@@ -34,6 +34,7 @@ protected:
 public:
   TSoundManager() : TRessourceManager<Mix_Chunk>() {};
   void PlaySound(string name);
+  void LoadSound(string name);
 };
 
 extern TSoundManager * SoundManager;

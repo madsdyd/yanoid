@@ -8,7 +8,6 @@ for script in scripts:
     runthis = "execfile('" + yanoid.resolve(script) + "')"
     eval(runthis)
 
-
 # Define a number of smaller functions here.
 def static_hit():
     PlaySound("sounds/blip.wav")

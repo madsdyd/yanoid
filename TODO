@@ -3,7 +3,8 @@ yanoid before the game can be considered ready for the contest.
 
 
 
-********************************************************************** CHECK LIST BEFORE SUBMITTING
+********************************************************************** 
+** CHECK LIST BEFORE SUBMITTING
 
 - Check 1 MB requirement
 - Check that dist builds
@@ -20,7 +21,6 @@ yanoid before the game can be considered ready for the contest.
 	[update: LargeFont.bmp is now colorkeyed (JCD)]
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
-- precache sounds (MBD)
 - no points for stay bricks (fix in maps) (MBD)
 * Powerups (MBD)
 
@@ -29,6 +29,7 @@ Stuff that seems to be fixed:
 - Sometimes the game crashes when it wants to display the in game 
   menu. Related to the text effects? (MBD, JCD?) <-- fixed?
   Fixed, but no background now... Weirdness and ? posted to SDL list.
+- precache sounds (MBD) <-- fixed, add sounds to yanoid.py
 
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)
@@ -37,6 +38,8 @@ Stuff that seems to be fixed:
 
 * no sounds from paddle when colliding with bricks (MBD)
 - Remove point for highscore "menu"? (JCD)
+- Should shots and powerups die, when the player dies?(MBD)
+- There are no background in menus (see above)... (MBD)
 
 * Sounds (BS)
 - Menu sounds 
@@ -75,7 +78,7 @@ SDL application that uses SDL_mixer.
 	Game over 
 
 **********************************************************************
-** IN YOUR DREAMS (stuff that we will must likely NOT have time for)
+** IN YOUR DREAMS (stuff that we will NOT have time for)
 
 * Network system 
   - (Get/deliver events/state from/to the network)

@@ -53,10 +53,24 @@ static PyObject * PlaySound(PyObject * self, PyObject * args) {
 }
 
 /* **********************************************************************
+ * A method to load (cache) a sound
+ * *********************************************************************/
+static PyObject * LoadSound(PyObject * self, PyObject * args) {
+  char * soundname;
+  if (!PyArg_ParseTuple(args, "s", &soundname)) {
+    return NULL;
+  }
+  SoundManager->LoadSound(soundname);
+  return Py_BuildValue("");
+}
+
+
+/* **********************************************************************
  * The client method table
  * *********************************************************************/
 static PyMethodDef client_methods[] = {
   {"PlaySound", PlaySound, METH_VARARGS},
+  {"LoadSound", LoadSound, METH_VARARGS},
   {NULL, NULL}
 };
 

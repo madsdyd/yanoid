@@ -5,3 +5,13 @@
 def PlaySound(soundname):
     "Play a sound"
     yanoid_client.PlaySound(soundname)
+
+# Load a sound (used for caching)
+def PlaySound(soundname):
+    "Play a sound"
+    yanoid_client.PlaySound(soundname)
+
+def LoadSound(soundname):
+    "Load a sound"
+    yanoid_client.LoadSound(soundname)
+

@@ -56,3 +56,13 @@ void TSoundManager::PlaySound(string name) {
     ReleaseRessource(tmp);
   }
 }
+
+/* **********************************************************************
+ * Load Sound - loads a sound (caches)
+ * *********************************************************************/
+void TSoundManager::LoadSound(string name) {
+  Mix_Chunk * tmp = RequireRessource(name);
+  if (tmp) {
+    ReleaseRessource(tmp);
+  }
+}

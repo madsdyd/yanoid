@@ -51,3 +51,15 @@ for script in default_scripts:
     put_console("Executing " + yanoid.resolve(script))
     runthis = "execfile('" + yanoid.resolve(script) + "')"
     eval(runthis)
+
+# This should probably not go here, but for now I need to put i here to
+# fix dependcies (client_interface needs to be loaded)
+
+# This preloads sounds to make sure that it does not lag the first
+# time it is played
+sounds = [ "sounds/blip.wav",
+           "sounds/pop.wav" ]
+
+for sound in sounds:
+    put_console("Caching sound " + yanoid.resolve(sound))
+    LoadSound(sound)
