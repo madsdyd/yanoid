@@ -195,14 +195,9 @@ bool TMenu::HandleEvent(SDL_Event * event) {
  * The DialogMenu
  * *********************************************************************/
 void TDialogMenu::Render() {
-  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  RenderBackground();
   RenderSplash();
   RenderLines();
-  /*
-  string text = "Here is room for a help text";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-  */
   RenderItems(0, 300, Screen->w, Screen->h);
   SDL_Flip(Screen);
 };
