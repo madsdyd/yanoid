@@ -25,6 +25,7 @@
 #include <string>
 #include <SDL/SDL.h>
 
+using namespace std;
 
 /* Implement a text renderer */
 class TText {

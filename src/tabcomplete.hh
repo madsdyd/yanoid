@@ -47,6 +47,8 @@
 #include <string>
 #include <list>
 
+using namespace std;
+
 typedef list<string> TCompletions;
 typedef TCompletions::iterator TCompletionsIterator;
 

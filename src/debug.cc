@@ -27,6 +27,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 /* Dump a backtrace to cerr */
 void BackTrace() {
 #ifdef HAVE_EXECINFO_H

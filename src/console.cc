@@ -143,6 +143,8 @@ bool TConsole::HandleLine(string line) {
     }
   }
   /* Start reading a new one */
+  /* Hmm */
+  return true;
 }
 
 /* **********************************************************************

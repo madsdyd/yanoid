@@ -21,6 +21,9 @@
 */
 #include "text.hh"
 #include "surfacemanager.hh"
+
+using namespace std;
+
 /* **********************************************************************
  * Constructor - loads the font
  * *********************************************************************/

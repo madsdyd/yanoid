@@ -27,6 +27,8 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class TText;
 class TMenu {
 protected:

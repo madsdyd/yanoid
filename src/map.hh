@@ -27,7 +27,7 @@ class TMap;
 class TPaddle;
 class TMapState {
   TPaddle * paddle;
-  friend TMap;
+  friend class TMap;
 public:
   int num_balls; /* Number of balls in play. 
 		    When 0 is reached, a live is substracted

@@ -30,6 +30,8 @@
 #include "point.hh"
 #include <functional>
 
+using namespace std;
+
 class TMotion;
 
 class TPixmapEntity;

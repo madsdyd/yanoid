@@ -31,6 +31,8 @@
 #include "readline.hh"
 #include "tabcomplete.hh"
 
+using namespace std;
+
 typedef void (*TConsoleCommand)(string params);
 
 #include <SDL/SDL.h>

@@ -32,6 +32,8 @@
 #include <iostream>
 #include <strstream>
 
+using namespace std;
+
 #define LOG_FATAL   0
 #define LogFatal(_line) \
   cerr << "FATAL ERROR : " << __FILE__ << ":" << __LINE__ \
@@ -55,9 +57,10 @@ extern bool duptoconsole;
 #define LOG_MAX     (1+LOG_VER_2)
 
 /* Log line is the usual interface to the log */
+//    loglinetmp.form _line << ends; 
 #define LogLineExt( _level, _line ) \
   { ostrstream loglinetmp; \
-    loglinetmp.form _line << ends; \
+    loglinetmp << "Fix LogLineExt" << ends; \
     Log->AddLine( _level, __FILE__, __LINE__, loglinetmp.str()); }
 
 #define LogLine( _level, _line ) \

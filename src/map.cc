@@ -489,6 +489,8 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
     LogLineExt(LOG_ERROR, ("Unhandled action : %s", action.c_str()))
     return false;
   }
+  /* Never reached */
+  return false;
 }
 
 /* **********************************************************************
