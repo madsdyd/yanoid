@@ -1,14 +1,12 @@
 The following is a list of stuff that needs to be implemented in
 yanoid before the game can be considered ready for the contest. 
 
-Bugs:
-
-- pop sound kills music???
-
 **********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
 - Collision code is flaky (JCD, is on the way)
+- Paddle should not leave the map (JCD?)
+- Paddle should be reset in a number of cases (ball lost most notably) (MBD)
 - Autoconf code for Python 2.2b is broken (MBD)
 - Complete the gameplay (map changing) code (JCD)
 - More maps (BS,...)?
@@ -17,10 +15,9 @@ Bugs:
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)
 
-* Input system - keyboard movement of paddle is not fluent (JCD)
-
 * Menu
 - Add help and about texts (JCD,MBD,BS)?
+- Background is missing from a number of menus (MBD)
 
 * Powerups
 
