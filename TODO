@@ -17,22 +17,16 @@ yanoid before the game can be considered ready for the contest.
 ** SHOWSTOPPERS - MUST BE FIXED
 
 - More maps (BS,MBD...)
-- Make fonts png (MBD) (may not be needed) 
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
-- no points for stay bricks (fix in maps) (MBD)
-* Powerups (MBD)
-
 
 Stuff that seems to be fixed:
 - Sometimes the game crashes when it wants to display the in game 
   menu. Related to the text effects? (MBD, JCD?) <-- fixed?
   Fixed, but no background now... Weirdness and ? posted to SDL list.
-- precache sounds (MBD) <-- fixed, add sounds to yanoid.py
 
 **********************************************************************
-** IMPORTANT (or possible easy - stuff that we really should do)
-
+** IMPORTANT (or possible easy - stuff that we probably should do)
 
 * no sounds from paddle when colliding with bricks (MBD)
 - Remove point for highscore "menu"? (JCD)
