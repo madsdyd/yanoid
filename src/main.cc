@@ -55,6 +55,9 @@
 #include "client.hh"
 #include "highscore.hh"
 #include "interprenter.hh"
+#include "entity.hh"
+#include "pixmap_entity.hh"
+#include "more_entities.hh"
 
 /* **********************************************************************
  * A handler for segmentation errors 
@@ -74,6 +77,7 @@ void Python(char * String) {
   Assert(String != NULL, "Python - NULL string");
   Interprenter->RunSimpleString(String);
 }
+
 
 /* Load a map */
 void LoadMap(char * map) {
@@ -105,6 +109,16 @@ void AlphaChange(char *alpha)
 }
 
 #ifdef DEBUG
+/* Toogle cheating */
+void ToggleCheat(char * arg) {
+  hole_bounces = !hole_bounces;
+  if (hole_bounces) {
+    CON_ConOut("Cheat mode enabled");
+  } else {
+    CON_ConOut("Cheat mode disabled");
+  }
+}
+
 /* Dup to console or not */
 void DupLogToConsole(char * arg) {
   duptoconsole = !duptoconsole;
@@ -307,6 +321,7 @@ int main(int argc, char ** argv) {
   CON_AddCommand(&AlphaChange,      "alpha");
 #ifdef DEBUG
   CON_AddCommand(&DupLogToConsole,  "duplogtoconsole");
+  CON_AddCommand(&ToggleCheat,      "togglecheat");
 #endif
   CON_AddCommand(&DisplayHighscore, "highscore");
   CON_AddCommand(&Python,           "i");

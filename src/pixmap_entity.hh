@@ -46,8 +46,9 @@ private:
 	     int shift1, int shift2, int N);
 };
 
+
 /* Define a list of pixmap entities */
-typedef std::list<TEntity *> TPixmapEntities;
-typedef TEntities::iterator TPixmapEntitiesIterator;
+//typedef std::list<TEntity *> TPixmapEntities;
+//typedef TEntities::iterator TPixmapEntitiesIterator;
 
 #endif

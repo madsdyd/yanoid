@@ -10,6 +10,9 @@ yanoid before the game can be considered ready for the contest.
 - Game over should not autoremove (player should be allowed to view his 
   score)
 - Ball should never go horizontal or vertical (interval around) (JCD)
+- Make fonts png and use colorkey (MBD)
+- Sometimes the game crashes when it wants to display the in game 
+  menu. Related to the text effects? (MBD, JCD?)
 
 
 **********************************************************************

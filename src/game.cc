@@ -156,6 +156,7 @@ void TGame::Update(Uint32 currenttime) {
 
 TGameState * TGame::GetState() {
   GameState.MapState = Map->GetState();
+  GameState.gametime = lastupdate;
   return &GameState;
 }
 
@@ -270,4 +271,24 @@ bool TGame::LoadMap(string mapname) {
   return result;
 }
 
-
+/* **********************************************************************
+ * Safely go to next map
+ * *********************************************************************/
+bool TGame::LoadNextMap() {
+  int cmap = GetState()->currentmap;
+  GetState()->currentmap++;
+  while(GetState()->currentmap != cmap) {
+    // Are there any maps left in out maplist?
+    if (!HasMap(GetState()->currentmap)) {
+      LogLine(LOG_VERBOSE, "No More Maps -> resetting");
+      GetState()->currentmap = 0;
+    }
+    // load the next map
+    if (LoadMap(GetMapName(GetState()->currentmap))) {
+      return true;
+    }
+    GetState()->currentmap++;
+  }
+  /* Been through the complete list */
+  return false;
+}

@@ -24,6 +24,13 @@
 #include "pixmap_entity.hh"
 #include "more_entities.hh"
 #include "soundmanager.hh"
+
+/* **********************************************************************
+ * The hole bounces variable
+ * *********************************************************************/
+bool hole_bounces = false;
+
+
 /* **********************************************************************
  * TBrick
  * *********************************************************************/
@@ -69,7 +76,11 @@ void THole::OnCollision(TEntity& other,Uint32 t) {
   LogLine(LOG_VERBOSE, "THole::OnCollision called");
   if (TEntity::BALL == other.getEntityType()) {
     /* Ah, hit by a ball */
-    other.MarkDying();
+    if (!hole_bounces) {
+      other.MarkDying();
+    } else {
+      TEntity::OnCollision(other, t);
+    }
   } else {
     LogLine(LOG_WARNING, "THole should not be hit by anything but balls");
   }

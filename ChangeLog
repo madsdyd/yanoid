@@ -1,3 +1,12 @@
+2001-11-23  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Various
+	Made the game load code more stable, take into 
+	account that some maps may not load correctly
+	Added time display and moved HUD elements around
+	Added cheat code to console
+	
+
 2001-11-21  Mads Bondo Dydensborg  <madsdyd@mother>
 
 	* Sounds and stuff

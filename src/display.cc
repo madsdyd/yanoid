@@ -55,24 +55,44 @@ void TDisplay::Render(SDL_Surface * surface) {
     CON_DrawConsole();
   }
 
-  // Draw framerate
-  int oldticks = ticks;
-  char framerate[20];
-  ticks = SDL_GetTicks();
-  if (ticks != oldticks) {
-    sprintf(framerate, "%.2f FPS", 1000.0 / (ticks - oldticks));
-    DT_DrawText(framerate, surface, 1, 1, surface->h - 40);
-  }
+  /* **********************************************************************
+   * Draw the HUD...
+   * *********************************************************************/
 
-  // Draw lives
-  sprintf(framerate, "lives %i", GameState->lives);
-  DT_DrawText(framerate, surface, 1, 200, surface->h - 40);
+  int drawy = 10;
+  char framerate[20];
 
   // Draw score
-  sprintf(framerate, "score %i", GameState->score);
-  DT_DrawText(framerate, surface, 1, 400, surface->h - 40);
+  sprintf(framerate, "Score %i", GameState->score);
+  DT_DrawText(framerate, surface, 1, 1, drawy);
+  
+
+  // Draw lives
+  sprintf(framerate, "Lives %i", GameState->lives);
+  DT_DrawText(framerate, surface, 1, 400-7*10, drawy);
+
+  // Draw time
+  int minutes = GameState->gametime/60000;
+  int seconds = (GameState->gametime%60000)/1000;
+  sprintf(framerate, "Time % 2i:%02i", minutes, seconds);
+  DT_DrawText(framerate, surface, 1, 800-9*20, drawy);
+  
+  /* The rest is drawn at the bottom of the screen */
 
   // Draw num_bricks
-  sprintf(framerate, "bricks %i", GameState->MapState->num_bricks);
-  DT_DrawText(framerate, surface, 1, 600, surface->h - 40);
+  sprintf(framerate, "Bricks %i", GameState->MapState->num_bricks);
+  DT_DrawText(framerate, surface, 1, 800-9*20, surface->h-40);
+
+  // Draw framerate
+  int oldticks = ticks;
+  ticks = SDL_GetTicks();
+  if (ticks != oldticks) {
+    sprintf(framerate, "%.2f", 1000.0 / (ticks - oldticks));
+    DT_DrawText(framerate, surface, 1, 1, surface->h-40);
+  }
+
+
+
+
+
 }

@@ -49,4 +49,7 @@ public:
   void Render(SDL_Surface * surface) {};
 };
 
+/* Used for cheating */
+extern bool hole_bounces;
+
 #endif

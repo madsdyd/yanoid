@@ -265,22 +265,13 @@ void TClient::Run() {
 	game_lastupdate = 0;
 	LogLine(LOG_VERBOSE, "Game->Update(0)");
 	Game->Update(0);
-	Game->GetState()->status = TGameState::PLAYING;
-	Game->GetState()->currentmap++;
-
-	// Are there any maps left in out maplist?
-	if (!Game->HasMap(Game->GetState()->currentmap)) {
-	    CON_ConOut("No More Maps -> resetting");
-	    Game->GetState()->currentmap = 0;
-	}
-
-	// load the next map
-	if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap))) {
-	  CON_ConOut("Map succesfully loaded");
+	if (Game->LoadNextMap()) {
+	  Game->GetState()->status = TGameState::PLAYING;
 	} else {
-	  CON_ConOut("Error loading map");
+	  LogLine(LOG_ERROR, "Unable to load any valid map");
+	  CON_ConOut("Unable to load any valid map");
+	  QuitCurrentGame = true;
 	}
-
 	break;
       }
       case TGameState::PLAYING: ;

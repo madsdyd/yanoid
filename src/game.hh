@@ -36,6 +36,7 @@ public:
   int lives; /* This will go/move somewhere else */
   int score;
   int currentmap;
+  Uint32 gametime;
   TGameState() {
     /* We start in cut, 5 lives, no score */
     status = CUT;
@@ -68,6 +69,8 @@ public:
   bool HasMap(unsigned int i) { return map_names.size() > i; }
   void Update(Uint32 currenttime);
   TGameState * GetState();
+  /* Safely load another map */
+  bool LoadNextMap();
   bool LoadMap(string mapname);
 };
 

@@ -324,10 +324,12 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
     if (current_script_entity) {
       /* arg1 == pixmap
 	 arg2 == hitfunction */
-      TEntity * e = new TPixmapEntity(current_script_entity->x(), 
-				      current_script_entity->y(), 
-				      0, arg1, 
-				      TEntity::PIXEL, TEntity::BALL);
+      TEntity * e 
+	= new 
+	TPixmapEntity(static_cast<int>(current_script_entity->x()), 
+		      static_cast<int>(current_script_entity->y()), 
+		      0, arg1, 
+		      TEntity::PIXEL, TEntity::BALL);
       e->SetScriptHitCall(arg2);
       // TODO, error handling.. 
       e->setMotion(new TFreeMotion);
