@@ -237,7 +237,7 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
      The purpose of this method is to resolve collisions between this object
      and the other. */
   /* Check if we have already collided */
-  if (LastUpdate == currenttime) {
+  if (LastCollision == currenttime) {
     return;
   }
 
@@ -263,8 +263,8 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
     // set collision update time
     // so that we won't calculate collisions
     // 2 times on a entity
-    LastUpdate = currenttime;
-    // other.LastUpdate = currenttime;
+    LastCollision = currenttime;
+    // other.LastCollision = currenttime;
     
     //
     // If we have a ball in the collision

@@ -59,7 +59,7 @@ protected:
   string ScriptHitCall;
   bool changed;
   int collidecorner;
-  Uint32 LastUpdate;
+  Uint32 LastCollision;
   bool removable;
   double AngleModifier; // only for paddle (should be in subclass)
   double MovementAngleModifier; // only for paddle (should be in subclass)
@@ -124,7 +124,7 @@ public:
   inline bool boundingBoxCollision(TEntity& obj);
   inline int getCollideCorner() { return collidecorner; }
   inline void resetCollideCorner() { collidecorner = 0; }
-  inline Uint32 getLastUpdate() { return LastUpdate; };
+  inline Uint32 getLastCollision() { return LastCollision; };
   /*
     return ! ((obj.position.y()+obj._h) < position.y() || 
 	      (position.y()+_h) < obj.position.y() || 

@@ -109,9 +109,11 @@ TPowerUp::TPowerUp(int x, int y, string pixmap, string hitfunction)
  * *********************************************************************/
 void TPowerUp::OnCollision(TEntity& other, Uint32 currenttime=0) {
   /* Check if we allready have collided */
-  if (LastUpdate == currenttime) {
+  if (LastCollision == currenttime) {
     return;
   }
+
+  LastCollision = currenttime;
 
   if ("PADDLE" == other.getEntityType()) {
     /* Make sure our hitfunction is called - 
@@ -231,10 +233,10 @@ void TPaddle::OnCollision(TEntity& other,Uint32 currenttime) {
      The purpose of this method is to resolve collisions between this object
      and the other. */
   /* Check if we have already collided */
-  if (LastUpdate == currenttime) {
+  if (LastCollision == currenttime) {
     return;
   }
-  
+  LastCollision = currenttime;
   /* We do not want the paddle to script on 
      hitting powerups */
   if ( "POWERUP" != other.getEntityType() ) {
