@@ -26,6 +26,7 @@
 #include <vector>
 #include "log.hh"
 #include "debug.hh"
+#include "tabcomplete.hh"
 
 /* **********************************************************************
  * The PathManager
@@ -42,10 +43,11 @@ typedef TPathMap::iterator TPathMapIterator;
 class TPathManager {
 protected:
   TPathMap pathmap;
+  TTabComplete * PathCompleter;
   void AddPathRecursivly(size_t base_size, string path);
   void AddMapping(string name, string absolute);
 public:
-  TPathManager() {};
+  TPathManager(TTabComplete * _PathCompleter) : PathCompleter(_PathCompleter) {};
   ~TPathManager();
   /* Add path will add the files found in that path to our list of 
      path mappings. Files found will override earlier paths */

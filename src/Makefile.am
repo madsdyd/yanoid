@@ -1,6 +1,6 @@
 bin_PROGRAMS = yanoid
 
-yanoid_SOURCES = readline.cc console.cc text.cc statistics.cc \
+yanoid_SOURCES = tabcomplete.cc readline.cc console.cc text.cc statistics.cc \
 	        soundmanager.cc more_entities.cc interprenter.cc \
                 game.cc map.cc entity.cc pixmap_entity.cc \
 		path.cc velocity.cc motion.cc \
@@ -11,7 +11,7 @@ yanoid_SOURCES = readline.cc console.cc text.cc statistics.cc \
 		menu.cc texteffects.cc 
 
 # none of these are installed - here for dist
-noinst_HEADERS = readline.hh console.hh text.hh statistics.hh \
+noinst_HEADERS = tabcomplete.hh readline.hh console.hh text.hh statistics.hh \
 	         soundmanager.hh more_entities.hh globals.hh interprenter.hh \
 		 map.hh point.hh entity.hh pixmap_entity.hh \
 		 path.hh game.hh velocity.hh motion.hh \

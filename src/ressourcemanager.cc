@@ -52,6 +52,9 @@ TPathManager::~TPathManager() {};
  * *********************************************************************/
 void TPathManager::AddMapping(string name, string absolute) {
   pathmap[name] = absolute;
+  if (PathCompleter) {
+    PathCompleter->Insert(name);
+  }
 }
 /* **********************************************************************
  * Adding a path should insert all filenames found into the map, with

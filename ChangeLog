@@ -1,3 +1,8 @@
+2001-12-22  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* TabCompletion
+	Added tab completion code to the console.
+
 2001-12-18  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Removing

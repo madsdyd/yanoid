@@ -28,6 +28,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "readline.hh"
+#include "tabcomplete.hh"
 
 typedef void (*TConsoleCommand)(string params);
 
@@ -38,6 +40,7 @@ class TConsole {
 private:
   TText * TextRender;
   TReadline * Readline;
+  TTabComplete * CommandComplete;
   typedef enum {is_up, is_down, is_moving} tconsole_state;
   unsigned int max_num_lines;
   vector<string> lines;
@@ -51,8 +54,10 @@ private:
   /* The map of commands */
   map<string, TConsoleCommand> Commands;
   TConsoleCommand DefaultCommand;
+  /* Called when a line needs to be handled */
+  bool HandleLine(string line);
 public:
-  TConsole(string fontname, int num_lines);
+  TConsole(string fontname, int num_lines, TTabComplete * ArgumentComplete = NULL);
   virtual ~TConsole();
   bool HandleEvent(SDL_Event * event);
   void Update(Uint32 deltatime);
@@ -72,6 +77,8 @@ public:
   void AddCommand(string name, TConsoleCommand command);
   /* Add a default command handler - used when everything else fails */
   void AddDefaultCommand(TConsoleCommand command);
+  /* Callback for Readline */
+  void CompletionsCallback(TCompletions * completions);
 };
 #endif
 

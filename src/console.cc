@@ -24,6 +24,7 @@
 #include "console.hh"
 #include "text.hh"
 #include "readline.hh"
+#include "tabcomplete.hh"
 
 #define FADE_DELTA 5000 /* Every line is on screen for this long */
 #define NUM_LINES_SHOW 4
@@ -42,9 +43,11 @@ TConsole * Console = NULL;
 /* **********************************************************************
  * Constructor & destructor
  * *********************************************************************/
-TConsole::TConsole(string fontname, int num_lines) {
-  TextRender = new TText(fontname);
-  Readline   = new TReadline(num_lines/10);
+TConsole::TConsole(string fontname, int num_lines, 
+		   TTabComplete * ArgumentComplete) {
+  TextRender      = new TText(fontname);
+  CommandComplete = new TTabComplete();
+  Readline        = new TReadline(num_lines/10, CommandComplete, ArgumentComplete);
   /* Start the readline */
   Readline->Readline();
   max_num_lines = num_lines;
@@ -60,6 +63,8 @@ TConsole::TConsole(string fontname, int num_lines) {
 TConsole::~TConsole() {
   delete TextRender;
   delete Readline;
+  /* Delete this after ReadLine */
+  delete CommandComplete;
 }
 
 /* **********************************************************************
@@ -105,38 +110,58 @@ void TConsole::Update(Uint32 deltatime) {
       << ", dposition : " << dposition << endl; */
 }
 /* **********************************************************************
+ * HandleLine - called when a line is ready in readline
+ * *********************************************************************/
+bool TConsole::HandleLine(string line) {
+  /* Readline accepted a line - check if we can handle it */
+  int firstspace = line.find(" ");
+  string name, arg;
+  if (firstspace < 0) {
+    name = line;
+    arg = "";
+  } else {
+    name = line.substr(0, firstspace);
+    arg 
+      =  line.substr(firstspace + 1, 
+		     line.size() 
+		     - (firstspace + 1));
+  }
+  // LogLineExt(LOG_VERBOSE, ("Got '%s' '%s'", name.c_str(), arg.c_str()));
+  /* Add the line to the history */
+  AddLine(line);
+  map<string,TConsoleCommand>::iterator i = Commands.find(name);
+  if (i != Commands.end()) {
+    // LogLineExt(LOG_VERBOSE, ("Looked up %s", name.c_str()));
+    (*i).second(arg);
+  } else {
+    if (DefaultCommand) {
+      DefaultCommand(line);
+    }
+  }
+  /* Start reading a new one */
+}
+
+/* **********************************************************************
  * Handleevents - just forward to Readline for now ... 
  * *********************************************************************/
 bool TConsole::HandleEvent(SDL_Event * event) {
   /* If escape, abort the current readline. I think */
   bool handled = Readline->HandleEvent(event);
+  /* Check if it completed reading a line */
   if (!Readline->IsReadingLine()) {
-    /* Readline accepted a line - check if we can handle it */
-    int firstspace = Readline->GetCurrentLine().find(" ");
-    string name, arg;
-    if (firstspace < 0) {
-      name = Readline->GetCurrentLine();
-      arg = "";
-    } else {
-      name = Readline->GetCurrentLine().substr(0, firstspace);
-      arg 
-	=  Readline->GetCurrentLine().substr(firstspace + 1, 
-					     Readline->GetCurrentLine().size() 
-					     - (firstspace + 1));
-    }
-    // LogLineExt(LOG_VERBOSE, ("Got '%s' '%s'", name.c_str(), arg.c_str()));
-    AddLine(Readline->GetCurrentLine());
-    map<string,TConsoleCommand>::iterator i = Commands.find(name);
-    if (i != Commands.end()) {
-      // LogLineExt(LOG_VERBOSE, ("Looked up %s", name.c_str()));
-      (*i).second(arg);
-    } else {
-      if (DefaultCommand) {
-	DefaultCommand(Readline->GetCurrentLine());
-      }
-    }
-    /* Start reading a new one */
+    HandleLine(Readline->GetCurrentLine());
+    /* Start reading a new line */
     Readline->Readline();
+  }
+  /* Check if there are completions here ... */
+  if (Readline->HasCompletions()) {
+    LogLine(LOG_VERBOSE, "Completions now!");
+    TCompletions * tmp = Readline->GetCurrentCompletions();
+    TCompletionsIterator i;
+    TCompletionsIterator End = tmp->end();
+    for (i = tmp->begin(); i != End; i++) {
+      AddLine((*i));
+    }
   }
   return handled;
 }
@@ -235,6 +260,7 @@ void TConsole::Clear() {
  * *********************************************************************/
 void TConsole::AddCommand(string name, TConsoleCommand command) {
   Commands[name] = command;
+  CommandComplete->Insert(name);
 }
 void TConsole::AddDefaultCommand(TConsoleCommand command) {
   DefaultCommand = command;

@@ -160,7 +160,12 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize the ressource management system
    * *********************************************************************/
-  PathManager = new TPathManager();
+  /* This tabcompleter will be shared with the console */
+  TTabComplete * PathCompleter = new TTabComplete();
+  Assert(PathCompleter != NULL, "Unable to create pathcompleter");
+  LogLine(LOG_VERBOSE, "PathCompleter created");
+ 
+  PathManager = new TPathManager(PathCompleter);
   Assert(PathManager != NULL, "Unable to create pathmanager");
   LogLine(LOG_VERBOSE, "PathManager created");
 
@@ -286,7 +291,7 @@ int main(int argc, char ** argv) {
    * Initialize the console (requires SDL to be initialized )
    * *********************************************************************/
   
-  Console = new TConsole("graphics/fonts/consolefont2.png", 1000);
+  Console = new TConsole("graphics/fonts/consolefont2.png", 1000, PathCompleter);
   Assert(Console != NULL, "Unable to create console");
   /* Add a number of commands to be treated */
   Console->AddCommand("loadmap", &LoadMap);
@@ -381,6 +386,8 @@ int main(int argc, char ** argv) {
   delete SurfaceManager;
   LogLine(LOG_VERBOSE, "Deleting PathManager");
   delete PathManager;
+  LogLine(LOG_VERBOSE, "Deleting PathCompleter");
+  delete PathCompleter;
   LogLine(LOG_VERBOSE, "Deleting Interprenter");
   delete Interprenter;
 #ifdef DEBUG
