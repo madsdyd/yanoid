@@ -36,6 +36,17 @@ public:
   int lives; /* This will go/move somewhere else */
   int score;
   int currentmap;
+  /* Uh, the hacks we make */
+  /* Time left to shoot in */
+  int shot_time_left;
+  int time_between_shots;
+  int current_shot_time_left;
+  /* Shottype */
+  string shot_type;
+  /* Shot pix map */
+  string shot_pixmap;
+  /* Shot hit function */
+  string shot_hitfunction;
   Uint32 gametime;
   TGameState() {
     /* We start in cut, 5 lives, no score */
@@ -44,6 +55,8 @@ public:
     score = 0;
     /* Until a map is loaded, it is -1 */
     currentmap = -1;
+    /* Uhhh, the hacks we make */
+    shot_time_left = 0;
   }
   ~TGameState() {
     LogLine(LOG_TODO, "TGameState::~ Clean up stuff?");

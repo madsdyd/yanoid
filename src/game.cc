@@ -56,6 +56,26 @@ static PyObject * AdjustLives(PyObject * self, PyObject * args) {
 }
 
 /* **********************************************************************
+ * Enable shooting
+ * *********************************************************************/
+static PyObject * EnableShot(PyObject * self, PyObject * args) {
+  char * type; char * pixmap; char * hitfunction; int shot_time;
+  int time_between_shots;
+  if (!CurrentGame 
+      || !PyArg_ParseTuple(args, "sssii", 
+			   &type, &pixmap, 
+			   &hitfunction, &shot_time,
+			   &time_between_shots)) {
+    return NULL;
+  }
+  CurrentGame->GetState()->shot_type = type;
+  CurrentGame->GetState()->shot_pixmap = pixmap;
+  CurrentGame->GetState()->shot_hitfunction = hitfunction;
+  CurrentGame->GetState()->shot_time_left = shot_time;
+  CurrentGame->GetState()->time_between_shots = time_between_shots;
+  return Py_BuildValue("");
+}
+/* **********************************************************************
  * Adds a new map to the maplist for the game
  * *********************************************************************/
 static PyObject * AddMap(PyObject * self, PyObject * args) {
@@ -74,6 +94,7 @@ static PyObject * AddMap(PyObject * self, PyObject * args) {
 static PyMethodDef game_methods[] = {
   {"AdjustScore", AdjustScore, METH_VARARGS},
   {"AdjustLives", AdjustLives, METH_VARARGS},
+  {"EnableShot", EnableShot, METH_VARARGS},
   {"AddMap", AddMap, METH_VARARGS},
   {NULL, NULL}
 };
@@ -125,6 +146,15 @@ bool TGame::AddModule() {
 void TGame::Update(Uint32 currenttime) {
   
   Uint32 deltatime = currenttime - lastupdate;
+  /* Update/reduce the shottime */
+  GetState()->shot_time_left -= deltatime;
+  if (0 > GetState()->shot_time_left) {
+    GetState()->shot_time_left = 0;
+  }
+  GetState()->current_shot_time_left -= deltatime;
+  if (0 > GetState()->current_shot_time_left) {
+    GetState()->current_shot_time_left = 0;
+  }
   /* Update all objects in game */
   Map->Update(deltatime);
   handleCollisions(currenttime);

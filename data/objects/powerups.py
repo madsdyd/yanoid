@@ -65,8 +65,8 @@ def powerup_spawn_shot():
                        "powerup_shot_hit()")
     
 def powerup_shot_hit():
-    yanoid_map.PowerUp("enable-shot",
-                       "graphics/shots/greenball.png", "")
+    EnableShot("", "graphics/shots/greenball.png", "", 20,
+               1)
 
 # Super shot
 def powerup_spawn_super_shot():
@@ -74,6 +74,6 @@ def powerup_spawn_super_shot():
                        "powerup_super_shot_hit()")
     
 def powerup_super_shot_hit():
-    yanoid_map.PowerUp("enable-shot",
-                       "graphics/shots/penetrating.png", "REMOVEALL")
+    EnableShot("REMOVEALL", "graphics/shots/penetrating.png",
+               "", 12, 3)
 

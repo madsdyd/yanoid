@@ -1,6 +1,17 @@
 The following is a list of stuff that needs to be implemented in
 yanoid before the game can be considered ready for the contest. 
 
+
+
+********************************************************************** CHECK LIST BEFORE SUBMITTING
+
+- Check 1 MB requirement
+- Check that dist builds
+- Check that dist actually install all required files
+- Check that dist actually runs
+- ??
+
+
 **********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
@@ -10,7 +21,9 @@ yanoid before the game can be considered ready for the contest.
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
 - precache sounds (MBD)
-- Remove point for highscore? (JCD)
+- no points for stay bricks (fix in maps) (MBD)
+* Powerups (MBD)
+
 
 Stuff that seems to be fixed:
 - Sometimes the game crashes when it wants to display the in game 
@@ -22,7 +35,8 @@ Stuff that seems to be fixed:
 
 * Pixel perfect collision detection?
 
-* Powerups (MBD)
+* no sounds from paddle when colliding with bricks (MBD)
+- Remove point for highscore "menu"? (JCD)
 
 * Sounds (BS)
 - Menu sounds 

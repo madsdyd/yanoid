@@ -297,6 +297,8 @@ void TClient::Run() {
 	  SDL_Flip(Screen);
 	}
 	Game->GetState()->MapState->ballbirth = 0;
+	/* No more shooting */
+	Game->GetState()->shot_time_left = 0;
 	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
@@ -345,6 +347,8 @@ void TClient::Run() {
 	 * Get on with loading a game
 	 * *********************************************************************/
 	Game->GetState()->MapState->ballbirth = 0;
+	/* No more shooting */
+	Game->GetState()->shot_time_left = 0;
 	//	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
 	//	MapDoneMenu->Run();
 	//	delete MapDoneMenu;
@@ -508,20 +512,25 @@ void TClient::HandleEvents() {
 	  // Testing shots
 	case SDLK_SPACE: {
 	  if (!paddle) break;
-	  TEntity * shot = new TShot(static_cast<int>(paddle->x()),
-				     static_cast<int>(paddle->y()), 
-				     "graphics/shots/penetrating.png", 
-				     "", "REMOVEALL");
-	  Game->GetState()->MapState->Entities.push_back(shot);
+	  if (!Game) break;
+	  /* This is a great example of how _not_ to 
+	     do things if you ever want to implement 
+	     network support ... */
+	  if (Game->GetState()->shot_time_left > 0
+	      && Game->GetState()->current_shot_time_left == 0) {
+	    /* Arh, the hacks upon hacks */
+	    TEntity * shot 
+	      = new TShot(0, 
+			  static_cast<int>(paddle->y()),
+			  Game->GetState()->shot_pixmap,
+			  Game->GetState()->shot_hitfunction,
+			  Game->GetState()->shot_type);
+	    shot->setX(paddle->x() + (paddle->w() - shot->w())/2.0);
+	    Game->GetState()->MapState->Entities.push_back(shot);
+	    Game->GetState()->current_shot_time_left = 
+	      Game->GetState()->time_between_shots;
+	  }
 	  break;}
-	case SDLK_m: {
-	  if (!paddle) break;
-	  TEntity * shot = new TShot(static_cast<int>(paddle->x())+20,
-				     static_cast<int>(paddle->y()), 
-				     "graphics/shots/greenball.png", 
-				     "", "");
-	  Game->GetState()->MapState->Entities.push_back(shot);
-	  break; }
 	}
 	break;
       case SDL_KEYUP:

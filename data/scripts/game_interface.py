@@ -13,6 +13,16 @@ def AdjustLives(dlives):
     "Adjust the current number of lives"
     yanoid_game.AdjustLives(dlives)
 
+# EnableShot(string type, string pixmap, int time_to_shot,
+#            int time_between_shots)
+# Enable shots, type should be "" or "REMOVEALL"
+# pixmap is the pix to use, time is the time it last in seconds
+def EnableShot(type, pixmap, hitfunction, time_to_shot,
+               time_between):
+    "Enable shots with type, pixmap and time"
+    yanoid_game.EnableShot(type, pixmap, hitfunction,
+                           time_to_shot*1000, time_between*1000)
+
 # AddMap
 # Add a mapname to the list of maps in the game
 def AddMap(mapname):
