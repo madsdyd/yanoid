@@ -264,6 +264,9 @@ bool TReadline::HandleEvent(SDL_Event * event) {
   
   /* Use previous lines entered */
   case SDLK_UP: {
+    if (backlog.size() == 0) {
+      return true;
+    }
     /* If we are moving away from the new line we are typing, save the line */
     if (0 == nextbacklogcommand) {
       savedline = currentline;

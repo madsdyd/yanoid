@@ -64,6 +64,8 @@ void TText::Print(SDL_Surface * surface, int x, int y, string text) {
   src.h = GlyphHeight;
   dest.y = y;
   dest.x = x;
+  dest.w = src.w;
+  dest.h = src.h;
   unsigned char glyph;
   int i;
   for (i = 0; i < size; i++) {
@@ -84,6 +86,8 @@ void TText::Print(SDL_Surface * surface, int x, int y, const char ch) {
   src.h = GlyphHeight;
   dest.y = y;
   dest.x = x;
+  dest.w = src.w;
+  dest.h = src.h;
   unsigned char glyph;
   glyph = ch; // static_cast<unsigned char>(ch);
   // cout << "Got -" << glyph << "- as a glyph" << endl;

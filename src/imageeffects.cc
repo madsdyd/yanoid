@@ -25,9 +25,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <sstream>
+#include <iostream>
 
 using std::vector;
 using std::ostringstream;
+using std::cerr;
+using std::endl;
 
 TImageParticleEffect::TImageParticleEffect(SDL_Surface *img,
 					   int w, int h) :  
@@ -194,8 +197,15 @@ void TImageParticleEffect::blit()
     int y = (unsigned int)(i->point.y() + Location.y()) * surface->w;
     int index = ((x < 0) ? 0 : ((x > surface->w) ? surface->w : x)) + y;
 
+    // TODO: This looks rotten. Sometimes we have problems... 
     if (index >= maxIndex)
       continue;
+    if (index < 0) {
+      cerr << "TImageParticleEffect::blit(), index =" << index << " < 0, x = " 
+	   << x << ", y = " << y << " i->point.x() " << i->point.x()
+	   << " i->point.y() " << i->point.y() << endl;
+      continue;
+    }
 
     switch(bpp) {
     case 1:
@@ -247,6 +257,13 @@ void TImageParticleEffect::saveBackground()
     if (index >= maxIndex)
       continue;
 
+    if (index < 0) {
+      cerr << "TImageParticleEffect::saveBackground(), index =" << index << " < 0, x = " 
+	   << x << " i->point.x() " << i->point.x()
+	   << " i->point.y() " << i->point.y() << endl;
+      continue;
+    }
+
     switch(bpp) {
     case 1:
       ((Uint8*)background->pixels)[count] = ((Uint8*)surface->pixels)[index];
@@ -295,6 +312,13 @@ void TImageParticleEffect::blitBackground()
       (int)(i->point.y() + Location.y()) * surface->w;
     if (index >= maxIndex)
       continue;
+    if (index < 0) {
+      cerr << "TImageParticleEffect::blitBackground(), index =" << index << " < 0, x = " 
+	   << x << " i->point.x() " << i->point.x()
+	   << " i->point.y() " << i->point.y() << endl;
+      continue;
+    }
+
     switch(bpp) {
     case 1:
       ((Uint8*)surface->pixels)[index] = ((Uint8*)background->pixels)[count];
