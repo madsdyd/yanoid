@@ -249,7 +249,9 @@ bool THighscore::HandleEvent(SDL_Event * event) {
 	      name[1] = ' ';
 	    if (name[0] != '_')
 	      update(name,curscore);
-	    close = true;
+	    /* Close the menu after pressing end */
+	    DisplayMode = HIGHSCORE;
+	    // close = true;
 	    name[0] = '_';
 	    name[1] = '_';
 	    name[2] = '_';
