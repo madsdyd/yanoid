@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 
@@ -18,28 +19,27 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/* This is Map state - currently a list of entities */
 
-#include "log.hh"
-#include "entity.hh"
+#ifndef __TVELOCITY_HH__
+#define __TVELOCITY_HH__
 
-class TMapState {
-public:
-  TEntities Entities;
-  ~TMapState();
-};
+#include <iostream>
 
-/* This is a map clas. It can load a map, and contains the state of a map
- */
+class TVelocity;
 
-class TMap {
+std::ostream& operator<<(std::ostream& o, const TVelocity& v);
+
+class TVelocity {
 protected:
-  TMapState MapState;
-  bool relocateHighEntities(TEntitiesIterator& i);
-  bool relocateLowEntities(TEntitiesIterator& i);
+  int _x;
+  int _y;
 public:
-  TMap();
-  ~TMap();
-  inline TMapState * GetState() { return &MapState; }
-  void Update(Uint32 deltatime);
+  TVelocity(int x_, int y_) : _x(x_), _y(y_) {}
+  inline int x() const { return _x; }
+  inline int y() const { return _y; }
+  inline void setX(int x_) { _x = x_; }
+  inline void setY(int y_) { _y = y_; }
+  friend std::ostream& operator <<(std::ostream& o, const TVelocity& v);
 };
+
+#endif

@@ -77,7 +77,7 @@ AC_ARG_WITH(pythondir,
 
 AC_MSG_RESULT($ac_python_dir)
 
-version="2.0"
+version="2.1"
 
 AC_MSG_CHECKING([for Python$version])
 

@@ -22,15 +22,22 @@
 
 #include "debug.hh"
 #include "surfacemanager.hh"
+
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
-TEntity::TEntity(int x_, int y_) {
-  x = x_; y = y_; 
-  vel_x = x/60; vel_y = y/20;
+TEntity::TEntity(int x_, int y_, CollisionType c, EntityType e): 
+  _x(x_), _y(y_), velocity(0,0), name("unknown"), collision_type(c), 
+  entity_type(e) {
+
+  velocity.setX(_x/60); 
+  velocity.setY(_x/20); 
+
   currentsurface
     = SurfaceManager->RequireRessource("graphics/objects/basic_brick.png");
   Assert(NULL != currentsurface, "Error loading graphics for entity");
+  _h = currentsurface->h;
+  _w = currentsurface->w;
 }
 
 /* **********************************************************************
@@ -45,10 +52,13 @@ TEntity::~TEntity() {
  * The Update method simple moves the TEntity along with the velocity
  * *********************************************************************/
 void TEntity::Update(Uint32 deltatime) {
-  x += (int) (deltatime*vel_x/10.0);
-  y += (int) (deltatime*vel_y/10.0);
-  /* cout << "TEntity::Update - delta, x, y " << deltatime 
-     << ", " << x << ", " << y << endl; */
+  _x += static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.x())/10.0);
+  _y += static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.y())/10.0);
+  _x %= 800;
+  _y %= 600;
+
+  /*  cout << "TEntity::Update - delta, x, y " << deltatime 
+      << ", " << x << ", " << y << endl; */
 }
 
 /* **********************************************************************
@@ -61,8 +71,16 @@ void TEntity::Render(SDL_Surface * surface) {
   src.x = 0; src.y = 0; 
   src.w = currentsurface->w; src.h = currentsurface->h;
 
-  dest.x = x; dest.y = y;
+  dest.x = _x; dest.y = _y;
   dest.w = src.w; dest.h = src.h;
   
   SDL_BlitSurface(currentsurface, &src, surface, &dest);
+}
+
+/* **********************************************************************
+ * PixelCollision determines whether the TEntity obj, 
+ * of obj collides with this TEntity using pixel perfection. 
+ * *********************************************************************/
+bool TEntity::pixelCollision() {
+  return false;
 }

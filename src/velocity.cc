@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 
@@ -18,28 +19,11 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/* This is Map state - currently a list of entities */
 
-#include "log.hh"
-#include "entity.hh"
+#include "velocity.hh"
 
-class TMapState {
-public:
-  TEntities Entities;
-  ~TMapState();
-};
-
-/* This is a map clas. It can load a map, and contains the state of a map
- */
-
-class TMap {
-protected:
-  TMapState MapState;
-  bool relocateHighEntities(TEntitiesIterator& i);
-  bool relocateLowEntities(TEntitiesIterator& i);
-public:
-  TMap();
-  ~TMap();
-  inline TMapState * GetState() { return &MapState; }
-  void Update(Uint32 deltatime);
-};
+std::ostream& operator <<(std::ostream& o, const TVelocity& v)
+{
+  o << "(dx, dy) = (" << v._x << ", " << v._y << ')';
+  return o;
+}

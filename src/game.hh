@@ -41,6 +41,7 @@ protected:
   Uint32 lastupdate;
   TMap Map;
   TGameState GameState;
+  void handleCollisions();
 public:
   TGame();
   ~TGame();

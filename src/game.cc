@@ -53,7 +53,7 @@ void TGame::Update(Uint32 currenttime) {
   Uint32 deltatime = currenttime - lastupdate;
   /* Update all objects in game */
   Map.Update(deltatime);
-
+  handleCollisions();
   lastupdate = currenttime;
 }
 
@@ -65,3 +65,75 @@ void TGame::Update(Uint32 currenttime) {
 TGameState * TGame::GetState() {
   return &GameState;
 }
+
+/* **********************************************************************
+ * HandleCollisions
+ * *********************************************************************/
+
+void TGame::handleCollisions() 
+{
+  TMapState* themap = GameState.MapState;
+  TEntitiesIterator end = themap->Entities.end();
+
+  // uhh O(n^2). But not quite soo, because we can skip
+  // alot of cycles..
+  for (TEntitiesIterator i1 = themap->Entities.begin() ; 
+       i1 != end ; ++i1) {
+    int maxy = (*i1)->y() + (*i1)->h();
+    TEntity::EntityType i1type = (*i1)->getEntityType();
+    TEntity::CollisionType i1coll = (*i1)->getCollisionType();
+    TEntitiesIterator i2 = i1;
+    i2++;
+    for ( ; *i2 != *i1 && i2 != end ; ++i2) {
+
+      // Check to see if the y for the i2 iterator is
+      // bigger than maxy. If so we know that the rest
+      // of the objects in the list must be located at a
+      // too high y to bee colliding and we can skip the tests
+
+      if (maxy < (*i2)->y())
+	break;
+      
+      // Next we check to see if both i1 and i2 are of
+      // type STATIONARY since it doesn't make sense to 
+      // collision detect stationary entities. At the same time use 
+      // shortcut or to determine if bounding box detection fails.
+
+      if (i1type == TEntity::STATIONARY && (*i2)->getEntityType() == i1type 
+	  || (! (*i1)->boundingBoxCollision(*(*i2))))
+	continue;
+      
+      LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
+	      " and " + (*i2)->getName());
+      
+      // this section is for debugging only
+      {
+
+	//	cout << (*i1)->getVelocity() << " / " << (*i2)->getVelocity() << endl;
+	
+	(*i1)->setVelocity(- (*i1)->getVelocity().x(),
+			   - (*i1)->getVelocity().y());
+	
+	(*i2)->setVelocity(- (*i2)->getVelocity().x(),
+			   - (*i2)->getVelocity().y());
+	
+	
+	//	cout << (*i1)->getVelocity() << " / " << (*i2)->getVelocity() << endl;
+
+	if ((*i1)->x() > (*i2)->x())
+	  (*i1)->setX((*i2)->x()+(*i2)->w()+1);
+	else
+	  (*i1)->setX((*i2)->x()-(*i1)->w()-1);
+      }
+
+      // If necessary make pixel perfect detection..
+      if (i1coll == TEntity::PIXEL || (*i2)->getCollisionType() == TEntity::PIXEL) 
+	cout << "Making pixel perfect detection" << endl;
+
+    }
+  }
+}
+
+
+
+

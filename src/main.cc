@@ -278,7 +278,7 @@ int main(int argc, char ** argv) {
 
   // Test the MOD music
   if ( ! Mix_PlayingMusic() ) {
-    Mix_PlayMusic(modmusic, 0);
+    //    Mix_PlayMusic(modmusic, 0);
   }
 
   // Test the ogg vorbis music
@@ -290,9 +290,9 @@ int main(int argc, char ** argv) {
   Client->Run();
 
   // Delete the stuff
-  delete (Client);
-  delete (Display);
-  delete (Game);
+  delete Client;
+  delete Display;
+  delete Game;
   
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(mysurf);
@@ -302,13 +302,13 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
 
   LogLine(LOG_VERBOSE, "Deleting SurfaceManager");
-  delete(SurfaceManager);
+  delete SurfaceManager;
   LogLine(LOG_VERBOSE, "Deleting PathManager");
-  delete(PathManager);
+  delete PathManager;
   LogLine(LOG_VERBOSE, "Deleting Interprenter");
 #ifdef DEBUG
   LogLine(LOG_VERBOSE, "Deleting Log object - Exiting gracefully");
-  delete(Log);
+  delete Log;
 #endif
 
   return 0;
