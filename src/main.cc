@@ -137,7 +137,7 @@ int main(int argc, char ** argv) {
   SDL_Delay(3000);
 
   // TODO: Freeing surface, etc.
-
+  SurfaceManager->ReleaseRessource(mysurf);
 
   /* **********************************************************************
    * Exit gracefully

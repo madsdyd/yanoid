@@ -66,7 +66,10 @@ extern TPathManager * PathManager;
    ressources. Note - the only point is to be able to access ressources,
    and share references to them. We perform no memory management
    we assume that this will never be a problem and let the OS handle it
-   Clearly we are not developing for a console machine .. ;-) */
+   Clearly we are not developing for a console machine .. ;-) 
+   
+   There are currently no way to unload ressources.
+*/
 
 /* The base ressource handler uses templates to abstract away the type of
    the ressource to be managed - one will need to inherit from them, 
@@ -94,7 +97,7 @@ protected:
       --rrefs; 
       Assert(rrefs >= 0, "Someone released a ressouce one to often");
     };
-    void HasRefs() { return 0 != rrefs; }
+    bool HasRefs() { return 0 != rrefs; }
   }; /* storage_t */
 
   /* **********************************************************************
@@ -128,9 +131,7 @@ public:
    * This is the meat of the handler
    * *********************************************************************/
   TRessourceManager() {};
-  virtual ~TRessourceManager() {
-    LogLine(LOG_TODO, "Free ressources and storage_t in maps");
-  };
+  virtual ~TRessourceManager();
   /* Require will load or locate the ressource, and return a pointer
      to it */
   res_t * RequireRessource(string name);
@@ -149,7 +150,26 @@ public:
  * *********************************************************************/
 
 /* **********************************************************************
- * Require a handle - may force ressource to be loaded.
+ * The destructor
+ * *********************************************************************/
+template <typename res_t>
+TRessourceManager <res_t>::~TRessourceManager() {
+  TNameToStorageMapIterator End = NameToStorageMap.end();
+  TNameToStorageMapIterator i;
+  for (i = NameToStorageMap.begin(); i != End; i++) {
+    if ((*i).second->HasRefs()) {
+      LogLine(LOG_ERROR, "Releasing " + (*i).second->GetName() + 
+	      " - ressource still referenced");
+      UnloadRessource((*i).second->TakeRessource());
+      delete ((*i).second);
+    }
+  }
+  LogLine(LOG_TODO, "Free ressources and storage_t in maps");
+};
+
+
+/* **********************************************************************
+ * Require a ressource - may force ressource to be loaded.
  * *********************************************************************/
 
 template <typename res_t>
@@ -187,5 +207,36 @@ res_t * TRessourceManager <res_t>::RequireRessource(string name) {
   RessourceToStorageMap[ressource] = storage;
   return storage->TakeRessource();
 };
+
+/* **********************************************************************
+ * Release a ressource 
+ * *********************************************************************/
+
+template <typename res_t>
+void TRessourceManager <res_t>::ReleaseRessource(res_t * ressource) {
+  /* Lookup the ressource in the storage map */
+  storage_t * tmp = RessourceToStorageMap[ressource];
+  if (!tmp) {
+    LogLine(LOG_ERROR, "ReleaseRessource on unmapped ressource");
+    return;
+  }
+  LogLine(LOG_VER_2, "Releasing ressource " + tmp->GetName());
+  tmp->ReleaseRessource();
+}
+
+/* **********************************************************************
+ * Duplicate a ressources
+ * *********************************************************************/
+template <typename res_t>
+res_t * TRessourceManager <res_t>::DuplicateRessource(res_t * ressource) {
+  /* Look up the ressource */
+  storage_t * tmp = RessourceToStorageMap[ressource];
+  if (!tmp) {
+    LogLine(LOG_ERROR, "DuplicateRessource on unmapped ressource");
+    return;
+  }
+  LogLine(LOG_VER_2, "Duplicating ressource " + tmp->GetName());
+  return tmp->TakeRessource();
+}
 
 #endif

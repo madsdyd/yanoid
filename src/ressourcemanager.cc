@@ -44,9 +44,7 @@ TPathManager * PathManager;
  * The destructor should empty the pathmap
  * *********************************************************************/
 
-TPathManager::~TPathManager() {
-  LogLine(LOG_TODO, "Need to empty the PathMap");
-};
+TPathManager::~TPathManager() {};
 
 /* **********************************************************************
  * Add a mapping
