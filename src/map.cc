@@ -354,7 +354,30 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
  * *********************************************************************/
 bool TMap::PowerUp(string action, string arg1, string arg2) {
   // LogLine(LOG_VERBOSE, "in powerup");
-  if ("spawn-ball" == action) {
+
+  /* **********************************************************************
+   * First the major case, spawning powerups (bricks falling down)
+   * *********************************************************************/
+  if ("powerup" == action) {
+    // LogLine(LOG_VERBOSE, "powerup added");
+    if (!current_script_entity) {
+      LogLine(LOG_WARNING, "no current_script_entity");
+      return false;
+    }
+    /* Add a powerup at the location of the current entity */
+    TEntity * e 
+      = new TPowerUp(static_cast<int>(current_script_entity->x()), 
+		     static_cast<int>(current_script_entity->y()), 
+		     arg1, arg2);
+    e->setName("powerup");
+    EntitiesToAddToMapState.push_back(e);
+    return true;
+  } /* "powerup" */ 
+
+  /* **********************************************************************
+   * Spawning a ball.
+   * *********************************************************************/
+  else if ("spawn-ball" == action) {
     // LogLine(LOG_VERBOSE, "in spawnball");
     /* Add a ball, based on the location of the current entity */
     if (current_script_entity) {
@@ -381,22 +404,30 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
       return false;
     }
   } /* "spawn-ball" */ 
-  else if ("powerup" == action) {
-    // LogLine(LOG_VERBOSE, "powerup added");
-    if (!current_script_entity) {
-      LogLine(LOG_WARNING, "no current_script_entity");
-      return false;
-    }
-    /* Add a powerup at the location of the current entity */
-    TEntity * e 
-      = new TPowerUp(static_cast<int>(current_script_entity->x()), 
-		     static_cast<int>(current_script_entity->y()), 
-		     arg1, arg2);
-    e->setName("powerup");
-    EntitiesToAddToMapState.push_back(e);
+
+  /* **********************************************************************
+   * add-life action
+   * *********************************************************************/
+  else if ("add-life" == action) {
+    /* No arguments - arg1 and arg2 are ignored. */
+    LogLine(LOG_TODO, "Implement add-life");
     return true;
-  } /* "powerup" */
+  } /* "add-life" */
+  
+  /* **********************************************************************
+   * enable-shot
+   * *********************************************************************/
+  else if ("enable-shot" == action) {
+    /* arg1 == pixmap, arg2 == type */
+    LogLine(LOG_TODO, "Implement enable-shot");
+    return true;
+  }
+
+  /* **********************************************************************
+   * Not handled, falling through to here
+   * *********************************************************************/
   else {
+    LogLineExt(LOG_ERROR, ("Unhandled action : %s", action.c_str()))
     return false;
   }
 }
