@@ -19,4 +19,4 @@ AddStatic(10, 0, 620, 10)
 AddStatic(0, 400, 640, 100)
 
 # Add a paddle
-SetPaddle(300, 300, "graphics/objects/weird_brick.png")
+SetPaddle(300, 300, "graphics/objects/basic_paddle.png")
