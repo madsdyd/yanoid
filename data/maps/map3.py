@@ -22,10 +22,10 @@ for x in range(-3, 4):
                  "graphics/objects/weird_brick.png")
             
 # Add the walls
-AddEntity("static", 0, 0, 10, 550, "static_hit()")
-AddEntity("static", 790, 0, 10, 550, "static_hit()")
-AddEntity("static", 10, 0, 780, 10, "static_hit()")
-AddEntity("hole", 0, 550, 800, 50, "static_hit()")
+AddEntity("static", -10, -10, 11, 620, "static_hit()")
+AddEntity("static", 799, -10, 10, 620, "static_hit()")
+AddEntity("static", 1, -10, 798, 11, "static_hit()")
+AddEntity("hole", 1, 550, 798, 50, "static_hit()")
 
 # Add a paddle
 SetPaddle(400, 500, "graphics/objects/basic_paddle.png")
