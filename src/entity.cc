@@ -121,8 +121,8 @@ void TEntity::Update(Uint32 deltatime)
 void TEntity::Render(SDL_Surface * surface) {
   SDL_Rect dest;
 
-  if (!changed)
-    return;
+  //  if (!changed)
+  //    return;
 
   dest.x = static_cast<int>(x()); 
   dest.y = static_cast<int>(y());

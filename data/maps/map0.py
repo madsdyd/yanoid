@@ -1,5 +1,5 @@
 # Python file that defines a _very_ simple map
-SetMapName("debug 0 - by JCD")
+SetMapName("Tunnel to heaven - by JCD")
 
 # Add a number of bricks
 for y in range(90,250,20):
