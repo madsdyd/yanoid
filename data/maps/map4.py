@@ -50,7 +50,7 @@ for x in range (401, 750, 79):
 
 
 # Add a paddle
-SetPaddle(188, 450, "graphics/paddles/square_75.png")
+SetPaddle(188, 530, "graphics/paddles/square_75.png")
 
 # define a round start function
 def RoundStart():

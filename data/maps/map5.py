@@ -31,7 +31,7 @@ for xc in range(0, 10, 1):
 StandardPlayField()
 
 # Add a paddle
-SetPaddle(366, 500, "graphics/paddles/square2_75.png")
+SetPaddle(366, 530, "graphics/paddles/square2_75.png")
 
 # define a round start function
 def RoundStart():

@@ -45,6 +45,7 @@ protected:
   char name[4];
   Score curscore;
   SDL_Surface * background;
+  Uint32 start_time;
 public:
   THighscore(int x_, int y_);
   virtual ~THighscore();

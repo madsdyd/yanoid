@@ -30,7 +30,7 @@ for x in range(6, 750, 79):
 StandardPlayField()
 
 # Add a paddle
-SetPaddle(366, 450, "graphics/paddles/square2_75.png")
+SetPaddle(366, 530, "graphics/paddles/square2_75.png")
 
 # define a round start function
 def RoundStart():

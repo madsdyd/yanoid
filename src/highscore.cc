@@ -27,7 +27,6 @@
 #include "fontmanager.hh"
 #include "ConsoleSource/DT_drawtext.h"
 #include "screen.hh"
-#include <sstream>
 #include <iomanip.h>
 
 /* **********************************************************************
@@ -47,7 +46,7 @@ THighscore::THighscore(int x_, int y_):
   LogLine(LOG_TODO, "Clean up THighscore contructor");
   Score s = 42;
   for (int i = 0 ; i < 10 ; ++i) {
-    Rankings.push_back(make_pair(string("Julemanden"),s--)); 
+    Rankings.push_back(make_pair(string("yaNOID"),s--)); 
   }
   // load font transparent 1, or solid 0
   fontHandle 
@@ -85,24 +84,29 @@ void THighscore::Update(Uint32 currenttime) {
  * *********************************************************************/
 bool THighscore::Run() {
   close = false;
+  start_time = SDL_GetTicks();
 
   LogLine(LOG_VERBOSE, "Capturing the screen");
   /* Copy the screen - make it a background */
-  background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
-				    Screen->format->BitsPerPixel,
-				    Screen->format->Rmask,
-				    Screen->format->Gmask,
-				    Screen->format->Bmask,
-				    Screen->format->Amask);
-  if (background == NULL) {
-    LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
-  } else {
-    SDL_Rect d;
-    d.x = 0; d.y = 0; 
-    d.w = background->w;
-    d.h = background->h;
-    SDL_BlitSurface(Screen, &d, background, &d);
-    SDL_SetAlpha(background, SDL_SRCALPHA, 64);
+  if (DisplayMode == INPUT) {
+    background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
+				      Screen->format->BitsPerPixel,
+				      Screen->format->Rmask,
+				      Screen->format->Gmask,
+				      Screen->format->Bmask,
+				      Screen->format->Amask);
+    if (background == NULL) {
+      LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
+    } else {
+      SDL_Rect d;
+      d.x = 0; d.y = 0; 
+      d.w = background->w;
+      d.h = background->h;
+      SDL_BlitSurface(Screen, &d, background, &d);
+      SDL_SetAlpha(background, SDL_SRCALPHA, 64);
+    }
+  }else if (DisplayMode == HIGHSCORE) {
+    SDL_FillRect(Screen, 0, SDL_MapRGB(Screen->format, 0, 0, 0));
   }
 
   /* While until the menu is done */
@@ -138,16 +142,20 @@ void THighscore::RenderSplash() {
  * RenderBackground - renders the background
  * *********************************************************************/
 void THighscore::RenderBackground() {
-  if (background) {
-    SDL_FillRect(Screen, NULL, 
-		 SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
-    SDL_Rect d;
-    d.x = 0; d.y = 0; 
-    d.w = background->w;
-    d.h = background->h;
-    SDL_BlitSurface(background, &d, Screen, &d);
-  } else {
-    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  if (DisplayMode == INPUT) {
+    if (background) {
+      SDL_FillRect(Screen, NULL, 
+		   SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
+      SDL_Rect d;
+      d.x = 0; d.y = 0; 
+      d.w = background->w;
+      d.h = background->h;
+      SDL_BlitSurface(background, &d, Screen, &d);
+    } else {
+      SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+    }
+  }else if (DisplayMode == HIGHSCORE) {
+    SDL_FillRect(Screen, 0, SDL_MapRGB(Screen->format, 0, 0, 0));
   }
 }
 
@@ -190,6 +198,14 @@ bool THighscore::HandleEvent(SDL_Event * event) {
       break;
     case SDLK_SPACE:
     case SDLK_RETURN: {
+      if (DisplayMode == HIGHSCORE) {
+	      close = true;
+	      name[0] = '_';
+	      name[1] = '_';
+	      name[2] = '_';
+	      curchar = 0;
+	      return false;
+      }
       if (cursorpos_y == 2) {
 	if (cursorpos_x == 6 || cursorpos_x == 7) {
 	  name[curchar] = '_';
@@ -249,12 +265,31 @@ void THighscore::Render(SDL_Surface * surface)
     for(std::list<pair<std::string, Score> >::const_iterator i = 
 	  Rankings.begin(); 
 	i != Rankings.end() && count < NumRankings; ++i, ++count ) {
-      std::ostringstream RankLine;
-      RankLine << setw(20) << setiosflags(ios::left) << i->first 
-	       << setw(10) << setiosflags(ios::right) << i->second;
-      DT_DrawText(RankLine.str().c_str(), surface, *fontHandle, drawx, drawy);
+      /*
+      std::string Rankline;
+      Rankline = i->first;
+      for(int j = (8 - i->first.size()) ; j > 0 ; --j) {
+	Rankline += ' ';
+      }
+
+      for(int j = 12 - a ; j < 12 ; ++j) {
+	Rankline += ' ';
+      }
+      */
+      char score[50];
+      score[29] = 0x00;
+      sprintf(score,"%-8s %12i",i->first.c_str(),i->second);
+      //      Rankline += score;
+      DT_DrawText(score, surface, *fontHandle, drawx, drawy);
       drawy += 20;
     }
+    string tmp = ">>> Return <<<";
+    /* Toogle x times pr second */
+    int offset = ((SDL_GetTicks() - start_time) / 225) % 3;
+    tmp[offset] = 0x1F;
+    tmp[tmp.size()-1-offset] = 0x1E;
+    DT_DrawText(tmp.c_str(), surface, *fontHandle, 
+		400-7 * DT_FontWidth(*fontHandle), 450);
   }
   break;
   case INPUT: {

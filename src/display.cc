@@ -62,7 +62,7 @@ void TDisplay::Render(SDL_Surface * surface) {
 
   // Draw lives
   sprintf(framerate, "Lives %i", GameState->lives);
-  //  DT_DrawText(framerate, surface, 1, 400-7*10, drawy);
+  DT_DrawText(framerate, surface, 1, 400-7*10, drawy);
 
   // Draw time
   int minutes = GameState->gametime/60000;
