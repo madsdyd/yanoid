@@ -48,13 +48,6 @@ void TDisplay::Render(SDL_Surface * surface) {
   }
 
   
-  // Draw highscore if necessary
-  Highscore->Render(surface);
-
-  if (ConsoleDown) {
-    CON_DrawConsole();
-  }
-
   /* **********************************************************************
    * Draw the HUD...
    * *********************************************************************/
@@ -91,8 +84,15 @@ void TDisplay::Render(SDL_Surface * surface) {
     DT_DrawText(framerate, surface, 1, 1, surface->h-40);
   }
 
+  /* **********************************************************************
+   * Draw highscore
+   * *********************************************************************/
+  Highscore->Render(surface);
 
-
-
-
+  /* **********************************************************************
+   * Draw Console on top of everything else
+   * *********************************************************************/
+  if (ConsoleDown) {
+    CON_DrawConsole();
+  }
 }

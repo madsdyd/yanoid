@@ -19,7 +19,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include <unistd.h>
 #include "menu.hh"
 #include "screen.hh"
 #include "client.hh"
@@ -88,7 +87,7 @@ bool TMenu::Run() {
       HandleEvent(&event);
     }
     /* Let the system be a little idle, sleep for 10 ms */
-    usleep(10000);
+    SDL_Delay(10);
   }
   /* If cancelled, return false, if not, return true */
   return !cancel;
