@@ -33,12 +33,22 @@
 #define LogLine(a, b)
 #define LogLineExt(a, b)
 #endif
-#ifdef WIN32
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
+#include <windows.h>
+
+#ifndef _POSIX_PATH_MAX
+#  define _POSIX_PATH_MAX MAX_PATH
+#endif
+
+#define WINPATHFUNCS
+#define WINPATHMAPPINGS
+#endif
+
+#ifdef WINPATHFUNCS
 #include <stdio.h>
 #include <errno.h>
-#include <windows.h>
 #include <stdlib.h>
-#  define _POSIX_PATH_MAX MAX_PATH
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -126,7 +136,7 @@ void TPathManager::AddMapping(string name, string absolute) {
   if (PathCompleter) {
     PathCompleter->Insert(name);
   }
-#ifdef WIN32
+#ifdef WINPATHMAPPINGS
   int i = 0;
   int replace = 0;
   while(i != -1)
