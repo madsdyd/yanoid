@@ -3,3 +3,22 @@ This is the readme file for yanoid - Yet Another Arkanoid.
 Currently the sole purpose of this file is to be part of the CVS archive.
 
 Mads Bondo Dydensborg, 20010922.
+
+Notes for the SDL contest.
+
+Prior to configuring and installing yanoid, please make sure that you have
+a dyncamic version of the Python library.
+
+If you do not, the archive "dyn-python-lib.<date>.tgz" contains a minor
+project that will create and install such a beast, from a static version
+of the python libs.
+
+Then, configure yanoid, with at least the following options:
+./configure --disable-debug --enable-optimize-size
+and, make and install:
+make install-strip
+
+This will ensure that yanoid is installed in its minimal form, fulfilling
+the 1 MB requirement of the contest. 
+
+Thanks.
