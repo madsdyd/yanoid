@@ -258,7 +258,7 @@ bool TMap::AddEntity(string type, int x, int y, int w, int h,
 				    TEntity::PIXEL, TEntity::MOVING);
     // TODO, error handling.. 
     e->setMotion(new TFreeMotion);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(45);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(0);
     dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.08);
     e->setName("Default Ball");
     MapState->Entities.push_back(e);

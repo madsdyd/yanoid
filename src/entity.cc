@@ -29,6 +29,7 @@
  * *********************************************************************/
 TEntity::TEntity(int x_, int y_, Angle a, CollisionType c, EntityType e):
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
+  remainder_x(0), remainder_y(0), 
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0)
 {
 
@@ -37,6 +38,7 @@ TEntity::TEntity(int x_, int y_, Angle a, CollisionType c, EntityType e):
 TEntity::TEntity(int x_, int y_, int w_, int h_, 
 		 Angle a, CollisionType c, EntityType e):
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
+  remainder_x(0), remainder_y(0), 
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0)
 {
 
@@ -44,6 +46,7 @@ TEntity::TEntity(int x_, int y_, int w_, int h_,
 
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
+  remainder_x(0), remainder_y(0), 
   collision_type(c), entity_type(e), motion(0), mask(0) {
 
 }

@@ -96,6 +96,8 @@ void TGame::handleCollisions()
     }
     // LogLine(LOG_VER_2, "Checking " + (*i1)->getName());
     int maxy = (*i1)->y() + (*i1)->h();
+    /*cout << "max y " << maxy << ", y() " << (*i1)->y() 
+      << ", h() " << (*i1)->h() << endl; */
     TEntity::CollisionType i1coll = (*i1)->getCollisionType();
     // TEntitiesIterator i2 = i1;
     // i2++;
@@ -108,16 +110,18 @@ void TGame::handleCollisions()
       // bigger than maxy. If so we know that the rest
       // of the objects in the list must be located at a
       // too high y to bee colliding and we can skip the tests
-      if (maxy < (*i2)->y())
+      if (maxy < (*i2)->y()) {
+	// LogLine(LOG_VER_2, "Checking " + (*i1)->getName() + " is beyond maxy");
 	break;
+      }
       
       /* If there are no collision between the current two entities, 
 	 continue */
       if (! (*i1)->boundingBoxCollision(*(*i2)))
 	continue;
       
-      /*LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
-	" and " + (*i2)->getName());*/
+      /* LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
+	 " and " + (*i2)->getName()); */
       // this section is for debugging only
       {
 
