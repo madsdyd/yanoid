@@ -1,3 +1,12 @@
+2002-04-04 Samuel Listopad II <samlii@listopad>
+
+	* Bugfixes
+	Fixed the paddle collisions in the CUT sequence.	
+	Fixed the texteffects not staying on screen when
+	  it went into post hold time.
+	Fixed next ball starting too quickly after losing
+	  it.
+	
 2002-03-9  Jonas Christian Drewsen  <drewsen@mmm>
 
 	* Bugfixes
