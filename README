@@ -1,11 +1,24 @@
-This is the readme file for yanoid - Yet Another Arkanoid.
-The projects homepage is at http://www.sf.net/projects/yanoid/ 
+This is the readme file for yanoid - Yet Another arkaNOID.
+The projects home page is at http://www.sf.net/projects/yanoid/ 
+
+----------------------------------------------------------------------
+* CONTENTS
+
+- Notes for the SDL contest
+- License
+- Requirements
+- Building Yanoid
+- Running Yanoid
+- Controls
+- Adding your own maps and ressources
+- Bug
+- Final notes
 
 ----------------------------------------------------------------------
 * NOTES FOR THE SDL CONTEST
 
 Prior to configuring and installing yanoid, please make sure that you
-have a dyncamic version of the Python library.
+have a dynamic version of the Python library.
 
 If you do not, the archive "dyn-python-lib.<date>.tgz" contains a
 minor project that will create and install such a beast, from a static
@@ -22,7 +35,7 @@ the 1 MB size requirement of the contest.
 Thanks.
 
 (Yanoid will work with a standard static version of the Python
-library, but the yanoid binary will be approximatly 800 KB larger.)
+library, but the yanoid binary will be approximately 800 KB larger.)
 
 * Required information
 
@@ -90,9 +103,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 * REQUIREMENTS
 
 Yanoid has only been tested under Linux, but should build on any
-platform that supports the neccesary tools and libs. 
+platform that supports the necessary tools and libs. 
 
-Yanoid uses the gnu autotools to (try to) autoconfigure it self, and
+Yanoid uses the gnu autotools to (try to) auto configure it self, and
 automate the build and install procedure. Ideally the process should
 automatically identify any missing software, and inform about what is
 needed to do to be able to build yanoid. However, this procedure has
@@ -124,10 +137,9 @@ SDL >= 1.2.2, SDL_mixer >= 1.1, SDL_image >= 1.1,
 python<version > 2.0>, artsc, esd, audiofile, 
 vorbis, smpeg, jpeg, png, z, ogg & tiff.
 
-IMPORTANT NOTE: yanoid has failed to work with Python 2.2b1! Apparently
-the import mechanisms in python are different from 2.x in such a way
-that everything breaks. If you get python errors in the console, please
-try and use Python version 2.1.1 which should work.
+IMPORTANT NOTE: yanoid has failed to work with Python 2.2b1 on at least
+on occasion! If you get python errors in the terminal you started 
+yanoid in, please try and use Python version 2.1.1 which should work.
 
 SDL, SDL_mixer & SDL_image is in fact part of many distributions and
 if you have a "correct" installation of the SDL, SDL_mixer and
@@ -147,7 +159,7 @@ should be quite straightforward.
 
 If you have checked out the sources from cvs, you should run the shell 
 script "bootstrap", which will create the script "configure" for you.
-For reasons not understood, it may be neccesary to run this script
+For reasons not understood, it may be necessary to run this script
 twice to get the necessary files created.
 
 * Configuration
@@ -167,7 +179,7 @@ libraries when run, and will let you know what is missing.
 
 * Compiling
 
-After a succesfull configuration step, you can compile yanoid like
+After a successful configuration step, you can compile yanoid like
 this:
 
 $make
@@ -214,7 +226,7 @@ $/path/to/yanoid
 to run yanoid.
 
 ----------------------------------------------------------------------
-* CONTROLS DURING GAME
+* CONTROLS
 
 * Menus
 
@@ -224,25 +236,94 @@ space to select an item.
 * Play
 
 During play, use the arrow keys (left and right) to move the
-paddle. Press the escape key to display the in game menu.
+paddle. If you have shots, use the space key to fire.
+
+Press the escape key to display the in game menu.
 
 * Special keys
 
-During play, you can press F3 to display the console and F11 to toogle
-fullscreen mode. Please note, that to run in fullscreen, you should
+During play, you can press F3 to display the console and F11 to toggle
+full screen mode. Please note, that to run in full screen, you should
 have a 800x600 resolution defined for your X server.
+
+----------------------------------------------------------------------
+* ADDING YOUR OWN MAPS
+
+Adding your own maps and ressources is quite easy. When you configure
+yanoid (before compiling), you can provide a directory to put the
+yanoid data tree into. Default is /usr/local/share/games/yanoid. 
+Yanoid looks for its data in here, but before that, it looks for a 
+directory called "data" in the directory where it is run from.
+Any data in here overrides data in the installed data tree.
+
+So, if you want to experiment with the layout for the first map - 
+which is called map1.py - you can issues the following commands
+
+mkdir data
+mkdir data/maps
+cp /usr/local/share/games/yanoid/maps/map1.py data/maps/map1.py
+
+You can now edit the file data/maps/map1.py with your favorite
+text editor.
+
+All maps in yanoid is defined as a python script. Have a look at the
+different maps to get a feel for how you can construct them.  Here is
+a quick overview. All maps contains of a number of objects, called
+entities in yanoid. The most fundamental ones are "bricks", "statics"
+and the "paddle". How these are constructed, use graphics and trigger
+functions when hit, should be quite clear from the current maps.
+
+Every map also need a "RoundStart" function, most likely one that will
+add a ball.  To interface with the yanoid engine, you will use most of
+the functions defined in the scripts in
+/usr/local/share/games/yanoid/scripts/ . Look in the file
+map_interface.py for functions that are related to map creation
+(Adding bricks, etc), game_interface.py for stuff that is related to
+the current game (AdjustScore, etc), and in client_interface.py for
+stuff like playing sounds.
+
+When you want to check out your changes, you can start yanoid, and it
+will automatically use your edited map when you start a game. If you
+want to make adjustments, you can hit escape to show the in game menu
+(this will let yanoid use fewer CPU cycles), then change to your
+editor, edit the map, return to yanoid, display the console (use the
+menu, or hit F3 in game), and issue the command "loadmap maps/map1.py"
+to load the map).
+
+You can also reload all the scripts and data files, by typing "i
+yanoid.yreload()" in the console. This can be very handy, when you
+want to change the behavior of bricks, etc.
+
+You probably want to run yanoid with DEBUG support (default) to 
+debug your maps. Look for Python errors in the terminal you started
+yanoid in. Remember that spelling errors (e.g. defining a RoundStar()
+function instead of a RoundStart() function) often will mean that 
+a previously defined function/value will be used instead of the one
+you intended.
+
+Currently the exported functionality from the yanoid engine has not
+stabilized enough or matured enough to describe it further. Although
+you can make quite interesting maps with the current model, these
+possibilities have only been superficially explored in the current
+collection of maps for yanoid.
+
+Defining new and interesting behavior for powerups, etc, are limited
+currently, and will require you to hack the C++ sources of yanoid.
+
+We invite you to submit your maps, graphics, sounds and music to us, 
+for future inclusion in yanoid.
 
 ----------------------------------------------------------------------
 * BUGS
 
-Why, of course. Look at the TODO file for _some_ of the known ones.
+Why, of course. Look at the TODO file for _some_ of the _known_ ones.
 
 Please report bugs and/or send patches to
 yanoid-devel@@lists.sourceforge.net - it will make you fell all warm
 and fuzzy inside....
 
 ----------------------------------------------------------------------
-* Final notes
+* FINAL NOTES
 
 You read this far? Amazing....
 

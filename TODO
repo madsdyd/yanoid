@@ -80,6 +80,8 @@ SDL application that uses SDL_mixer.
 	Level complete
 	Game over 
 
+* Pause game on minimize (sleep to reduce CPU usage as well)
+
 **********************************************************************
 ** IN YOUR DREAMS (stuff that we will NOT have time for)
 
