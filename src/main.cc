@@ -108,6 +108,26 @@ void AlphaChange(char *alpha)
   }
 }
 
+/* Toogle cheating */
+void Help(char * arg) {
+
+  CON_ConOut("--------------------------------------------------------");
+  CON_ConOut("Available commands:");
+  CON_ConOut("");
+  CON_ConOut("help               :  show help");
+  CON_ConOut("highscore [show]   :  show/hide(no arg) highscore");
+  CON_ConOut("loadmap <map path> :  load the map");
+  CON_ConOut("                      ex. loadmap maps/map1.py");
+  CON_ConOut("i <python command> :  run a python command");
+  CON_ConOut("alpha <value>      :  set the alpha value of the console");
+  CON_ConOut("printme <string>   :  print a string to console");
+#ifdef DEBUG
+  CON_ConOut("togglecheat        :  ball can not be lost");
+  CON_ConOut("duplogtoconsole    :  print all log to console");
+#endif
+  CON_ConOut("--------------------------------------------------------");
+}
+
 #ifdef DEBUG
 /* Toogle cheating */
 void ToggleCheat(char * arg) {
@@ -318,6 +338,8 @@ int main(int argc, char ** argv) {
 	 "Unable to initialize console");
   
   /* Add some commands to the console */
+  CON_AddCommand(&Help,      "help");
+  CON_AddCommand(&Help,      "?");
   CON_AddCommand(&AlphaChange,      "alpha");
 #ifdef DEBUG
   CON_AddCommand(&DupLogToConsole,  "duplogtoconsole");

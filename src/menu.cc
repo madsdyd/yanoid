@@ -157,13 +157,13 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
   TItemsIterator End = items.end();
   for (TItemsIterator i = items.begin(); i != End; i++) {
     tmp = *i;
-    /* Mark the focused one */
+     /* Mark the focused one */
     if (count == focused) {
       tmp = ">>> " + tmp + " <<<";
       /* Toogle x times pr second */
       int offset = ((SDL_GetTicks() - start_time) / 225) % 3;
-      tmp[offset] = '|';
-      tmp[tmp.size()-1-offset] = '|';
+      tmp[offset] = 0x1F;
+      tmp[tmp.size()-1-offset] = 0x1E;
     }
     drawx = (w - tmp.size()*16) / 2 + xlow;
     DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
