@@ -1,3 +1,10 @@
+2001-09-28  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* Interprenter
+	Added first shot at Pythin support. The autotools are probably
+	flaky like hell. But, it sort of works, unless you tie uo the
+	interprenter for too long, in which case yanoid crashes horribly.
+
 2001-09-27  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* Various
