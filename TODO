@@ -38,6 +38,8 @@ Stuff that seems to be fixed:
 - Remove point for highscore "menu"? (JCD)
 - Should shots and powerups die, when the player dies?(MBD)
 - There are no background in menus (see above)... (MBD)
+- powerup display in bottom of screen?
+- bonus for time completed early?
 
 * Sounds (BS)
 - Menu sounds 
