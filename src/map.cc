@@ -48,7 +48,7 @@ static PyObject * AddObject(PyObject * self, PyObject * args) {
     return NULL;
   }
   if (CurrentMap->AddEntity(type, x, y, w, h, pixmap)) {
-    return Py_None;
+    return Py_BuildValue("");
   } else {
     return NULL;
   }
@@ -69,7 +69,7 @@ static PyObject * SetPaddle(PyObject * self, PyObject * args) {
     return NULL;
   }
   if (CurrentMap->SetPaddle(x, y, pathtype, velocity, angle, pixmap)) {
-    return Py_None;
+    return Py_BuildValue("");
   } else {
     return NULL;
   }

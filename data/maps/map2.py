@@ -2,7 +2,7 @@
 
 # Add a number of bricks
 for x in range(60, 540, 50):
-    for y in range(30, 120, 34):
+    for y in range(30, 120, 18):
         if (y <= 30):
             AddBrick(x, y, "graphics/objects/weird_brick.png")
         elif (y <= 60):

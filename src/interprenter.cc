@@ -40,7 +40,7 @@ static PyObject * put_console(PyObject * self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "s", &command))
     return NULL;
   PrintMe(command);
-  return Py_None;
+  return Py_BuildValue("");
 };
 
 static PyObject * reload(PyObject * self, PyObject *args) {
@@ -50,7 +50,7 @@ static PyObject * reload(PyObject * self, PyObject *args) {
   PyRun_SimpleFile(tmpf, tmp);
   free(tmp);
   PyRun_SimpleString("help()");
-  return Py_None;
+  return Py_BuildValue("");
 };
 
 static PyMethodDef yanoid_methods[] = {

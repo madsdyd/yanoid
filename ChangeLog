@@ -1,5 +1,10 @@
 2001-10-07  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
+	* Python
+	Fixed problem with crashing python.
+
+2001-10-07  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
 	* Map loading
 	Map loading now includes static objects and the paddle.
 
