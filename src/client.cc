@@ -349,13 +349,16 @@ void TClient::Run() {
 	tfx->start();
 	effects.push_back(tfx);
 	Uint32 _last_update = SDL_GetTicks();
+	PauseGame();
 	while(!tfx->isStopped()) {
 	  Uint32 tmp = SDL_GetTicks();
 	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
+	  Game->handleCollisions(tmp - _last_update);
 	  Render();
 	  HandleEvents();
 	  _last_update = tmp;
-	}
+	} 
+	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
 	  LogLine(LOG_ERROR, "Error running interprenter -RoundStart()-");
@@ -540,7 +543,11 @@ bool TClient::HandleGlobalKeys(SDL_Event * event) {
       SDL_SaveBMP(Screen, "screenshot.bmp");
       SDL_UnlockSurface(Screen);
       return true;
+    default:
+      break;
     }
+  default:
+    break;
   }
   /* Falling true - unhandled */
   return false;
@@ -611,7 +618,8 @@ void TClient::HandleEvents() {
 	  Game->GetState()->MapState->MovingEntities.push_back(shot);
 	  Game->GetState()->current_shot_time_left = 
 	    Game->GetState()->time_between_shots;
-	} 
+	}
+	default: 
 	break;}
       }
       break;
@@ -640,6 +648,8 @@ void TClient::HandleEvents() {
       case SDLK_DOWN:
 	if (!paddle) break;
 	//	  paddle->getMotion()->setVelocity( 0.0 );
+	break;
+      default:
 	break;
       }
     default:

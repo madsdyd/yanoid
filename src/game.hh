@@ -74,7 +74,6 @@ protected:
   std::vector<std::string> map_names;
   TGameState GameState;
   static bool ModuleAdded;
-  void handleCollisions(Uint32 currenttime);
 public:
   TGame();
   ~TGame();
@@ -87,5 +86,6 @@ public:
   /* Safely load another map */
   bool LoadNextMap();
   bool LoadMap(string mapname);
+  void handleCollisions(Uint32 currenttime);
 };
 
