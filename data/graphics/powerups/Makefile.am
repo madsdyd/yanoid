@@ -9,7 +9,9 @@ pkgdata_DATA = blue_1UP.png green_s.png purple_ss.png \
 		lightblue_100.png \
 		lightblue_500.png \
 		lightblue_1000.png \
-		yellow_steallife.png
+		yellow_steallife.png \
+		grayblue_slowball.png \
+		grayblue_speedball.png 
 
 
 EXTRA_DIST = $(pkgdata_DATA)
