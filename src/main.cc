@@ -327,15 +327,37 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
   Splash = SurfaceManager->RequireRessource("graphics/yanoid.png");
   Assert(NULL != Splash, "Error getting SDL_Surface for splash screen");
-  SDL_Rect src, dest;
+  SDL_Rect src, dest, erasedest;
   src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
-  dest.x = (Screen->w-src.w)/2; dest.y = (Screen->h-src.h)/2;
-  dest.w = src.w; dest.h = src.h;
-  SDL_BlitSurface(Splash, &src, Screen, &dest);
-  SDL_UpdateRect(Screen, 0, 0, 0, 0);
+
+  // scroll down splash
+  for(int i=0 ; i < (Screen->h-src.h)/32; i++) {
+    dest.y = (i*32)/2; 
+    dest.x = (Screen->w-src.w)/2;
+    dest.w = src.w; dest.h = src.h;
+    erasedest = dest;
+    erasedest.y = ((i-1)*32)/2;
+    SDL_FillRect(Screen, &erasedest, 0x00000000);
+    SDL_BlitSurface(Splash, &src, Screen, &dest);
+    //    SDL_UpdateRect(Screen, 0, 0, 0, 0);
+    SDL_Flip(Screen);
+  }
 
   /* Let the impression sink in... ;-) */
   SDL_Delay(2000);
+
+  // scroll up splash to make room for menu
+  int endi = dest.y - 100;
+  for(int i=0 ; i < endi/8; i++) {
+    erasedest = dest;
+    dest.y -= 8; 
+    dest.x = (Screen->w-src.w)/2;
+    dest.w = src.w; dest.h = src.h;
+    SDL_FillRect(Screen, &erasedest, 0x00000000);
+    SDL_BlitSurface(Splash, &src, Screen, &dest);
+    //    SDL_UpdateRect(Screen, 0, 0, 0, 0);
+    SDL_Flip(Screen);
+  }
 
 
 #ifndef NO_MUSIC_THREAD
