@@ -124,6 +124,18 @@ public:
 };
 
 /* **********************************************************************
+ * A TBall is a ball bouncing around in the game area
+ * *********************************************************************/
+
+class TBall : public TPixmapEntity {
+public:
+  TBall(int x_, int y_, double vel ,
+	const std::string& pixmap_path, const string& hitfunction);
+  virtual ~TBall() {};
+  virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
+};
+
+/* **********************************************************************
  * A powerup is an entity that is spawned from the middle of another 
  * entity, and falls down, off the screen
  * If it collides with a paddle, some action is performed. If

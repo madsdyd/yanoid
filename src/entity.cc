@@ -430,3 +430,11 @@ void TEntity::ExecuteScriptHitCall() {
   }
   current_script_entity = NULL;
 }
+
+string TEntity::toString() const
+{
+  char buf[100];
+  sprintf(buf,"at x = %f, y = %f, w = %i ,h = %i",x(),y(),w(),h()); 
+  string descr = getName() + " " + buf;
+  return descr;
+}

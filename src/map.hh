@@ -34,13 +34,12 @@ public:
 		    and a ball is added if there is lives left */
   int num_bricks; /* Number of bricks in play. When zero, the map has
 		     been completed */
-  double ballspeed; /* The speed of all balls in map */
-  double ballbirth;
-  double ballacceleration;
+  double ballspeed;
   string mapname;
   TMapState();
   ~TMapState();
-  TEntities Entities;
+  TEntities StationaryEntities;
+  TEntities MovingEntities;
   TEntity * GetPaddle();
   void load(const std::string& path);
 };
@@ -52,8 +51,7 @@ class TMap {
 protected:
   TMapState * MapState;
   TEntities EntitiesToAddToMapState;
-  bool relocateHighEntities(TEntitiesIterator& i);
-  bool relocateLowEntities(TEntitiesIterator& i);
+  void sortEntities(TEntities&);
   /* Keep track of wheter or not the modules have been loaded */
   static bool ModuleAdded;
   /* Clear the mapstate */

@@ -305,3 +305,25 @@ void TPaddle::GoWide(int seconds) {
   if (x() < minx) { setX(minx); };
   /* Note, this may not work, but its the best I can do currently */
 }
+
+/* **********************************************************************
+ * Ball
+ * *********************************************************************/
+/* **********************************************************************
+ * Constructor, very similar to TBrick
+ * *********************************************************************/
+TBall::TBall(int x, int y, double vel,
+	     const string& pixmap, const string& hitfunction)
+  : TPixmapEntity(x, y, 0, pixmap, "BALL", MOVING, PIXEL) {
+  SetScriptHitCall(hitfunction);
+  setMotion(new TFreeMotion);
+  dynamic_cast<TFreeMotion*>(getMotion())->setDir(1 * M_PI / 3);
+  dynamic_cast<TFreeMotion*>(getMotion())->setVelocity(vel);
+}
+  
+/* **********************************************************************
+ * Collision - Currently just call parent function
+ * *********************************************************************/
+void TBall::OnCollision(TEntity& other, Uint32 currenttime=0) {
+  TPixmapEntity::OnCollision(other,currenttime);
+}

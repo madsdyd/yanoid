@@ -28,6 +28,7 @@
 #include "globals.hh"
 #include "motion.hh"
 #include "interprenter.hh"
+#include <algorithm>
 
 /* **********************************************************************
  * Testing: A temporary TMap variable to use with some static functions
@@ -130,16 +131,21 @@ static PyMethodDef map_methods[] = {
  * TMapState constructor
  * *********************************************************************/
 TMapState::TMapState() : paddle(NULL), num_balls(0), num_bricks(0),
-ballspeed(0.19), ballbirth(0), ballacceleration(0.000003) {
+			 ballspeed(0.19)
+{
 
 }
 /* **********************************************************************
  * TMapState destructor
  * *********************************************************************/
 TMapState::~TMapState() {
-  TEntitiesIterator End = Entities.end();
+  TEntitiesIterator End = StationaryEntities.end();
   TEntitiesIterator i;
-  for (i = Entities.begin(); i != End; i++) {
+  for (i = StationaryEntities.begin(); i != End; i++) {
+    delete(*i);
+  }  
+  End = MovingEntities.end();
+  for (i = MovingEntities.begin(); i != End; i++) {
     delete(*i);
   }  
 }
@@ -249,32 +255,37 @@ bool TMap::AddEntity(string type, string hitfunction,
   /* Do different things, according to type */
   if ("brick" == type ) {
     /* This is a pixmapentity */
-    MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction));
+    MapState->StationaryEntities.push_back(new TBrick(x, y, pixmap, hitfunction));
     MapState->num_bricks++;
+    sortEntities(MapState->StationaryEntities);
     return true;
   } else if ("brick-stay-3" == type ) {
     /* This is a pixmapentity */
-    MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction, 3));
+    MapState->StationaryEntities.push_back(new TBrick(x, y, pixmap, hitfunction, 3));
     MapState->num_bricks++;
+    sortEntities(MapState->StationaryEntities);
     return true;
   } else if ("brick-stay" == type ) {
     /* This is a pixmapentity */
-    MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction, -1));
+    MapState->StationaryEntities.push_back(new TBrick(x, y, pixmap, hitfunction, -1));
     // Obviously, do not increase the number of bricks, if the brick
     // can not be removed... *douh*
     // MapState->num_bricks++;
+    sortEntities(MapState->StationaryEntities);
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */
     TEntity * e = new TEntity(x, y, w, h, 0, "STATIC");
     e->SetScriptHitCall(hitfunction);
-    MapState->Entities.push_back(e);
+    MapState->StationaryEntities.push_back(e);
+    sortEntities(MapState->StationaryEntities);
     return true;
   } else if ("brick-delay" == type) {
     /* Add a brick that automatically disappears after a while 
        w is used as the time to stay in millisecs */
     TEntity * e = new TDelayBrick(x, y, hitfunction, w);
-    MapState->Entities.push_back(e);
+    MapState->MovingEntities.push_back(e);
+    sortEntities(MapState->MovingEntities);
     /* And, this counts towards the bricks. */
     MapState->num_bricks++;
     return true;
@@ -282,7 +293,8 @@ bool TMap::AddEntity(string type, string hitfunction,
     TEntity * e = new THole(x, y, w, h);
     // TEntity * e = new TEntity(x, y, w, h);
     e->SetScriptHitCall(hitfunction);
-    MapState->Entities.push_back(e);
+    MapState->StationaryEntities.push_back(e);
+    sortEntities(MapState->StationaryEntities);
     // LogLine(LOG_VERBOSE, "hole created");
     return true;
   } else if ("default-ball" == type) {
@@ -297,24 +309,23 @@ bool TMap::AddEntity(string type, string hitfunction,
 				    MapState->paddle->y() - 16,
 				    0, pixmap, TEntity::PIXEL, 
 				    TEntity::MOVING);*/
+    
     TEntity * e;
     if (x == 0 && y == 0) {
-      e = new TPixmapEntity(300, 400, 0, pixmap, 
-			    "BALL", TEntity::MOVING,
-			    TEntity::PIXEL);
+      e = new TBall(300, 400, MapState->ballspeed, pixmap, hitfunction);
     }else{
-      e = new TPixmapEntity(x, y, 0, pixmap, 
-			    "BALL", TEntity::MOVING,
-			    TEntity::PIXEL);
+      e = new TBall(x, y, MapState->ballspeed, pixmap, hitfunction);
     }
-    e->SetScriptHitCall(hitfunction);
+    
     // TODO, error handling.. 
-    e->setMotion(new TFreeMotion);
-    //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 3);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed);
+
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setCurrentVelocity(MapState->ballspeed);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed * 100);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setAccel(0.000003);
+
     e->setName("Default Ball");
-    MapState->Entities.push_back(e);
+    MapState->MovingEntities.push_back(e);
+    sortEntities(MapState->MovingEntities);
     MapState->num_balls++;
     return true;
   } else {
@@ -344,9 +355,6 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
 		  "graphics/paddles/square2_100.png",
 		  "graphics/paddles/square2_50.png");
   
-
-    /*    new TPixmapEntity(x, y, 0, pixmap, "PADDLE", 
-	  TEntity::MOVING, TEntity::PIXEL); */
   paddle->setName("Paddle");
   paddle->SetScriptHitCall("paddle_hit()");
   if ("FreeMotion" == pathtype) {
@@ -364,7 +372,8 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
   paddle->getMotion()->setAccel(-0.03);
   paddle->getMotion()->setCurrentVelocity(2.0);
   paddle->setName("Paddle");
-  MapState->Entities.push_back(paddle);
+  MapState->MovingEntities.push_back(paddle);
+  sortEntities(MapState->MovingEntities);
   MapState->paddle = paddle;
   return true;
 }
@@ -404,17 +413,14 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
       /* arg1 == pixmap
 	 arg2 == hitfunction */
       TEntity * e 
-	= new 
-	TPixmapEntity(static_cast<int>(current_script_entity->x()), 
-		      static_cast<int>(current_script_entity->y()), 
-		      0, arg1, 
-		      "BALL", TEntity::MOVING, TEntity::PIXEL);
-      e->SetScriptHitCall(arg2);
-      // TODO, error handling.. 
-      e->setMotion(new TFreeMotion);
-      //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
-      dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
-      dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed);
+	= new TBall(static_cast<int>(current_script_entity->x()), 
+		    static_cast<int>(current_script_entity->y()), 
+		    MapState->ballspeed, arg1, arg2);
+
+      dynamic_cast<TFreeMotion*>(e->getMotion())->setCurrentVelocity(MapState->ballspeed);
+      dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed * 100);
+      dynamic_cast<TFreeMotion*>(e->getMotion())->setAccel(0.000003);
+      
       e->setName("Default Ball");
       EntitiesToAddToMapState.push_back(e);
       // MapState->num_balls++;
@@ -462,11 +468,17 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
  * *********************************************************************/
 void TMap::Update(Uint32 deltatime) {
   /* Iterate through entities that needs to be added, add them */
+
   TEntitiesIterator i, tmpi;
   TEntitiesIterator End = EntitiesToAddToMapState.end();
   for (i = EntitiesToAddToMapState.begin(); i != End;) {
     /* Add this entity, remove it from this list */
-    MapState->Entities.push_back(*i);
+    if ((*i)->getMoveType() == TEntity::MOVING) {
+      MapState->MovingEntities.push_back(*i);
+    }else{
+      MapState->StationaryEntities.push_back(*i);
+      sortEntities(MapState->StationaryEntities);
+    }
     /* If we add a ball, remember to increase the number of balls */
     if ("BALL" == (*i)->getEntityType()) {
       MapState->num_balls++;
@@ -476,39 +488,42 @@ void TMap::Update(Uint32 deltatime) {
     i++;
     EntitiesToAddToMapState.erase(tmpi);
   }  
-  
-  /* Do the update of all entities in the map */
-  TEntitiesIterator candi;
-  End = MapState->Entities.end();
-  for (i = MapState->Entities.begin(); i != End; i++) {
+
+  for (TEntitiesIterator i = MapState->MovingEntities.begin(); 
+       i != MapState->MovingEntities.end(); i++) {
     (*i)->Update(deltatime);
-
-    // Now in order to ensure that the entity list is ordered by
-    // y axis we have to check if the current entity should be moved
-    // to another pos. in the list. We want to order by y axis 
-    // because it speeds up the collision detection.
-    candi = i;
-    if (i != MapState->Entities.begin())
-      --candi;
-
-    if (i != MapState->Entities.end()) {
-      if (i != MapState->Entities.begin() ){
-	if (relocateHighEntities(i) || relocateLowEntities(i))
-	  i = candi;
-      }else {
-	if (relocateHighEntities(i))
-	  i = candi;
-      }
-    }else {
-      if (relocateLowEntities(i)) 
-	i = candi;
-    }
   }
+  for (TEntitiesIterator i = MapState->StationaryEntities.begin(); 
+       i != MapState->StationaryEntities.end(); i++) {
+    (*i)->Update(deltatime);
+  }
+
+  sortEntities(MapState->MovingEntities);
+
   /* Clean out entities that are no longer alive */
   TEntity * tmp;
   // Note, End could be changed above... 
-  End = MapState->Entities.end();
-  for (i = MapState->Entities.begin(); i != End;) {
+  TEntitiesIterator candi;
+  End = MapState->StationaryEntities.end();
+  for (i = MapState->StationaryEntities.begin(); i != End;) {
+    candi = i;
+    i++;
+    if ((*candi)->IsRemovable()) {
+      tmp = (*candi);
+      /* If we remove a BRICK, reduce the number of brics */
+      if ("BRICK" == tmp->getEntityType()) {
+	MapState->num_bricks--;
+	// LogLine(LOG_VERBOSE, "Brick removed");
+	Assert(MapState->num_bricks >= 0, 
+	       "Can't have a negative number of bricks");
+      }
+      MapState->StationaryEntities.erase(candi);
+      delete tmp;
+    }
+  }
+
+  End = MapState->MovingEntities.end();
+  for (i = MapState->MovingEntities.begin(); i != End;) {
     candi = i;
     i++;
     if ((*candi)->IsRemovable()) {
@@ -519,74 +534,19 @@ void TMap::Update(Uint32 deltatime) {
 	Assert(MapState->num_balls >= 0, 
 	       "Cant have a negative number of balls");
       }
-      /* If we remove a BRICK, reduce the number of brics */
-      if ("BRICK" == tmp->getEntityType()) {
-	MapState->num_bricks--;
-	// LogLine(LOG_VERBOSE, "Brick removed");
-	Assert(MapState->num_bricks >= 0, 
-	       "Can't have a negative number of bricks");
-      }
-
-      MapState->Entities.erase(candi);
+      MapState->MovingEntities.erase(candi);
       delete tmp;
     }
   }
 
 }
 
-
-/* helper function for update
-   Moves the entity associated with the iterator i, 
-   to the correct position in the upper half of the 
-   list from itself.
-*/
-bool TMap::relocateHighEntities(TEntitiesIterator& i)
+void TMap::sortEntities(TEntities& entities) 
 {
-  TEntitiesIterator newi = i;
-  TEntitiesIterator nexti = i;
-  ++nexti;
-  TEntitiesIterator End = MapState->Entities.end();
-  while(++newi != End) {
-    if ((*newi)->y() >= (*i)->y()) {
-      if (*newi != *nexti) {
-	TEntity* tmp = *i;
-	i = MapState->Entities.erase(i);
-	--i;
-	MapState->Entities.insert(newi,1,tmp);
-	return true;
-      }else{
-	return false;
-      }
-    }
-  }
-  return false;
+  entities.sort(less_entities());
 }
 
 
-/* helper function for update
-   Moves the entity associated with the iterator i, 
-   to the correct position in the lower half of the 
-   list from itself.
-*/
-bool TMap::relocateLowEntities(TEntitiesIterator& i)
-{
-  TEntitiesIterator newi = i;
-  TEntitiesIterator previ = i;
-  --previ;
-  TEntitiesIterator Begin = MapState->Entities.begin();
-  while(--newi != Begin) {
-    if ((*newi)->y() <= (*i)->y()) {
-      if (*newi != *previ) {
-	TEntity* tmp = *i;
-	i = MapState->Entities.erase(i);
-	--i;
-	MapState->Entities.insert(++newi,1,tmp);
-	return true;
-      }else{
-	return false;
-      }
-    }
-  }
-  return false;
-}
+
+
 

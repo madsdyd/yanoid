@@ -28,6 +28,7 @@
 #include <list>
 #include <string>
 #include "point.hh"
+#include <functional>
 
 class TMotion;
 
@@ -132,6 +133,8 @@ public:
   }
   */
   virtual bool pixelCollision(TEntity& obj);
+
+  virtual string toString() const; // For debugging
   friend class TMotion;
   friend class TFreeMotion;
   friend class TPathMotion;
@@ -141,6 +144,14 @@ public:
 /* Define a list of entities */
 typedef std::list<TEntity *> TEntities;
 typedef TEntities::iterator TEntitiesIterator;
+
+
+/* Function object for comparing entities 
+   is STL sort function
+*/
+struct less_entities : public binary_function<TEntity*, TEntity*, bool> {
+  bool operator()(TEntity* e1, TEntity* e2) { return e1->y() < e2->y(); }
+};
 
 /* This is a hack. Yuck. Kids, don't do this at home */
 extern TEntity * current_script_entity;

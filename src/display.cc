@@ -65,13 +65,19 @@ void TDisplay::Render(SDL_Surface * surface) {
 #endif
 
   TGameState * GameState = Client->GetGame()->GetState();
-  TEntitiesIterator End = GameState->MapState->Entities.end();
+  TEntitiesIterator End = GameState->MapState->StationaryEntities.end();
   TEntitiesIterator i;
 
-  for (i = GameState->MapState->Entities.begin(); i != End; i++) {
+  for (i = GameState->MapState->StationaryEntities.begin(); i != End; i++) {
     (*i)->Render(surface);
   }
   
+  End = GameState->MapState->MovingEntities.end();
+
+  for (i = GameState->MapState->MovingEntities.begin(); i != End; i++) {
+    (*i)->Render(surface);
+  }
+
   /* **********************************************************************
    * Draw the HUD...
    * *********************************************************************/

@@ -157,7 +157,7 @@ bool TClient::NextMap() {
     return false;
   }
   
-  Game->GetState()->MapState->ballbirth = 0;
+  //  Game->GetState()->MapState->ballbirth = 0;
   game_start      = SDL_GetTicks();
   game_lastupdate = 0;
   LogLine(LOG_VERBOSE, "Game->Update(0)");
@@ -238,7 +238,7 @@ void TClient::Run() {
       QuitCurrentGame = true;
     }
     
-    Game->GetState()->MapState->ballbirth = 0;
+    //    Game->GetState()->MapState->ballbirth = 0;
 
     /* **********************************************************************
      * Main game loop.
@@ -291,7 +291,7 @@ void TClient::Run() {
 	//	GameOverMenu->Run();
 	//	delete GameOverMenu;
 	QuitCurrentGame = true;
-	Game->GetState()->MapState->ballbirth = 0;
+	//	Game->GetState()->MapState->ballbirth = 0;
 	break;
       }
       /* **********************************************************************
@@ -311,7 +311,7 @@ void TClient::Run() {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
-	Game->GetState()->MapState->ballbirth = 0;
+	//	Game->GetState()->MapState->ballbirth = 0;
 	/* No more shooting */
 	Game->GetState()->shot_time_left = 0;
 	Game->GetState()->current_shot_time_left = 0;
@@ -536,7 +536,7 @@ void TClient::HandleEvents() {
 			  Game->GetState()->shot_hitfunction,
 			  Game->GetState()->shot_type);
 	    shot->setX(paddle->x() + (paddle->w() - shot->w())/2.0);
-	    Game->GetState()->MapState->Entities.push_back(shot);
+	    Game->GetState()->MapState->MovingEntities.push_back(shot);
 	    Game->GetState()->current_shot_time_left = 
 	      Game->GetState()->time_between_shots;
 	  } 
