@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 
@@ -18,43 +19,30 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/* This contains the TClient module */
+#ifndef __TEXT_HH__
+#define __TEXT_HH__
+
 #include <string>
 #include <SDL/SDL.h>
 
-class TGame;
-class TConsole;
-class TClient {
-protected:
-  TGame * Game;
-  /* Our console - this is running in the client since it is tightly 
-     coupled to the client. I do not know if it is "the right thing"(tm) though */
-  bool ConsoleIsUp;
-  /* Various stuff for timekeeping */
-  Uint32 game_start;
-  Uint32 game_lastupdate;
-  Uint32 console_lastupdate;
-  Uint32 pausetime;
-  bool QuitCurrentGame;
-  int paused;
-  static bool ModuleAdded;
-  /* Splitting stuff up, to make it easier to handle */
-  void UpdateGame();
-  void Render();
-  void HandleEvents();
-  bool HandleGlobalKeys(SDL_Event * event);
-  void PauseGame();
-  void ContinueGame();
-  bool NextMap();
+
+/* Implement a text renderer */
+class TText {
+private:
+  SDL_Surface * font;
+  int GlyphWidth;
+  int GlyphHeight;
 public:
-  TClient();
-  ~TClient();
-  inline TGame * GetGame() const { return Game; }
-  static bool AddModule();
-  void Run();
-  void ToggleConsole();
-  void ToggleMusic();
+  /* The fontname should point to a 16x16 glyph image */
+  TText(string fontname);
+  ~TText();
+  /* Return the width and height of a glyph */
+  inline int GetGlyphWidth() { return GlyphWidth; }
+  inline int GetGlyphHeight() { return GlyphHeight; }
+  /* Print string to surface at x, y 
+     Note, the surface is not updated ...
+   */
+  void Print(SDL_Surface * surface, int x, int y, string text);
 };
 
-/* Out global client - we can never have more than this. */
-extern TClient * Client;
+#endif

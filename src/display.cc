@@ -31,10 +31,11 @@
 #include "client.hh"
 #include "game.hh"
 #include "highscore.hh"
-#include "ConsoleSource/CON_console.h"
+#include "console.hh"
 #include "ConsoleSource/DT_drawtext.h"
 #include "surfacemanager.hh"
 #include "statistics.hh"
+#include "console.hh"
 
 /* **********************************************************************
  * The global display
@@ -89,18 +90,17 @@ void TDisplay::Render(SDL_Surface * surface) {
 
   // Draw score
   sprintf(buf, "Score %i", GameState->score);
-  DT_DrawText(buf, surface, 1, 1, drawy);
+  DT_DrawText(buf, surface, 0, 1, drawy);
   
-
   // Draw lives
   sprintf(buf, "Lives %i", GameState->lives);
-  DT_DrawText(buf, surface, 1, 400-7*10, drawy);
+  DT_DrawText(buf, surface, 0, 400-7*10, drawy);
 
   // Draw time
   int minutes = GameState->gametime/60000;
   int seconds = (GameState->gametime%60000)/1000;
   sprintf(buf, "Time % 2i:%02i", minutes, seconds);
-  DT_DrawText(buf, surface, 1, 800-9*20, drawy);
+  DT_DrawText(buf, surface, 0, 800-9*20, drawy);
   
   // At the center bottom, draw the current powerup, if applicable
   if (GameState->shot_time_left > 0) {
@@ -127,7 +127,7 @@ void TDisplay::Render(SDL_Surface * surface) {
     /* Draw the time left for this powerup - add a second to avoid 0*/
     seconds = (GameState->shot_time_left%60000)/1000 + 1;
     sprintf(buf, "%i", seconds);
-    DT_DrawText(buf, surface, 1, 
+    DT_DrawText(buf, surface, 0, 
 		powerup_dest.x + powerup_dest.w + 10, 
 		surface->h - (40 + DT_FontHeight(1) ) /2);
   }
@@ -137,14 +137,14 @@ void TDisplay::Render(SDL_Surface * surface) {
 #ifdef DEBUG
   // Draw num_bricks
   sprintf(buf, "Bricks %i", GameState->MapState->num_bricks);
-  DT_DrawText(buf, surface, 1, 800-9*20, surface->h-40);
+  DT_DrawText(buf, surface, 0, 800-9*20, surface->h-40);
 
   // Draw framerate
   int oldticks = ticks;
   ticks = SDL_GetTicks();
   if (ticks != oldticks) {
     sprintf(buf, "%.2f", 1000.0 / (ticks - oldticks));
-    DT_DrawText(buf, surface, 1, 1, surface->h-40);
+    DT_DrawText(buf, surface, 0, 1, surface->h-40);
   }
   // Register frametime, Draw stat
   Stat.RegisterFrameTime(ticks - oldticks);
@@ -152,10 +152,4 @@ void TDisplay::Render(SDL_Surface * surface) {
     Stat.Render(200, surface->h);
   }
 #endif
-  /* **********************************************************************
-   * Draw Console on top of everything else
-   * *********************************************************************/
-  if (ConsoleDown) {
-    CON_DrawConsole();
-  }
 }

@@ -1,3 +1,10 @@
+2001-12-18  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Console
+	Removed the old console code. Still uses the DT_DrawText stuff,
+	but not for long. 7 files added. Console is not as functional as
+	the old one, but a lot faster.
+
 2001-12-09  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Tagging

@@ -25,7 +25,7 @@
 #include <iomanip.h>
 
 #include <SDL/SDL.h>
-#include "ConsoleSource/CON_console.h"
+#include "console.hh"
 
 bool duptoconsole = false;
 
@@ -73,7 +73,7 @@ void TLog::AddLine(int level_, char * filename, int lineno, string line) {
 	<< " - \"" << line << "\"" << ends;
     cout << tmp.str() << endl;
     if (duptoconsole) {
-      CON_ConOut(tmp.str());
+      Console->AddLine(tmp.str());
     }
   }
 }

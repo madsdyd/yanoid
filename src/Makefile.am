@@ -2,7 +2,7 @@ bin_PROGRAMS = yanoid
 
 SUBDIRS = ConsoleSource
 
-yanoid_SOURCES = statistics.cc \
+yanoid_SOURCES = readline.cc console.cc text.cc statistics.cc \
 	        soundmanager.cc more_entities.cc interprenter.cc \
                 game.cc map.cc entity.cc pixmap_entity.cc \
 		path.cc velocity.cc motion.cc \
@@ -16,7 +16,7 @@ yanoid_LDADD = ConsoleSource/libSDL_console.la
 
 # none of these are installed - here for dist
 
-noinst_HEADERS = statistics.hh \
+noinst_HEADERS = readline.hh console.hh text.hh statistics.hh \
 	         soundmanager.hh more_entities.hh globals.hh interprenter.hh \
 		 map.hh point.hh entity.hh pixmap_entity.hh \
 		 path.hh game.hh velocity.hh motion.hh \

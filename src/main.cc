@@ -49,7 +49,8 @@
 #include "musicmanager.hh"
 #include "soundmanager.hh"
 #include "fontmanager.hh"
-#include "ConsoleSource/CON_console.h"
+
+#include "console.hh"
 #include "game.hh"
 #include "display.hh"
 #include "client.hh"
@@ -73,95 +74,52 @@ void SignalHandler(int signal) {
  * *********************************************************************/
 
 /* Calls the python interprenter */
-void Python(char * String) {
-  Assert(String != NULL, "Python - NULL string");
-  Interprenter->RunSimpleString(String);
+void Python(string command) {
+  Interprenter->RunSimpleString(command);
 }
 
 
 /* Load a map */
-void LoadMap(char * map) {
+void LoadMap(string map) {
   if (!Client || !(Client->GetGame())) { 
-    CON_ConOut("Hmm - no client, or no game...");
+    Console->AddLine("Hmm - no client, or no game...");
   };
   if (Client->GetGame()->LoadMap(map)) {
-    CON_ConOut("Map %s succesfully loaded", map);
+    // Console->AddLine("Map %s succesfully loaded", map);
+    Console->AddLine("Map " + map + " succesfully loaded");
   } else {
-    CON_ConOut("Error loading map %s", map);
+    Console->AddLine("Error loading map " + map);
   }
 }
 
 /* Prints the string you pass it into the console */
-void PrintMe(char *String)
+void PrintMe(string arg)
 {
-  CON_ConOut("%s", String);
+  Console->AddLine(arg);
 }
 
-/* Lets the user change the alpha level */
-void AlphaChange(char *alpha)
-{
-  if (strlen(alpha) > 0) {
-    CON_ConsoleAlpha(atoi(alpha));
-    CON_ConOut("Alpha set to %s.", alpha);
-  } else {
-    CON_ConOut("Usage: alpha <value> - where 0 <= value < 255");
-  }
-}
-
-/* Toogle cheating */
-void Help(char * arg) {
-
-  CON_ConOut("--------------------------------------------------------");
-  CON_ConOut("Available commands:");
-  CON_ConOut("");
-  CON_ConOut("help               :  show help");
-  CON_ConOut("highscore [show]   :  show/hide(no arg) highscore");
-  CON_ConOut("loadmap <map path> :  load the map");
-  CON_ConOut("                      ex. loadmap maps/map1.py");
-  CON_ConOut("i <python command> :  run a python command");
-  CON_ConOut("alpha <value>      :  set the alpha value of the console");
-  CON_ConOut("printme <string>   :  print a string to console");
-#ifdef DEBUG
-  CON_ConOut("togglecheat        :  ball can not be lost");
-  CON_ConOut("duplogtoconsole    :  print all log to console");
-#endif
-  CON_ConOut("--------------------------------------------------------");
-}
 
 #ifdef DEBUG
 /* Toogle cheating */
-void ToggleCheat(char * arg) {
+void ToggleCheat(string arg) {
   hole_bounces = !hole_bounces;
   if (hole_bounces) {
-    CON_ConOut("Cheat mode enabled");
+    Console->AddLine("Cheat mode enabled");
   } else {
-    CON_ConOut("Cheat mode disabled");
+    Console->AddLine("Cheat mode disabled");
   }
 }
 
 /* Dup to console or not */
-void DupLogToConsole(char * arg) {
+void DupLogToConsole(string arg) {
   duptoconsole = !duptoconsole;
   if (duptoconsole) {
-    CON_ConOut("Logging information dupped to console");
+    Console->AddLine("Logging information dupped to console");
   } else {
-    CON_ConOut("Logging information not dupped to console");
+    Console->AddLine("Logging information not dupped to console");
   }
 }
 #endif
-
-/* Show/hide highscore */
-void DisplayHighscore(char *arg)
-{
-string _arg(arg);
-  if (_arg == "show")
-    Highscore->displayRankings();
-  else
-    Highscore->displayNone();
-
-  CON_ConOut("Highscore %s",arg);
-}
-
 
 /* **********************************************************************
  * The main program. Yuhu.
@@ -336,31 +294,25 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize the console (requires SDL to be initialized )
    * *********************************************************************/
-
-  SDL_Rect Con_Init = { 0, 0, 800, 300 };
   
-  /* Init the console */
-  // hacky
-  Assert(CON_ConsoleInit(PathManager->Resolve("graphics/fonts/ConsoleFont.png").c_str(), 
-			 Screen, 100, Con_Init) == 0,
-	 "Unable to initialize console");
-  
-  /* Add some commands to the console */
-  CON_AddCommand(&Help,      "help");
-  CON_AddCommand(&Help,      "?");
-  CON_AddCommand(&AlphaChange,      "alpha");
+  Console = new TConsole("graphics/fonts/consolefont2.png", 1000);
+  Assert(Console != NULL, "Unable to create console");
+  /* Add a number of commands to be treated */
+  Console->AddCommand("loadmap", &LoadMap);
+  Console->AddCommand("printme", &PrintMe);  
 #ifdef DEBUG
-  CON_AddCommand(&DupLogToConsole,  "duplogtoconsole");
-  CON_AddCommand(&ToggleCheat,      "togglecheat");
+  Console->AddCommand("togglecheat", &ToggleCheat);
+  Console->AddCommand("duplogtoconsole", &DupLogToConsole);
 #endif
-  CON_AddCommand(&DisplayHighscore, "highscore");
-  CON_AddCommand(&Python,           "i");
-  CON_AddCommand(&LoadMap,          "loadmap");
-  CON_AddCommand(&PrintMe,          "printme");
-  
-  CON_ListCommands();
-  
-  CON_ConsoleAlpha(190);
+  /* Let python handle everything else... */
+  Console->AddDefaultCommand(&Python);
+
+  /* **********************************************************************
+   * Initialize Display and client;
+   * *********************************************************************/
+  Client    = new TClient();
+  Display   = new TDisplay();
+  Highscore = new THighscore(Screen->w / 2  - 160, Screen->h / 2 - 150);
 
   /* **********************************************************************
    * Add default modules, run default script
@@ -373,13 +325,6 @@ int main(int argc, char ** argv) {
   /* Dump the Interprenter help to the console */
   Interprenter->RunSimpleString("help()");
   
-  /* **********************************************************************
-   * Initialize Display and client;
-   * *********************************************************************/
-  Client    = new TClient();
-  Display   = new TDisplay();
-  Highscore = new THighscore(Screen->w / 2  - 160, Screen->h / 2 - 150);
-
   /* **********************************************************************
    * Display a splash screen.
    * *********************************************************************/
@@ -441,11 +386,14 @@ int main(int argc, char ** argv) {
   delete MusicManager;
   LogLine(LOG_VERBOSE, "Deleting FontManager");
   delete FontManager;
+  LogLine(LOG_VERBOSE, "Deleting Console");
+  delete Console;
   LogLine(LOG_VERBOSE, "Deleting SurfaceManager");
   delete SurfaceManager;
   LogLine(LOG_VERBOSE, "Deleting PathManager");
   delete PathManager;
   LogLine(LOG_VERBOSE, "Deleting Interprenter");
+  delete Interprenter;
 #ifdef DEBUG
   LogLine(LOG_VERBOSE, "Deleting Log object - Exiting gracefully");
   delete Log;

@@ -23,23 +23,19 @@
 #include "ressourcemanager.hh"
 #include "interprenter.hh"
 #include "log.hh"
+#include "console.hh"
 
 /* **********************************************************************
  * The interprenter
  * *********************************************************************/
 TInterprenter * Interprenter;
 
-/* A quick hack to test things ... */
-
-/* Declare a function from main */
-extern void PrintMe(char *String);
-
 /* Function to put a string onto the console */
 static PyObject * put_console(PyObject * self, PyObject *args) {
   char * command;
   if (!PyArg_ParseTuple(args, "s", &command))
     return NULL;
-  PrintMe(command);
+  Console->AddLine(command);
   return Py_BuildValue("");
 };
 
