@@ -1,3 +1,11 @@
+2001-12-08  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Rounding
+
+	* Scripts
+	Moved the preload stuff around a bit, added a ReloadScripts()
+	command, preloads the powerup_bad.wav file
+
 2001-12-06  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Highscore

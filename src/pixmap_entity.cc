@@ -19,6 +19,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include <math.h>
 #include "pixmap_entity.hh"
 
 #include "debug.hh"
@@ -124,8 +125,8 @@ void TPixmapEntity::Render(SDL_Surface * surface) {
   src.x = 0; src.y = 0; 
   src.w = currentsurface->w; src.h = currentsurface->h;
 
-  dest.x = static_cast<int>(x()); 
-  dest.y = static_cast<int>(y());
+  dest.x = static_cast<int>(floor(x() + 0.5)); 
+  dest.y = static_cast<int>(floor(y() + 0.5));
   dest.w = src.w; dest.h = src.h;
   
   SDL_BlitSurface(currentsurface, &src, surface, &dest);
