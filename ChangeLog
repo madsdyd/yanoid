@@ -1,3 +1,13 @@
+2001-09-27  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* Various
+	Made sure everything compiles, all stuff is included in installs,
+	and distributions. 
+	Made the console stuff from Jones be path independent.
+	Jonas hava also added support for mod and ogg files, 
+	and performs some tricky stuff with libtool! (gaderespekt).
+	Tagging this as 0.0.4
+
 2001-09-26  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* Map
