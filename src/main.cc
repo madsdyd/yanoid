@@ -276,10 +276,10 @@ int main(int argc, char ** argv) {
 
   // open 11025 Hz, 8-bit, 1 channel, 512 chunksize
 #ifndef NO_MUSIC_THREAD
-  Assert( Mix_OpenAudio(11025, AUDIO_U8, 1, 512) >= 0 , 
+  Assert( Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0 , 
 	  "Unable to set audio mode");
   LogLine(LOG_VERBOSE, 
-	  "Audiomode set (11025 Hz, 8-bit, 1 ch, 512 byte chunks)");
+	  "Audiomode set (11025 Hz, 8-bit, 1 ch, 256 byte chunks)");
 #endif
   /* **********************************************************************
    * Initialize the surface manager (requires SDL to be initialized and 
