@@ -151,6 +151,11 @@ int main(int argc, char ** argv) {
   // Test the client
   Client->Run();
 
+  // Delete the stuff
+  delete (Client);
+  delete (Display);
+  delete (Game);
+  
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(mysurf);
 
