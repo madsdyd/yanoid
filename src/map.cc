@@ -441,9 +441,18 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
    * *********************************************************************/
   else if ("ball-speed" == action) {
     /* Arg1 = % change (150 % == 1.5 times as fast, 80 = 0.8 times, etc */
-    int percent = atoi(arg1.c_str());
-    if (percent > 0) {
-      MapState->ballspeed *= (percent/100.0);
+    double percent = (atoi(arg1.c_str()))/100.0;
+    if (percent > 0.0) {
+      /* Seek through all entities, adjust those that are BALLs */
+      TEntitiesIterator i;
+      TEntitiesIterator End = MapState->MovingEntities.end();
+      TEntity * tmp;
+      for (i = MapState->MovingEntities.begin(); i != End; i++) {
+	tmp = *i;
+	if ("BALL" == tmp->getEntityType()) {
+	  tmp->getMotion()->setCurrentVelocity(tmp->getMotion()->getCurrentVelocity()*percent);
+	}
+      }
     } else {
       LogLineExt(LOG_ERROR, ("ball-speed with invalid argument %s", arg1.c_str()));
       return false;
@@ -526,9 +535,9 @@ void TMap::Update(Uint32 deltatime) {
   End = MapState->StationaryEntities.end();
   for (i = MapState->StationaryEntities.begin(); i != End;) {
     candi = i;
+    tmp = *i;
     i++;
-    if ((*candi)->IsRemovable()) {
-      tmp = (*candi);
+    if (tmp->IsRemovable()) {
       /* If we remove a BRICK, reduce the number of brics */
       if ("BRICK" == tmp->getEntityType()) {
 	MapState->num_bricks--;

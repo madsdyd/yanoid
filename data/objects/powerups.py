@@ -18,8 +18,8 @@ from random import randrange
 # is the "weight" of the powerup.
 powerups = [ [9, "powerup_spawn_ball()"],
 
-             [4, 'powerup_spawn_ball_speed("graphics/powerups/grayblue_slowball.png", "20")'],
-             [4, 'powerup_spawn_ball_speed("graphics/powerups/grayblue_speedball.png", "500")'],
+             [4, 'powerup_spawn_ball_speed("graphics/powerups/grayblue_slowball.png", "50")'],
+             [4, 'powerup_spawn_ball_speed("graphics/powerups/grayblue_speedball.png", "200")'],
 
              [2, "powerup_spawn_life()"],
              [2, "powerup_spawn_remove_life()"],
@@ -210,13 +210,13 @@ def powerup_point_adjust_hit(point):
 # Ball speed powerups, note, argument is a string
 def powerup_spawn_ball_speed(pixmap, percent):
     yanoid_map.PowerUp("powerup", pixmap,
-                       "powerup_ball_speed_hit('"+percent+"')")
+                       "powerup_ball_speed_hit("+percent+")")
 
 def powerup_ball_speed_hit(percent):
     if (percent > 100):
         PlaySound("sounds/powerup_bad.wav")
     else:
         PlaySound("sounds/powerup_collect.wav")
-    yanoid_map.PowerUp("ball-speed", percent, "");
+    yanoid_map.PowerUp("ball-speed", str(percent), "");
         
 
