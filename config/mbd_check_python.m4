@@ -70,12 +70,17 @@ minver = '$1'
 pyver  = string.split(sys.version)[0]  # first word is version string
 # split strings by '.' and convert to numeric
 minver = map(string.atoi, string.split(minver, '.'))
-pyver  = map(string.atoi, string.split(pyver, '.'))
+pyver  = string.split(pyver, '.')
+pyvermajor = string.atoi(pyver[0][0])
+pyverminor = string.atoi(pyver[1][0])
 # we can now do comparisons on the two lists:
-if pyver >= minver:
-        sys.exit(0)
+if pyvermajor > minver[0]:
+	sys.exit(0)
 else:
-        sys.exit(1)"
+	if pyvermajor == minver[0] and pyverminor >= minver[1]:
+		sys.exit(0)
+	else:
+	        sys.exit(1)"
     changequote([, ])dnl
     if $PYTHON -c "$prog" 1>&AC_FD_CC 2>&AC_FD_CC
     then
