@@ -1,3 +1,8 @@
+2002-01-13  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* gcc3
+	Tried to add gcc3 support, may or may not work.
+
 2002-01-11  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* mingw
