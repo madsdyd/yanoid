@@ -38,7 +38,7 @@ public:
   TBrick(int x_, int y_, string pixmap, string hitfunction, int _hitnum = 1);
   virtual ~TBrick();
   virtual void MarkDying();
-  virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
+  virtual void OnCollision(TEntity& other);
 };
 
 /* **********************************************************************
@@ -52,7 +52,7 @@ public:
   virtual ~TDelayBrick() {};
   virtual void Render(SDL_Surface *) {};
   virtual void Update(Uint32 deltatime);
-  virtual void OnCollision(TEntity& other, Uint32 currenttime=0) {};
+  virtual void OnCollision(TEntity& other) {};
 };
 
 /* **********************************************************************
@@ -66,17 +66,23 @@ protected:
   SDL_Surface * normalsurface;
   SDL_Surface * widesurface;
   SDL_Surface * narrowsurface;
+  // modifier of balls angle caused by hit position
+  double AngleModifier; 
+  // modifier of balls angle during movement of paddle
+  double MovementAngleModifier; 
 public:
   TPaddle(int x_, int y_, 
 	  const std::string normal_pixmap_path,
 	  const std::string wide_pixmap_path,
 	  const std::string narrow_pixmap_path);
   virtual ~TPaddle();
-  virtual void OnCollision(TEntity& other, Uint32 time = 0);
+  virtual void OnCollision(TEntity& other);
   void Update(Uint32 deltatime);
   void GoNormal();
   void GoNarrow(int seconds);
   void GoWide(int seconds);
+  inline double getAngleMod() { return AngleModifier; }
+  inline double getMoveAngleMod() { return MovementAngleModifier; }
 };
 
 
@@ -89,7 +95,7 @@ class TPowerUp : public TPixmapEntity {
 public:
   virtual ~TPowerUp() {};
   TPowerUp(int x, int y, string pixmap, string hitfunction);
-  virtual void OnCollision(TEntity& other, Uint32 currenttime = 0);
+  virtual void OnCollision(TEntity& other);
 };
 
 /* **********************************************************************
@@ -106,7 +112,7 @@ public:
   virtual ~TShot() {};
   TShot(int x, int y, string pixmap, string hitfunction, 
 	string type);
-  virtual void OnCollision(TEntity& other, Uint32 currenttime = 0);
+  virtual void OnCollision(TEntity& other);
 };
 
 /* **********************************************************************
@@ -119,7 +125,7 @@ class THole : public TEntity {
 public:
   THole(double x_, double y_, int w_, int h_);
   virtual ~THole();
-  virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
+  virtual void OnCollision(TEntity& other);
   void Render(SDL_Surface * surface) {};
 };
 
@@ -128,11 +134,13 @@ public:
  * *********************************************************************/
 
 class TBall : public TPixmapEntity {
+protected:
+  bool is_dying; 
 public:
   TBall(int x_, int y_, double vel ,
 	const std::string& pixmap_path, const string& hitfunction);
   virtual ~TBall() {};
-  virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
+  virtual void OnCollision(TEntity& other);
 };
 
 /* **********************************************************************

@@ -60,11 +60,11 @@ void TBrick::MarkDying() {
 /* **********************************************************************
  * OnCollision - most bricks simply die, when they are part of a collision
  * *********************************************************************/
-void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
+void TBrick::OnCollision(TEntity& other) {
   /* Calling our ancestors onCollision gives us scripts, etc. */
   if ("BALL" == other.getEntityType() ||
       "SHOT" == other.getEntityType()) {
-    TPixmapEntity::OnCollision(other, currenttime);
+    TPixmapEntity::OnCollision(other);
     if (hitnum > 0 && --hitnum == 0) {
       removable = true;
     }
@@ -107,14 +107,7 @@ TPowerUp::TPowerUp(int x, int y, string pixmap, string hitfunction)
  * Collision - also very similar to bricks, except that we only remove
  * if hit by a paddle or shot.
  * *********************************************************************/
-void TPowerUp::OnCollision(TEntity& other, Uint32 currenttime=0) {
-  /* Check if we allready have collided */
-  if (LastCollision == currenttime) {
-    return;
-  }
-
-  LastCollision = currenttime;
-
+void TPowerUp::OnCollision(TEntity& other) {
   if ("PADDLE" == other.getEntityType()) {
     /* Make sure our hitfunction is called - 
        it should spawn a relevant powerup... */
@@ -143,10 +136,10 @@ TShot::TShot(int x, int y, string pixmap, string hitfunction,
  * Collision - also very similar to bricks, except that we only remove
  * if hit by a paddle or shot.
  * *********************************************************************/
-void TShot::OnCollision(TEntity& other, Uint32 currenttime=0) {
+void TShot::OnCollision(TEntity& other) {
   /* Make sure our hitfunction is called */
   if ("BRICK" == other.getEntityType()) {
-    TPixmapEntity::OnCollision(other, currenttime);
+    TPixmapEntity::OnCollision(other);
     if (shot_type == "REMOVEALL") {
       other.MarkDying();
     } else {
@@ -154,7 +147,7 @@ void TShot::OnCollision(TEntity& other, Uint32 currenttime=0) {
     }
   }
   if ("STATIC" == other.getEntityType()) {
-    TPixmapEntity::OnCollision(other, currenttime);
+    TPixmapEntity::OnCollision(other);
     removable = true;
   }
 }
@@ -174,7 +167,7 @@ THole::~THole() {
 /* **********************************************************************
  * Collision
  * *********************************************************************/
-void THole::OnCollision(TEntity& other,Uint32 t) {
+void THole::OnCollision(TEntity& other) {
   // LogLine(LOG_VERBOSE, "THole::OnCollision called");
   if ("BALL" == other.getEntityType()) {
     /* Ah, hit by a ball */
@@ -183,9 +176,9 @@ void THole::OnCollision(TEntity& other,Uint32 t) {
     } else {
       /* To cheat the ball into collision reflection, we
 	 have to swap the order... */
-      // TEntity::OnCollision(other, t);
+      // TEntity::OnCollision(other);
       // I dare not touch this......
-      other.OnCollision(*this, t);
+      other.OnCollision(*this);
     }
   } 
   else if ("POWERUP" == other.getEntityType()) {
@@ -205,7 +198,9 @@ TPaddle::TPaddle(int x_, int y_,
 		  const std::string narrow_pixmap_path) : 
   TPixmapEntity(x_, y_, 0, normal_pixmap_path, "PADDLE", MOVING, PIXEL),
   minx(900.0), maxx(-1.0), milli_seconds_to_normal(0), 
-  widesurface(NULL), narrowsurface(NULL) {
+  widesurface(NULL), narrowsurface(NULL),
+  AngleModifier(0.05), MovementAngleModifier(1.55)
+{
   /* Pixmap has loaded normal into current. Store it */
   normalsurface = SurfaceManager->DuplicateRessource(currentsurface);
   /* Require the other surfaces */
@@ -226,17 +221,13 @@ TPaddle::~TPaddle() {
 /* **********************************************************************
  * Called, when this entity collides with another
  * *********************************************************************/
-void TPaddle::OnCollision(TEntity& other,Uint32 currenttime) {
+void TPaddle::OnCollision(TEntity& other) {
 
   /* This must only be called, when at least boundingCollision have been 
      called 
      The purpose of this method is to resolve collisions between this object
      and the other. */
-  /* Check if we have already collided */
-  if (LastCollision == currenttime) {
-    return;
-  }
-  LastCollision = currenttime;
+
   /* We do not want the paddle to script on 
      hitting powerups */
   if ( "POWERUP" != other.getEntityType() ) {
@@ -316,7 +307,9 @@ void TPaddle::GoWide(int seconds) {
  * *********************************************************************/
 TBall::TBall(int x, int y, double vel,
 	     const string& pixmap, const string& hitfunction)
-  : TPixmapEntity(x, y, 0, pixmap, "BALL", MOVING, PIXEL) {
+  : TPixmapEntity(x, y, 0, pixmap, "BALL", MOVING, PIXEL),
+    is_dying(false)
+{
   SetScriptHitCall(hitfunction);
   setMotion(new TFreeMotion);
   dynamic_cast<TFreeMotion*>(getMotion())->setDir(1 * M_PI / 3);
@@ -326,6 +319,149 @@ TBall::TBall(int x, int y, double vel,
 /* **********************************************************************
  * Collision - Currently just call parent function
  * *********************************************************************/
-void TBall::OnCollision(TEntity& other, Uint32 currenttime=0) {
-  TPixmapEntity::OnCollision(other,currenttime);
+void TBall::OnCollision(TEntity& other) {
+
+  /* This must only be called, when at least boundingCollision have been 
+     called 
+     The purpose of this method is to resolve collisions between this object
+     and the other. */
+  
+  if (other.getEntityType() == "POWERUP")
+    return;
+  
+  if (getMotion()) {
+    double colx = x();
+    double coly = y();
+    getMotion()->rewind(*this);
+    TFreeMotion* motion = dynamic_cast<TFreeMotion*>(getMotion());
+    double newangle = 0.0;
+    double ballwidth = 0;
+    double ballheight = 0;
+    
+    // if the ball is on the way down the drain, skip collision response
+    if ( other.getEntityType() == "PADDLE" && 
+	 (y() + h()) > other.y() ) {
+
+      getMotion()->setVelocity(0.5);
+      setX(colx);
+      setY(coly);
+      // make sure the right reflektion is done
+      if (!is_dying && 
+	  ((motion->getDir() > (3*M_PI/2) && x() < (other.x() + other.w()/2)) ||
+	   (motion->getDir() < (3*M_PI/2) && x() > (other.x() + other.w()/2)) ) )
+	motion->setDir(3.0 * M_PI - motion->getDir());       
+      is_dying = true;
+      return;
+    }
+
+    switch(other.getCollideCorner()) {
+    case 1:
+      ballwidth = w();
+      ballheight = h();
+      break;
+    case 2:
+      ballwidth = w();
+      break;
+    case 3:
+      break;
+    case 4:
+      ballheight = h();
+      break;
+    }
+    double dx = collidepoint.x() - (x() + ballwidth);
+    double dy = collidepoint.y() - (y() + ballheight);
+      
+    // Equation of two lines intersecting, knowing that one of 
+    // the lines is vertical. The taking only the y component of the 
+    // intersection point.
+    double lin_intersect_y = dy * ((other.getCollidePoint().x() - (x() + ballwidth) ) / dx) + y() + ballheight; 
+      
+    bool verticalhit = false;
+    switch(other.getCollideCorner()) {
+    case 1:
+      if ( lin_intersect_y > other.getCollidePoint().y() && dx > 0) {
+	verticalhit = true;
+      }
+      break;
+    case 2:
+      if ( lin_intersect_y < other.getCollidePoint().y() && dx > 0) {
+	verticalhit = true;
+      }
+      break;
+    case 3:
+      if ( lin_intersect_y < other.getCollidePoint().y() && dx < 0) {
+	verticalhit = true;
+      }
+      break;
+    case 4:
+      if ( lin_intersect_y > other.getCollidePoint().y() && dx < 0) {	
+	verticalhit = true;
+      }
+      break;
+    }
+      
+    if ( verticalhit ) {	
+      // OK collision on the side
+      // a hit from the left
+      newangle = (dy < 0) ? 
+	M_PI - motion->getDir() :
+	3.0 * M_PI - motion->getDir(); 
+	
+      if (dx >= 0) {
+	setX(colx - 2 * ( (colx + ballwidth) -  other.getCollidePoint().x()));	
+      }else{
+	setX(colx + 2 * ( other.getCollidePoint().x() - colx ));
+      }
+      setY(coly);
+	
+	
+    }else{
+      // OK collision on the top/bottom
+	
+      newangle = (dx < 0) ? 
+	2.0 * M_PI - motion->getDir() :
+	2.0 * M_PI - motion->getDir();
+	
+      if (dy >= 0) {
+
+	setY(coly - 2 * ( (coly + ballheight) -  other.getCollidePoint().y()) -1  );
+
+	// If the ball has hit the paddle from above we make some modifications to the angle
+	// depending where on the paddle the ball has hit.
+	if (other.getEntityType() == "PADDLE") {
+	  TPaddle* paddle =  dynamic_cast<TPaddle*>(&other);
+	  double lx = (x() + w()/2) - paddle->x();
+	  lx = (lx < 0) ? 0 :  ( (lx > paddle->w()) ? paddle->w() : lx);
+	  double modangle = ( (paddle->w()/2) < lx) ? -log(lx - paddle->w()/2) : log(paddle->w()/2 - lx);
+	  modangle = ( (paddle->w()/2) == lx) ? 0 : modangle;
+
+	  // if the ball hits the middle of the bat no angle modifier is applied
+	  modangle = (fabs(paddle->w()/2 - lx) < (paddle->w() * 0.3)) ? 0 : modangle;
+
+	  // OK now we see if the paddle is moving and make the appropriate changes to 
+	  // the angle of the ball.
+	  double modangle2 = 0;
+	  if (motion->getCurrentVelocity() != 0)
+	    modangle2 = -(paddle->getMoveAngleMod() * paddle->getMotion()->getCurrentVelocity());
+
+	  newangle += modangle * paddle->getAngleMod() + modangle2;
+
+	  // make some adjustment so the ball doesn't move horizontal ever
+	  if (newangle < (M_PI / 7)) {
+	    newangle = M_PI / 7;
+	  } else if (newangle > (6 *M_PI / 7)) {
+	    newangle = 6 * M_PI / 7;
+	  }
+	}
+      }else{
+	setY(coly + 2 * ( other.getCollidePoint().y() -  coly) + 1 );
+      }
+	
+      setX(colx);
+	
+    }
+    motion->setDir(newangle);
+  } 
+
+  TPixmapEntity::OnCollision(other);
 }

@@ -254,8 +254,13 @@ void TGame::handleCollisions(Uint32 currenttime)
 
       /* Call the OnCollision events for both entities 
 	 This ensures that STATIONARY can react to collisions. */
-      e1->OnCollision(*e2,currenttime);
-      e2->OnCollision(*e1,currenttime);
+      if (e1->getLastCollided() != currenttime)
+	e1->OnCollision(*e2);
+      if (e2->getLastCollided() != currenttime)
+	e2->OnCollision(*e1);
+
+      e1->setCollideTime(currenttime);
+      e2->setCollideTime(currenttime);
 
       // If necessary make pixel perfect detection..
 #ifdef PIXELON
@@ -295,8 +300,14 @@ void TGame::handleCollisions(Uint32 currenttime)
 
       /* Call the OnCollision events for both entities 
 	 This ensures that STATIONARY can react to collisions. */
-      e1->OnCollision(*e2,currenttime);
-      e2->OnCollision(*e1,currenttime);
+      
+      if (e1->getLastCollided() != currenttime)
+	e1->OnCollision(*e2);
+      if (e2->getLastCollided() != currenttime)
+	e2->OnCollision(*e1);
+      
+      e1->setCollideTime(currenttime);
+      e2->setCollideTime(currenttime);
 
       // If necessary make pixel perfect detection..
 #ifdef PIXELON

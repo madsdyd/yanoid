@@ -40,8 +40,7 @@ TEntity::TEntity(double x_, double y_, Angle a,
   entity_type(e), collision_granularity(c), move_type(m),
   motion(0), 
   mask(0),changed(true),
-  collidecorner(0), removable(false), AngleModifier(0.05), 
-  MovementAngleModifier(1.55), is_dying(false)
+  collidecorner(0), removable(false)
 {
 }
 
@@ -52,8 +51,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
   name("unknown"), 
   entity_type(e), collision_granularity(c), move_type(m),
   motion(0), mask(0),
-  changed(true), collidecorner(0), removable(false), 
-  AngleModifier(0.05), MovementAngleModifier(1.55), is_dying(false)
+  changed(true), collidecorner(0), removable(false)
 {
 
 }
@@ -63,8 +61,7 @@ TEntity::TEntity(const TOrientedPoint& p,
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
   entity_type(e), collision_granularity(c), move_type(m),
   motion(0), mask(0), 
-  changed(true), collidecorner(0), removable(false), 
-  AngleModifier(0.05), MovementAngleModifier(1.55), is_dying(false)
+  changed(true), collidecorner(0), removable(false)
 {
 }
 
@@ -72,14 +69,6 @@ TEntity::TEntity(const TOrientedPoint& p,
  * The destructor just clears the surface
  * *********************************************************************/
 TEntity::~TEntity() {
-}
-
-/* **********************************************************************
- * load - loads a entity from path
- * *********************************************************************/
-void TEntity::load(const std::string& path) 
-{
-  string abspath = PathManager->Resolve(path);
 }
 
 /* **********************************************************************
@@ -230,182 +219,8 @@ bool TEntity::pixelCollision(TEntity& o) {
 /* **********************************************************************
  * Called, when this entity collides with another
  * *********************************************************************/
-void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
+void TEntity::OnCollision(TEntity& other) {
 
-  /* This must only be called, when at least boundingCollision have been 
-     called 
-     The purpose of this method is to resolve collisions between this object
-     and the other. */
-  /* Check if we have already collided */
-  if (LastCollision == currenttime) {
-    return;
-  }
-
-  TEntity* ball;
-  TEntity* tother;
-
-  /* Peters syge forslag */
-  /*  if ("BALL" == getEntityType() && "STATIC" == other.getEntityType()) {
-    if (y() < 20) {
-      setY(550);
-      return;
-    }
-    }*/
-
-  /* Mega if on this beeing a ball */
-  if (getEntityType() == "BALL" && "POWERUP" != other.getEntityType()) {
-    /* LogLineExt(LOG_VERBOSE, ("BALL has collided with %s", 
-       other.getEntityType().c_str())); */
-	       
-    ball = this;
-    tother = &other;
-
-    // set collision update time
-    // so that we won't calculate collisions
-    // 2 times on a entity
-    LastCollision = currenttime;
-    // other.LastCollision = currenttime;
-    
-    //
-    // If we have a ball in the collision
-    //
-    if (ball->getMotion()) {
-      double colx = ball->x();
-      double coly = ball->y();
-      ball->getMotion()->rewind(*ball);
-      TFreeMotion* motion = dynamic_cast<TFreeMotion*>(ball->getMotion());
-      double newangle = 0.0;
-      
-      
-      double ballwidth = 0;
-      double ballheight = 0;
-    
-      // if the ball is on the way down the drain, skip collision response
-      if ( tother->getEntityType() == "PADDLE" && 
-	   (ball->y() + ball->h()) > tother->y() ) {
-
-	ball->getMotion()->setVelocity(0.5);
-	ball->setX(colx);
-	ball->setY(coly);
-	// make sure the right reflektion is done
-	if (!ball->is_dying && 
-	    ((motion->getDir() > (3*M_PI/2) && ball->x() < (tother->x() + tother->w()/2)) ||
-	     (motion->getDir() < (3*M_PI/2) && ball->x() > (tother->x() + tother->w()/2)) ) )
-	  motion->setDir(3.0 * M_PI - motion->getDir());       
-	ball->is_dying = true;
-	return;
-      }
-
-      switch(tother->collidecorner) {
-      case 1:
-	ballwidth = ball->w();
-	ballheight = ball->h();
-	break;
-      case 2:
-	ballwidth = ball->w();
-	break;
-      case 3:
-	break;
-      case 4:
-	ballheight = ball->h();
-	break;
-      }
-      double dx = ball->collidepoint.x() - (ball->x() + ballwidth);
-      double dy = ball->collidepoint.y() - (ball->y() + ballheight);
-      
-      // Equation of two lines intersecting, knowing that one of 
-      // the lines is vertical. The taking only the y component of the 
-      // intersection point.
-      double lin_intersect_y = dy * ((tother->collidepoint.x() - (ball->x() + ballwidth) ) / dx) + ball->y() + ballheight; 
-      
-      bool verticalhit = false;
-      switch(tother->collidecorner) {
-      case 1:
-	if ( lin_intersect_y > tother->collidepoint.y() && dx > 0) {
-	  verticalhit = true;
-	}
-	break;
-      case 2:
-	if ( lin_intersect_y < tother->collidepoint.y() && dx > 0) {
-	  verticalhit = true;
-	}
-	break;
-      case 3:
-	if ( lin_intersect_y < tother->collidepoint.y() && dx < 0) {
-	  verticalhit = true;
-	}
-	break;
-      case 4:
-	if ( lin_intersect_y > tother->collidepoint.y() && dx < 0) {	
-	  verticalhit = true;
-	}
-	break;
-      }
-      
-      if ( verticalhit ) {	
-	// OK collision on the side
-	// a hit from the left
-	newangle = (dy < 0) ? 
-	  M_PI - motion->getDir() :
-	  3.0 * M_PI - motion->getDir(); 
-	
-	if (dx >= 0) {
-	  ball->setX(colx - 2 * ( (colx + ballwidth) -  tother->collidepoint.x()));	
-	}else{
-	  ball->setX(colx + 2 * ( tother->collidepoint.x() - colx ));
-	}
-	ball->setY(coly);
-	
-	
-      }else{
-	// OK collision on the top/bottom
-	
-	newangle = (dx < 0) ? 
-	  2.0 * M_PI - motion->getDir() :
-	  2.0 * M_PI - motion->getDir();
-	
-	if (dy >= 0) {
-
-	  ball->setY(coly - 2 * ( (coly + ballheight) -  tother->collidepoint.y()) -1  );
-
-	  // If the ball has hit the paddle from above we make some modifications to the angle
-	  // depending where on the paddle the ball has hit.
-	  if (tother->getEntityType() == "PADDLE") {
-	    double lx = (ball->x() + ball->w()/2) - tother->x();
-	    lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
-	    double modangle = ( (tother->w()/2) < lx) ? -log(lx - tother->w()/2) : log(tother->w()/2 - lx);
-	    modangle = ( (tother->w()/2) == lx) ? 0 : modangle;
-
-	    // if the ball hits the middle of the bat no angle modifier is applied
-	    modangle = (fabs(tother->w()/2 - lx) < (tother->w() * 0.3)) ? 0 : modangle;
-
-	    // OK now we see if the paddle is moving and make the appropriate changes to 
-	    // the angle of the ball.
-	    double modangle2 = 0;
-	    if (motion->getCurrentVelocity() != 0)
-	      modangle2 = -(tother->MovementAngleModifier * tother->getMotion()->getCurrentVelocity());
-
-	    newangle += modangle * tother->AngleModifier + modangle2;
-
-	    // make some adjustment so the ball doesn't move horizontal ever
-	    if (newangle < (M_PI / 7)) {
-	      newangle = M_PI / 7;
-	    } else if (newangle > (6 *M_PI / 7)) {
-	      newangle = 6 * M_PI / 7;
-	    }
-	  }
-	}else{
-	  ball->setY(coly + 2 * ( tother->collidepoint.y() -  coly) + 1 );
-	}
-	
-	ball->setX(colx);
-	
-      }
-      motion->setDir(newangle);
-    } 
-    
-  } /* If ball in collision */
-  
   ExecuteScriptHitCall();
 
 }

@@ -61,9 +61,6 @@ protected:
   int collidecorner;
   Uint32 LastCollision;
   bool removable;
-  double AngleModifier; // only for paddle (should be in subclass)
-  double MovementAngleModifier; // only for paddle (should be in subclass)
-  bool is_dying; // only for ball (should be in subclass)
 public:
   TEntity(double x_, double y_, Angle a_ = 0,
 	  EntityType e = "BRICK", 
@@ -79,8 +76,6 @@ public:
 	  CollisionGranularity c = BOX);
   virtual ~TEntity();
 
-  virtual void load(const std::string& path);
-
   virtual void Update(Uint32 deltatime);
 
   virtual void Render(SDL_Surface * surface);
@@ -92,19 +87,25 @@ public:
   void setMotion(TMotion* m);
 
   /* Called when this entity collidies with another */
-  virtual void OnCollision(TEntity& other, Uint32 time = 0);
+  virtual void OnCollision(TEntity& other);
+
+  inline Uint32 getLastCollided() { return LastCollision; }
+  inline void setCollideTime(Uint32 currenttime) { LastCollision = currenttime;}
 
   inline EntityType getEntityType() const { return entity_type; }
+
   inline CollisionGranularity getCollisionGranularity() const { 
     return collision_granularity; 
   }
   inline MoveType getMoveType() const { return move_type; }
+
   /* Stuff to do with calling scripts (Test) */
   void SetScriptHitCall(string function);
   void ExecuteScriptHitCall();
 
   /* MarkDying - prepare this entity for its destiny... */
   virtual void MarkDying();
+
   /* Ask if entity can be removed */
   bool IsRemovable();
 
@@ -124,6 +125,7 @@ public:
   inline bool boundingBoxCollision(TEntity& obj);
   inline int getCollideCorner() { return collidecorner; }
   inline void resetCollideCorner() { collidecorner = 0; }
+  inline TPoint getCollidePoint() { return collidepoint; }
   inline Uint32 getLastCollision() { return LastCollision; };
   /*
     return ! ((obj.position.y()+obj._h) < position.y() || 
@@ -144,7 +146,6 @@ public:
 /* Define a list of entities */
 typedef std::list<TEntity *> TEntities;
 typedef TEntities::iterator TEntitiesIterator;
-
 
 /* Function object for comparing entities 
    is STL sort function
