@@ -28,15 +28,15 @@
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
 TEntity::TEntity(int x_, int y_, Angle a, CollisionType c, EntityType e):
-  _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), name("unknown"), 
-  collision_type(c), entity_type(e), motion(0) 
+  _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
+  name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0)
 {
 
 }
 
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
-  _w(24), _h(16), position(p), name("unknown"), 
-  collision_type(c), entity_type(e), motion(0) {
+  _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
+  collision_type(c), entity_type(e), motion(0), mask(0) {
 
 }
 
@@ -95,10 +95,66 @@ void TEntity::Render(SDL_Surface * surface) {
 }
 
 /* **********************************************************************
+ * boundingBoxCollision determines if the entity o's boundingBox, 
+ * collides with this boundingbox
+ * Much of this code is taken from sgelib
+ * *********************************************************************/
+bool TEntity::boundingBoxCollision(const TEntity& o)
+{
+  int x1 = position.x();
+  int y1 = position.y();
+  int x2 = o.position.x();
+  int y2 = o.position.y();
+  int w1 = _w;
+  int h1 = _h;
+  int w2 = o._w;
+  int h2 = o._h;
+  
+  if(x1 < x2){
+    if(x1+w1 > x2){
+      if(y1 < y2){
+	if(y1+h1 > y2){
+	  collidepoint.setX(x2);
+	  collidepoint.setY(y2);
+	  return true;
+	}
+      }
+      else{
+	if(y2+h2 > y1){
+	  collidepoint.setX(x2);
+	  collidepoint.setY(y1);
+	  return true;
+	}
+      }
+    }	
+  }
+  else{
+    if(x2+w2 > x1){
+      if(y2 < y1){
+	if(y2+h2 > y1){
+	  collidepoint.setX(x1);
+	  collidepoint.setY(y1);
+	  return true;
+	}
+      }
+      else{
+	if(y1+h1 > y2){
+	  collidepoint.setX(x1);
+	  collidepoint.setY(y2);
+	  return true;
+	}
+      }
+    }	
+  }
+  return false;
+}
+
+/* **********************************************************************
  * PixelCollision determines whether the TEntity obj, 
  * of obj collides with this TEntity using pixel perfection. 
  * *********************************************************************/
 bool TEntity::pixelCollision(const TEntity& o) {
   return boundingBoxCollision(o);
 }
+
 

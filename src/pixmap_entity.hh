@@ -38,8 +38,12 @@ public:
   virtual ~TPixmapEntity();
   
   virtual void setPixmap(const std::string& pixmap_path);
+  void MakeMask();
   virtual void Render(SDL_Surface * surface);
   virtual bool pixelCollision(const TEntity&);
+private:
+  int memand(unsigned char *s1, unsigned char *s2, 
+	     int shift1, int shift2, int N);
 };
 
 /* Define a list of pixmap entities */

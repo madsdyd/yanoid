@@ -31,6 +31,7 @@
 
 class TMotion;
 
+class TPixmapEntity;
 class TEntity {
 public:
   typedef enum CollisionType { BOX, PIXEL, NONE } CollisionType;
@@ -46,10 +47,12 @@ protected:
   */
   double remainder_x, remainder_y;
   TOrientedPoint position;
+  TPoint collidepoint;
   std::string name;
   CollisionType collision_type;
   EntityType entity_type;
   TMotion * motion;
+  unsigned char* mask;
 public:
   TEntity(int x_, int y_, Angle a_ = 0, CollisionType c = BOX, EntityType e = MOVING);
   TEntity(const TOrientedPoint& p, CollisionType c = BOX, EntityType e = MOVING);
@@ -83,14 +86,19 @@ public:
   inline int h() const { return _h; };
   inline void setW(int w_) { _w = w_; }
   inline void setH(int h_) { _h = h_; }
-  inline bool boundingBoxCollision(const TEntity& obj) {
-    return ! ((obj.position.y()+obj._h) < position.y() || (position.y()+_h) < obj.position.y() || 
-	      (obj.position.x()+obj._w) < position.x() || (position.x()+_w) < obj.position.x());
+  inline bool boundingBoxCollision(const TEntity& obj);
+  /*
+    return ! ((obj.position.y()+obj._h) < position.y() || 
+	      (position.y()+_h) < obj.position.y() || 
+	      (obj.position.x()+obj._w) < position.x() || 
+	      (position.x()+_w) < obj.position.x());
   }
+  */
   virtual bool pixelCollision(const TEntity& obj);
   friend class TMotion;
   friend class TFreeMotion;
   friend class TPathMotion;
+  friend class TPixmapEntity;
 };
 
 /* Define a list of entities */

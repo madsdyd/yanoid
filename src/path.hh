@@ -25,6 +25,21 @@
  * and/or angles. It is typically used for the paddle to describe 
  * where it can be on the screen. It may also be used to describe 
  * a predetermined behaviour of an enemy.
+ *
+ * fx.
+ * We create the paddle as a TPixmapEntity. Since the paddle should
+ * be constrained to be on a path (ie. certain positions on the screen),
+ * we also create a TPathMotion which we associate with the paddle. 
+ * Now the paddle has a pathmotion, but we have to define how the
+ * path is. Typically the paddle moves in a straight line in the bottom
+ * of the screen, and for this purpose we use a TOrientedLinePath, that
+ * we associate to the TPathMotion.
+ *
+ * This contruction has the advantage that we can easily define how the
+ * paddle (or other enetities) should move. Fx. we could have used a
+ * TOrientedCirkelPath instead of TOrientedLinePath to make the paddle
+ * constrained to moving in a large cirkel on the screen. Several paths
+ * can be put in a TPathMotion to define more complex paths.
  * *********************************************************************/
 
 #ifndef __PATH_HH__
