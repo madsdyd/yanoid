@@ -48,6 +48,6 @@ def StandardPlayField():
     # Top
     AddEntity("static", 1, -10, 798, 11, "static_hit()")
     # Bottom
-    AddEntity("hole", 1, 550, 798, 50, "")    
+    AddEntity("hole", 1, 599, 798, 100, "")    
     #AddEntity("static", 1, 550, 798, 50, "static_hit()")    
     
