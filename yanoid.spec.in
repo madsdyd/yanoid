@@ -1,7 +1,7 @@
 # Damn it, this is a -*-rpm-spec-*- file.
 %define name       yanoid
 %define version    @VERSION@
-%define release    3
+%define release    4
 %define serial     1
 %define prefix     /usr
 
@@ -11,7 +11,7 @@ Version:        %{version}
 Release:        %{release}
 Serial:         %{serial}
 Copyright:      GPL
-Group:          Applications/Games
+Group:          Games/Arcade
 Url:            http://yanoid.sf.net/
 Source:         %{name}-%{version}.tar.gz
 Packager:       Jonas Christian Drewsen <jcd@xspect.dk>
@@ -44,10 +44,10 @@ rm -rf %{buildroot}
 # The package files
 
 %files 
-%attr(755,root,root) %{prefix}/*
-%attr(755,root,root) %{prefix}/*/*
-%attr(755,root,root) %{prefix}/*/*/*
-%attr(755,root,root) %{prefix}/*/*/*/*
-%attr(755,root,root) %{prefix}/*/*/*/*/*
-%attr(755,root,root) %{prefix}/*/*/*/*/*/*
-
+%doc ChangeLog
+%doc AUTHORS
+%doc COPYING
+%doc CREDITS
+%doc README
+%doc TODO
+%attr(755,root,root) %{prefix}

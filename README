@@ -4,64 +4,24 @@ The projects home page is at http://www.sf.net/projects/yanoid/
 ----------------------------------------------------------------------
 * CONTENTS
 
-- Notes for the SDL contest
+- Authors and introduction
 - License
 - Requirements
 - Building Yanoid
 - Running Yanoid
 - Controls
 - Adding your own maps and ressources
-- Bug
+- Bugs
 - Final notes
 
 ----------------------------------------------------------------------
-* NOTES FOR THE SDL CONTEST
-
-IMPORTANT: Prior to configuring and installing yanoid, please make
-sure that you have a dynamic version of the Python library.
-
-If you do not, the archive "dyn-python-lib.<date>.tgz" (which you
-should have received as part of the contest entry) contains a minor
-project that will create and install such a beast, from a static
-version of the python libs. This will only take a couple of minutes.
-Please read the README file that comes with this archive. Should the
-process fail, then please obtain the Python sources and configure and
-install the Python library as a dynamic library.
-
-After you have succesfully created a dynamically loadable python library, proceed by configuring, building and installing yanoid. 
-
-Cnfigure yanoid, with at least the following options:
-./configure --disable-debug --enable-optimize-size 
-and, make and install: 
-make install-strip
-
-This will ensure that yanoid is installed in its minimal form, fulfilling
-the 1 MB size requirement of the contest. 
-
-If you have any troubles, please look in the "Requirements" and "Building
-Yanoid" sections below for full information on building Yanoid.
-
-Thanks.
-
-(FYI: Yanoid will work with a standard static version of the Python
-library, but the yanoid binary will be approximately 800 KB larger,
-thereby breaking the 1MB limit. A purely technical problem, although
-a rather unfortunate one.)
-
-* Required information
-
-Name: Entry into contest is a group entry called "Yet Another arkaNOID"
-(yanoid). The entry has been prepared in the period from the
-announcement of the contest, until 1th December 2001, by:
+* AUTHORS AND INTRODUCTION
 
 Mads Bondo Dydensborg <mads@dydensborg.dk>
 Jonas Christian Drewsen <jcd@xspect.dk>
 Bjarke Sørensen	<bs@wasd.dk>
+Please see the AUTHORS file for contributors.
 
-The entry is submitted by Mads Bondo Dydensborg on behalf of the
-group.
-
-City              : Copenhagen (Denmark, Scandinavia, Europe)
 Game Title        : Yet Another arkaNOID (short: yanoid)
 Brief description : A GPL SDL implementation of the classic game 
                     Arkanoid, in which a ball bounces on a map that 
@@ -77,31 +37,8 @@ Brief description : A GPL SDL implementation of the classic game
                     flexible, allowing the game to be extended in
                     novel ways.
 Build instructions: Please see the section "BUILDING YANOID"
-Email address     : mads@dydensborg.dk
+Email address     : madsdyd@challenge.dk
 Web site          : http://www.sf.net/projects/yanoid/
-Tools and libs    : Please see the section "REQUIREMENTS"
-License           : GPL, please see the section "LICENSE"
-Time to compile   : Cel 550 :  96.19user 5.78system 1:43.09elapsed
-                    We are aware that Yanoid may break the 1 minute
-                    barrier but hope the judges will have mercy on 
-                    us/yanoid.
-Size              : Yanoid should stay well within the 1MB limit
-                    (When a dynamic Python library is used, please
-                    see above).
-                    To ease extending Yanoid, all data files are
-                    installed in their native format. No special
-                    actions have been taken to compress neither
-                    binaries or data files (beyond their native
-                    compression features).
-		    It is a bit unclear to us, how to mark the files
-                    used by Yanoid. The easiest way to determine
-                    the size of the files installed by yanoid is
-                    to install yanoid to some isolated area of the
-                    filesystem, e.g. /usr/tmp/yanoid, by using the
-                    --prefix=/usr/tmp/yanoid flag to the configure
-                    script. All files used by yanoid will then 
-                    be installed to this directory, and the size
-                    taken up by them, can easily be determined.
 Credits           : Please see the file CREDITS.
                     A special "Thank You" goes to John Hall, 
                     author of "Programming Linux Games", for
@@ -136,9 +73,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ----------------------------------------------------------------------
 * REQUIREMENTS
 
-Yanoid has only been tested under Linux with the intel line of CPU's,
-but should build on any platform that supports the necessary tools and
-libs.
+Yanoid "was born" under Linux with the Intel line of CPU's, but should
+build on any platform that supports the necessary tools and
+libs. (Yanoid has been reported to build under Windows with the mingw
+compiler. Doing this should be a pretty straightforward process)
 
 Yanoid uses the gnu autotools to (try to) auto configure it self, and
 automate the build and install procedure. Ideally the process should
@@ -223,16 +161,13 @@ this:
 
 $ make
 
-You will most likely get a number of warnings (mostly from compiling
-the SDL_console source, which is provided as part of yanoid).
-
 Compiling yanoid takes about 3-4 minutes on a Ppro 232 with 128 MB
 ram.
 
 If the installation fails and it is during the linking stage, it is
 most likely because you have discovered a dependency on a library,
 that the configure script does not take into account. A likely cause
-is that you need a "devel" package for some library on your linux
+is that you need a "devel" package for some library on your Linux
 system. Please install the necessary package and "make" again.
 
 You are very welcome to write us, if you have problems with the yanoid
@@ -250,10 +185,6 @@ to install yanoid to the location you configured for (default
 games to /usr/local/games/bin/yanoid, but instead installs to
 /usr/local/bin/yanoid. Shared files are installed into
 /usr/local/share/games/yanoid however. 
-
-SDL contest note: To judge the size of yanoid, it will be neccesary to
-install yanoid, as final linking against dynamic libraries, etc, are
-done during installation.
 
 ----------------------------------------------------------------------
 * RUNNING YANOID
