@@ -59,6 +59,7 @@ protected:
   Uint32 LastUpdate;
   bool removable;
   double AngleModifier; // only for paddel (should be in subclass)
+  bool is_dying; // only for ball (should be in subclass)
 public:
   TEntity(double x_, double y_, Angle a_ = 0, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);

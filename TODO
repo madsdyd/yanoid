@@ -8,24 +8,24 @@ Bugs:
 **********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
-- Collision code is flaky
-- Autoconf code for Python 2.2b is broken
-- Complete the gameplay (map changing) code
-- More maps
+- Collision code is flaky (JCD, is on the way)
+- Autoconf code for Python 2.2b is broken (MBD)
+- Complete the gameplay (map changing) code (JCD)
+- More maps (BS,...)?
 
 
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)
 
-* Input system - keyboard movement of paddle is not fluent
+* Input system - keyboard movement of paddle is not fluent (JCD)
 
 * Menu
-- Add help and about texts
+- Add help and about texts (JCD,MBD,BS)?
 
 * Powerups
 
-* Sounds
-- Menu sounds
+* Sounds (BS)
+- Menu sounds 
 - ball hits paddle sound
 - ball hits wall sound
 - ball hits brick sound
@@ -34,7 +34,7 @@ Bugs:
 - bad sounds
 - gem sounds
 
-* Autotool
+* Autotool (MBD?)
 - Make sure that we fail when something essentiel is missing
 - need to add libvorbisfile (-lvorbis -lvorbisfile) to configure.in
 - need to add asound (-lasound) to configure.in (alsa-lib-devel)
@@ -52,12 +52,13 @@ SDL application that uses SDL_mixer.
 
 * Graphics
 - Better Font for menu/startup/display of score
-- Better Paddle graphic(?)
+- Better Paddle graphic(? Must be rectangular. After 1/12/2001 we'll see)
 - Graphic for different bricks
-- Ball graphic
+- Ball graphic 
 - Powerup graphics
-- Various animation stuff
-
+- Various animation stuff 
+	Level complete
+	Game over 
 
 **********************************************************************
 ** IN YOUR DREAMS (stuff that we will must likely NOT have time for)
@@ -68,4 +69,7 @@ SDL application that uses SDL_mixer.
 * Input system
   - mouse (probably not)
   - joystick? (very much unlikely)
+
+
+
 

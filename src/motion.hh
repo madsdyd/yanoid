@@ -40,16 +40,19 @@
 /* Base class */
 class TMotion {
 protected:
-  double _vel;
+  double _cur_vel, _vel, _acc;
   Uint32 _current_time;
   Uint32 _last_time;
 public:
-  virtual void setVelocity(double vel) { _vel = vel; }
+  TMotion() : _cur_vel(0) {}
+  virtual void setAccel(double acc) { _acc = acc; }
+  virtual double getAccel() { return _acc; }
+  virtual void setVelocity(double vel) { _vel = vel; _acc = _vel; }
   virtual double getVelocity() { return _vel; }
   virtual void Update(Uint32 deltatime, TEntity& e) = 0;
   void setDirection(bool forward) { _vel = (forward) ? fabs(_vel): -fabs(_vel); }
-  bool getDirection() const { return (_vel >= 0.0); }
-  void reverseDirection() { _vel = - _vel; }
+  bool getDirection() const { return (_cur_vel >= 0.0); }
+  void reverseDirection() { _cur_vel = - _cur_vel; }
   virtual void rewind(TEntity&);
 };
 

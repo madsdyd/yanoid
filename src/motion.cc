@@ -36,8 +36,8 @@ void TMotion::rewind(TEntity& e) {
  * Rewind, taken a step back in time for in the motion
  * *********************************************************************/
 void TFreeMotion::rewind(TEntity& e) {
-  double subx = _last_time * cos(motion_dir) * _vel; 
-  double suby = _last_time * sin(-motion_dir) * _vel; 
+  double subx = _last_time * cos(motion_dir) * _cur_vel; 
+  double suby = _last_time * sin(-motion_dir) * _cur_vel; 
   e.setX(e.x() - subx);
   e.setY(e.y() - suby);
 }
@@ -49,9 +49,16 @@ void TFreeMotion::Update(Uint32 deltatime, TEntity& e)
 {
   //  cerr << "Updateting " << e.getName() << " " << e.x() << ", " << e.y();
   _last_time = deltatime;
+
+  /* update the velocity, from the acceleration */
+  _cur_vel += deltatime * _acc;
+
+  _cur_vel = (_cur_vel >= _vel && _acc >= 0) ? _vel : _cur_vel;
+  _cur_vel = (_cur_vel <= _vel && _acc <= 0) ? _vel : _cur_vel;
+  //  cerr << "curvel : " << _cur_vel << " vel: " << _vel << " acc: " << _acc << endl;
   /* hmm. maybe this is too slow. we'll see */
-  double addx = deltatime * cos(motion_dir) * _vel; 
-  double addy = deltatime * sin(-motion_dir) * _vel; 
+  double addx = deltatime * cos(motion_dir) * _cur_vel; 
+  double addy = deltatime * sin(-motion_dir) * _cur_vel; 
   double oldx = e.x();
   double oldy = e.y();
   e.setX(addx + e.x());
@@ -69,6 +76,7 @@ void TFreeMotion::Update(Uint32 deltatime, TEntity& e)
 TPathMotion::TPathMotion(TPath* p, double vel) : _max(0.0)
 {
   _current_time = 0;
+  _cur_vel = vel;
   _vel = vel;
   if (p) {
     _paths.push_back(p);

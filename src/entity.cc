@@ -31,7 +31,7 @@
 TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  collidecorner(0), removable(false), AngleModifier(0.05)
+  collidecorner(0), removable(false), AngleModifier(0.05), is_dying(false)
 {
 }
 
@@ -40,6 +40,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
   changed(true),  collidecorner(0), removable(false), AngleModifier(0.05)
+  , is_dying(false)
 {
   cerr << "MJELLO" << endl;
 }
@@ -47,7 +48,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
   collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
-  collidecorner(0), removable(false), AngleModifier(0.05)
+  collidecorner(0), removable(false), AngleModifier(0.05), is_dying(false)
 {
 }
 
@@ -261,6 +262,23 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
       
       double ballwidth = 0;
       double ballheight = 0;
+    
+      // if the ball is on the way down the drain, skip collision response
+      if ( tother->getEntityType() == TEntity::PADDLE && 
+	   (ball->y() + ball->h()) > tother->y() ) {
+	cerr << "marked dying " << motion->getDir() << endl;
+	ball->getMotion()->setVelocity(0.5);
+	ball->setX(colx);
+	ball->setY(coly);
+	// make sure the right reflektion is done
+	if (!ball->is_dying && 
+	    ((motion->getDir() > (3*M_PI/2) && ball->x() < (tother->x() + tother->w()/2)) ||
+	     (motion->getDir() < (3*M_PI/2) && ball->x() > (tother->x() + tother->w()/2)) ) )
+	  motion->setDir(3.0 * M_PI - motion->getDir());       
+	ball->is_dying = true;
+	return;
+      }
+
       switch(tother->collidecorner) {
       case 1:
 	ballwidth = ball->w();
@@ -354,9 +372,12 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 	  if (tother->getEntityType() == TEntity::PADDLE) {
 	    double lx = (ball->x() + ball->w()/2) - tother->x();
 	    lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
-	    double modangle = (tother->w()/2 - lx) * tother->AngleModifier;
-	    cerr << "lx :" << lx << " modangle: " << modangle << endl;
-	    newangle += modangle;
+	    double modangle = ( (tother->w()/2) < lx) ? -log(lx - tother->w()/2) : log(tother->w()/2 - lx);
+	    modangle = ( (tother->w()/2) == lx) ? 0 : modangle;
+	    // if the ball hits the middle of the bat no angle modifier is applied
+	    modangle = (fabs(tother->w()/2 - lx) < (tother->w() * 0.3)) ? 0 : modangle;
+	    newangle += modangle * tother->AngleModifier;
+	    cerr << "lx :" << lx << " modangle: " << modangle << " tother->w(): " << tother->w() << endl;
 	  }
 	}else{
 	  /*

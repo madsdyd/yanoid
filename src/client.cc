@@ -249,22 +249,24 @@ void TClient::HandleEvents() {
 	case SDLK_LEFT:
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( -0.5 );
+	  paddle->getMotion()->setAccel( -0.001 );
 	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_RIGHT:
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( 0.5 );
+	  paddle->getMotion()->setAccel( 0.001 );
 	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_UP:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.5 );
-	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( M_PI_2 );	
+	  //	  paddle->getMotion()->setVelocity( 0.5 );
+	  //	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( M_PI_2 );	
 	  break;
 	case SDLK_DOWN:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.5 );
-	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
+	  //	  paddle->getMotion()->setVelocity( 0.5 );
+	  //	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
 	  break;
 	}
 	break;
@@ -272,19 +274,27 @@ void TClient::HandleEvents() {
 	switch (event.key.keysym.sym) {
 	case SDLK_LEFT:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.0 );
+	  // make sure we doesn't stop a movement to the right
+	  if(paddle->getMotion()->getVelocity() < 0) {
+	    paddle->getMotion()->setVelocity( 0.0 );
+	    paddle->getMotion()->setAccel( 0.001 );
+	  }
 	  break;
 	case SDLK_RIGHT:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.0 );
+	  // make sure we doesn't stop a movement to the left
+	  if(paddle->getMotion()->getVelocity() > 0) {
+	    paddle->getMotion()->setVelocity( 0.0 );
+	    paddle->getMotion()->setAccel( -0.001 );
+	  }
 	  break;
 	case SDLK_UP:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.0 );
+	  //	  paddle->getMotion()->setVelocity( 0.0 );
 	  break;
 	case SDLK_DOWN:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.0 );
+	  //	  paddle->getMotion()->setVelocity( 0.0 );
 	  break;
 	}
       default:
