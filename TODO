@@ -1,0 +1,38 @@
+The following is a list of stuff that needs to be implemented in yanoid, as 
+well as the ressources (graphics, sounds) that will be needed before we have
+a game that can be considered ready for the SDL contest.
+
+* Implementation
+- Input system
+  - keyboard
+  - mouse
+  - joystick?
+- Basic game engine
+  - Objects (everything that reacts to game physics)
+  - Physics (bouncing, mostly, various hardness of surfaces, sinks)
+  - Map (Describes map layout)
+- Graphics system 
+  - (Represent game engine on screen)
+- Network system 
+  - (Get/deliver events/state from/to the network)
+- Update system
+  - Updates gamestate based on input and network stuff.
+- Ressource management
+  - (Load ressources on demand)
+- Main loop.
+
+
+* Graphics
+- Font for menu/startup/display of score
+- Paddle graphic
+- Graphic for different bricks
+
+* Sounds
+- Menu sounds
+- ball hits paddle sound
+- ball hits wall sound
+- ball hits brick sound
+- brick effect sounds (explosion, disappear, whatever)
+- powerup sounds
+- bad sounds
+- gem sounds
