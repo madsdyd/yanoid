@@ -165,4 +165,18 @@ bool TEntity::pixelCollision(const TEntity& o) {
   return boundingBoxCollision(o);
 }
 
-
+/* **********************************************************************
+ * Called, when this entity collides with another
+ * *********************************************************************/
+void TEntity::OnCollision(const TEntity& other) {
+  /* This must only be called, when at least boundingCollision have been 
+     called 
+     The purpose of this method is to resolve collisions between this object
+     and the other. 
+     This is done by rewinding the time for both objects, finding the point
+     in time where they collide, change their motion according to some
+     yet-to-be-defined rules, and then forward time again. */
+  if (getMotion()) {
+    
+  }
+}

@@ -74,6 +74,9 @@ public:
   inline TMotion * getMotion() { return motion; }
   void setMotion(TMotion* m);
 
+  /* Called when this entity collidies with another */
+  void OnCollision(const TEntity& other);
+
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
 
