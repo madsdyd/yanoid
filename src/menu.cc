@@ -25,61 +25,6 @@
 #include "fontmanager.hh"
 #include <SDL/SDL.h>
 #include "ConsoleSource/DT_drawtext.h"
-/* **********************************************************************
- * These menus are used internally.
- * *********************************************************************/
-
-/* **********************************************************************
- * The Help Menu
- * *********************************************************************/
-class THelpMenu : public TMenu {
-protected:
-  void SelectFocused() { cancel = true; };
-  void Render();
-public:
-  THelpMenu();
-};
-
-THelpMenu::THelpMenu() : TMenu() {
-  items.push_back("Return");
-}
-
-void THelpMenu::Render() {
-  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-  RenderSplash();
-  string text = "Here is room for a help text";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-
-  RenderItems(0, 300, Screen->w, Screen->h);
-  SDL_Flip(Screen);
-}
-
-/* **********************************************************************
- * The About Menu
- * *********************************************************************/
-class TAboutMenu : public TMenu {
-protected:
-  void SelectFocused() { cancel = true; };
-  void Render();
-public:
-  TAboutMenu();
-};
-
-TAboutMenu::TAboutMenu() : TMenu() {
-  items.push_back("Return");
-}
-
-void TAboutMenu::Render() {
-  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-  RenderSplash();
-  string text = "Here is room for an about text";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-
-  RenderItems(0, 300, Screen->w, Screen->h);
-  SDL_Flip(Screen);
-}
 
 
 /* **********************************************************************
@@ -90,15 +35,18 @@ void TAboutMenu::Render() {
  * Constructor and destructor
  * *********************************************************************/
 
-TMenu::TMenu() {
+TMenu::TMenu(bool capture_background, bool display_splash) {
   font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
   if (!font) {
     LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
     exit(-1);
   }
-  focused = 0;
-  cancel = false;
-  close = false;
+  cap_back   = capture_background;
+  background = NULL;
+  dis_splash = display_splash;
+  focused    = 0;
+  cancel     = false;
+  close      = false;
 }
 
 TMenu::~TMenu() {
@@ -110,6 +58,27 @@ TMenu::~TMenu() {
  * *********************************************************************/
 bool TMenu::Run() {
   cancel = false; close = false;
+  /* Copy the background, if neccesary */
+  if (cap_back) {
+    /* Copy the screen - make it a background */
+    background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
+				      Screen->format->BitsPerPixel,
+				      Screen->format->Rmask,
+				      Screen->format->Gmask,
+				      Screen->format->Bmask,
+				      Screen->format->Amask);
+    if (background == NULL) {
+      LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
+    } else {
+      SDL_Rect d;
+      d.x = 0; d.y = 0; 
+      d.w = background->w;
+      d.h = background->h;
+      SDL_BlitSurface(Screen, &d, background, &d);
+      SDL_SetAlpha(background, SDL_SRCALPHA, 64);
+    }
+  }
+  /* While until the menu is done */
   while(!cancel && !close) {
     Render();
     SDL_Event event;
@@ -125,7 +94,7 @@ bool TMenu::Run() {
  * Render - renders the menu
  * *********************************************************************/
 void TMenu::Render() {
-  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  RenderBackground();
   RenderSplash();
   RenderItems(0, 0, Screen->w, Screen->h);
   SDL_Flip(Screen);
@@ -135,11 +104,29 @@ void TMenu::Render() {
  * RenderSplash - renders the splash screen
  * *********************************************************************/
 void TMenu::RenderSplash() {
-  /* Put on the splash screen */
-  SDL_Rect src, dest;
-  src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
-  dest.x = (Screen->w-src.w)/2; dest.y = 100; dest.w = src.w; dest.h = src.h;
-  SDL_BlitSurface(Splash, &src, Screen, &dest);
+  if (dis_splash) {
+    /* Put on the splash screen */
+    SDL_Rect src, dest;
+    src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
+    dest.x = (Screen->w-src.w)/2; dest.y = 100; dest.w = src.w; dest.h = src.h;
+    SDL_BlitSurface(Splash, &src, Screen, &dest);
+  }
+}
+/* **********************************************************************
+ * RenderBackground - renders the background
+ * *********************************************************************/
+void TMenu::RenderBackground() {
+  if (background) {
+    SDL_FillRect(Screen, NULL, 
+		 SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
+    SDL_Rect d;
+    d.x = 0; d.y = 0; 
+    d.w = background->w;
+    d.h = background->h;
+    SDL_BlitSurface(background, &d, Screen, &d);
+  } else {
+    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  }
 }
 
 /* **********************************************************************
@@ -204,10 +191,66 @@ bool TMenu::HandleEvent(SDL_Event * event) {
 };
 
 /* **********************************************************************
+ * These menus are used internally.
+ * *********************************************************************/
+
+/* **********************************************************************
+ * The Help Menu
+ * *********************************************************************/
+class THelpMenu : public TMenu {
+protected:
+  void SelectFocused() { cancel = true; };
+  void Render();
+public:
+  THelpMenu();
+};
+
+THelpMenu::THelpMenu() : TMenu(false) {
+  items.push_back("Return");
+}
+
+void THelpMenu::Render() {
+  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  RenderSplash();
+  string text = "Here is room for a help text";
+  int drawx = (Screen->w - text.size()*16) / 2;
+  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
+
+  RenderItems(0, 300, Screen->w, Screen->h);
+  SDL_Flip(Screen);
+}
+
+/* **********************************************************************
+ * The About Menu
+ * *********************************************************************/
+class TAboutMenu : public TMenu {
+protected:
+  void SelectFocused() { cancel = true; };
+  void Render();
+public:
+  TAboutMenu();
+};
+
+TAboutMenu::TAboutMenu() : TMenu(false) {
+  items.push_back("Return");
+}
+
+void TAboutMenu::Render() {
+  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  RenderSplash();
+  string text = "Here is room for an about text";
+  int drawx = (Screen->w - text.size()*16) / 2;
+  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
+
+  RenderItems(0, 300, Screen->w, Screen->h);
+  SDL_Flip(Screen);
+}
+
+/* **********************************************************************
  * The PreGameMenu
  * *********************************************************************/
 
-TPreGameMenu::TPreGameMenu() : TMenu() {
+TPreGameMenu::TPreGameMenu() : TMenu(false) {
   HelpMenu = new THelpMenu();
   AboutMenu = new TAboutMenu();
   items.push_back("Start Game");
@@ -245,7 +288,8 @@ void TPreGameMenu::SelectFocused() {
 /* **********************************************************************
  * The in game menu
  * *********************************************************************/
-TInGameMenu::TInGameMenu(TClient * client) : TMenu(), Client(client) {
+TInGameMenu::TInGameMenu(TClient * client) 
+  : TMenu(true, false), Client(client) {
   items.push_back("Resume game");
   items.push_back("Toggle console");
   items.push_back("Toggle fullscreen");
@@ -272,41 +316,22 @@ void TInGameMenu::SelectFocused() {
   }
 }
 
-bool TInGameMenu::Run() {
-  /* Copy the screen - make it a background */
-  background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
-				    Screen->format->BitsPerPixel,
-				    Screen->format->Rmask,
-				    Screen->format->Gmask,
-				    Screen->format->Bmask,
-				    Screen->format->Amask);
-  if (background == NULL) {
-    LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
-  } else {
-    SDL_Rect d;
-    d.x = 0; d.y = 0; 
-    d.w = background->w;
-    d.h = background->h;
-    SDL_BlitSurface(Screen, &d, background, &d);
-    SDL_SetAlpha(background, SDL_SRCALPHA, 64);
-  }
-  /* Call parent */
-  return TMenu::Run();
+/* **********************************************************************
+ * TGameOver menu
+ * *********************************************************************/
+TGameOverMenu::TGameOverMenu() : TMenu(true, false) {
+  items.push_back("OK");
 }
 
-void TInGameMenu::Render() {
-  if (background) {
-    SDL_FillRect(Screen, NULL, 
-		 SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
-    SDL_Rect d;
-    d.x = 0; d.y = 0; 
-    d.w = background->w;
-    d.h = background->h;
-    SDL_BlitSurface(background, &d, Screen, &d);
-    // RenderSplash();
-    RenderItems(0, 0, Screen->w, Screen->h);
-    SDL_Flip(Screen);
-  } else {
-    TMenu::Render();
-  }
+void TGameOverMenu::SelectFocused() { 
+  cancel = true; 
+};
+
+void TGameOverMenu::Render() {
+  RenderBackground();
+  string text = "Game over";
+  int drawx = (Screen->w - text.size()*16) / 2;
+  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
+  RenderItems(0, 300, Screen->w, Screen->h);
+  SDL_Flip(Screen);
 }

@@ -1,3 +1,11 @@
+2001-11-16  Mads Bondo Dydensborg  <madsdyd@mother>
+
+	* Gameplay
+	Added a score and lives display
+	Game now adds balls, and reduces lives
+	Added a gameover menu
+	Fixed crash on exit
+
 2001-11-14  Mads Bondo Dydensborg  <madsdyd@mother>
 
 	* Gameplay

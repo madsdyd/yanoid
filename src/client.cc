@@ -101,7 +101,7 @@ void TClient::Run() {
     game_lastupdate = 0;
     LogLine(LOG_VERBOSE, "Game->Update(0)");
     Game->Update(0);
-    QuitCurrentGame = false;
+    QuitCurrentGame = false; /* May be changed by the in game menu */
     while(!QuitCurrentGame) {
       /* Update the game state */
       UpdateGame();
@@ -114,6 +114,9 @@ void TClient::Run() {
       if (TGameState::DEAD == Game->GetState()->status) {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
+	TGameOverMenu * GameOverMenu = new TGameOverMenu();
+	GameOverMenu->Run();
+	delete GameOverMenu;
 	QuitCurrentGame = true;
       }
     }

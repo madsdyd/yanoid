@@ -30,6 +30,11 @@
 class TMenu {
 protected:
   fonthandle_t * font;
+  /* Wheter or not we capture the background */
+  bool cap_back;
+  SDL_Surface * background;
+  /* Wheter or not to display the splash screen */
+  bool dis_splash;
   /* The menu items */
   typedef vector<string> TItems;
   typedef vector<string>::iterator TItemsIterator;
@@ -45,10 +50,12 @@ protected:
   virtual void Render();
   /* Called to render the splash menu */
   void RenderSplash();
+  /* Called to render a background */
+  void RenderBackground();
   /* Called when the items should be rendered */
   void RenderItems(int xlow, int ylow, int xhigh, int yhigh);
 public:
-  TMenu(); 
+  TMenu(bool capture_background = false, bool display_splash = true); 
   virtual ~TMenu();
   virtual bool Run();
 };
@@ -76,8 +83,14 @@ protected:
   TClient * Client;
   SDL_Surface * background;
   virtual void SelectFocused();
-  virtual void Render();
 public:
   TInGameMenu(TClient * client);
-  bool Run();
+};
+
+class TGameOverMenu : public TMenu {
+protected: 
+  void SelectFocused();
+  void Render();
+public:
+  TGameOverMenu();
 };
