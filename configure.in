@@ -192,9 +192,9 @@ if test "x$have_SDL" = "xno" ; then
     have_trouble=yes
     AC_MSG_WARN([
 *** PROBLEM:
-*** Unable to find a version of SDL that was never than 1.1.8
+*** Unable to find a version of SDL that was never than 1.2.2
 *** This is required for yanoid to work.
-*** Most distributions include at least SDL 1.1.8 - never
+*** Most distributions include at least SDL 1.2.2 - never
 *** versions may be found at http://www.libsdl.org
 ])
 fi
