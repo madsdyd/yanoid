@@ -28,6 +28,11 @@ class TMapState {
   TEntity * paddle;
   friend TMap;
 public:
+  int num_balls; /* Number of balls in play. 
+		    When 0 is reached, a live is substracted
+		    and a ball is added if there is lives left */
+  int num_bricks; /* Number of bricks in play. When zero, the map has
+		     been completed */
   TMapState();
   ~TMapState();
   TEntities Entities;

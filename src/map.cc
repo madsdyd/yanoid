@@ -91,7 +91,7 @@ static PyMethodDef map_methods[] = {
 /* **********************************************************************
  * TMapState constructor
  * *********************************************************************/
-TMapState::TMapState() : paddle(NULL) {
+TMapState::TMapState() : paddle(NULL), num_balls(0), num_bricks(0) {
 
 }
 /* **********************************************************************
@@ -195,6 +195,7 @@ bool TMap::AddEntity(string type, string hitfunction,
     TPixmapEntity * e = new TPixmapEntity(x, y, 0, pixmap);
     e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
+    MapState->num_bricks++;
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */
@@ -224,6 +225,7 @@ bool TMap::AddEntity(string type, string hitfunction,
     dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.05);
     e->setName("Default Ball");
     MapState->Entities.push_back(e);
+    MapState->num_balls++;
     return true;
   } else {
     LogLine(LOG_WARNING, "TMap::AddEntity - unknown type " + type);

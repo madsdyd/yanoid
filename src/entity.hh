@@ -56,6 +56,7 @@ protected:
   string ScriptHitCall;
   bool changed;
   int collidecorner;
+  bool removable;
 public:
   TEntity(double x_, double y_, Angle a_ = 0, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);
@@ -86,6 +87,11 @@ public:
   /* Stuff to do with calling scripts (Test) */
   void SetScriptHitCall(string function);
   void ExecuteScriptHitCall();
+
+  /* MarkDying - prepare this entity for its destiny... */
+  void MarkDying();
+  /* Ask if entity can be removed */
+  bool IsRemovable();
 
   /*
     Geometry functions of the entity
@@ -120,7 +126,6 @@ public:
 /* Define a list of entities */
 typedef std::list<TEntity *> TEntities;
 typedef TEntities::iterator TEntitiesIterator;
-
 #endif
 
 

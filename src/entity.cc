@@ -31,7 +31,7 @@
 TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  collidecorner(0)
+  collidecorner(0), removable(false)
 {
 
 }
@@ -40,7 +40,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
 		 Angle a, CollisionType c, EntityType e):
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  changed(true),  collidecorner(0)
+  changed(true),  collidecorner(0), removable(false)
 {
 
 }
@@ -48,7 +48,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
   collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
-  collidecorner(0)
+  collidecorner(0), removable(false)
 {
 
 }
@@ -117,6 +117,27 @@ void TEntity::Render(SDL_Surface * surface) {
 
   changed = false;
 }
+
+
+
+
+
+
+/* **********************************************************************
+ * Marking dying and removable is to have a way to remove entities 
+ * - balls and bricks, mostly - from a map.
+ * *********************************************************************/
+void TEntity::MarkDying() {
+  removable = true;
+  /* Could be used to spawn some sort of animation, etc */
+}
+
+bool TEntity::IsRemovable() {
+  return removable;
+}
+
+
+
 
 /* **********************************************************************
  * boundingBoxCollision determines if the entity o's boundingBox, 

@@ -35,7 +35,6 @@ public:
   StatusType status;
   int lives; /* This will go/move somewhere else */
   int score;
-  
   TGameState() {
     /* We start in cut, 5 lives, no score */
     status = CUT;
