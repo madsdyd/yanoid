@@ -50,7 +50,7 @@ protected:
 public:
   TMenu(); 
   virtual ~TMenu();
-  bool Run();
+  virtual bool Run();
 };
 
 
@@ -74,7 +74,10 @@ class TClient;
 class TInGameMenu : public TMenu{
 protected:
   TClient * Client;
+  SDL_Surface * background;
   virtual void SelectFocused();
+  virtual void Render();
 public:
   TInGameMenu(TClient * client);
+  bool Run();
 };

@@ -267,3 +267,42 @@ void TInGameMenu::SelectFocused() {
     LogLineExt(LOG_ERROR, ("TInGameMenu - focused out of range %i", focused));
   }
 }
+
+bool TInGameMenu::Run() {
+  /* Copy the screen - make it a background */
+  background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
+				    Screen->format->BitsPerPixel,
+				    Screen->format->Rmask,
+				    Screen->format->Gmask,
+				    Screen->format->Bmask,
+				    Screen->format->Amask);
+  if (background == NULL) {
+    LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
+  } else {
+    SDL_Rect d;
+    d.x = 0; d.y = 0; 
+    d.w = background->w;
+    d.h = background->h;
+    SDL_BlitSurface(Screen, &d, background, &d);
+    SDL_SetAlpha(background, SDL_SRCALPHA, 64);
+  }
+  /* Call parent */
+  return TMenu::Run();
+}
+
+void TInGameMenu::Render() {
+  if (background) {
+    SDL_FillRect(Screen, NULL, 
+		 SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
+    SDL_Rect d;
+    d.x = 0; d.y = 0; 
+    d.w = background->w;
+    d.h = background->h;
+    SDL_BlitSurface(background, &d, Screen, &d);
+    // RenderSplash();
+    RenderItems(0, 0, Screen->w, Screen->h);
+    SDL_Flip(Screen);
+  } else {
+    TMenu::Render();
+  }
+}
