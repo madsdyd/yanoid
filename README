@@ -124,6 +124,11 @@ SDL >= 1.2.2, SDL_mixer >= 1.1, SDL_image >= 1.1,
 python<version > 2.0>, artsc, esd, audiofile, 
 vorbis, smpeg, jpeg, png, z, ogg & tiff.
 
+IMPORTANT NOTE: yanoid has failed to work with Python 2.2b1! Apparently
+the import mechanisms in python are different from 2.x in such a way
+that everything breaks. If you get python errors in the console, please
+try and use Python version 2.1.1 which should work.
+
 SDL, SDL_mixer & SDL_image is in fact part of many distributions and
 if you have a "correct" installation of the SDL, SDL_mixer and
 SDL_image, the remaining libraries should be present. In other words,
