@@ -45,7 +45,7 @@
 #include "ressourcemanager.hh"
 #include "surfacemanager.hh"
 #include "musicmanager.hh"
-
+#include "ConsoleSource/CON_console.h"
 #include "game.hh"
 #include "display.hh"
 #include "client.hh"
@@ -59,6 +59,18 @@ void SignalHandler(int signal) {
   exit(-1);
 }
 
+/* Prints the string you pass it into the console */
+void PrintMe(char *String)
+{
+        CON_ConOut("%s", String);
+}
+
+/* lets the user change the alpha level */
+void AlphaChange(char *alpha)
+{
+        CON_ConsoleAlpha(atoi(alpha));
+        CON_ConOut("Alpha set to %s.", alpha);
+}
 
 int main(int argc, char ** argv) {
   /* **********************************************************************
@@ -188,6 +200,23 @@ int main(int argc, char ** argv) {
     = MusicManager->RequireRessource("sounds/yanoid.ogg");
   Assert(NULL != oggmusic, "Error getting Mix_Music *");
 
+  /* **********************************************************************
+   * Initialize the console (requires SDL to be initialized )
+   * *********************************************************************/
+
+  SDL_Rect Con_Init = { 0, 0, 800, 300 };
+  
+  /* Init the console */
+  // hacky
+  Assert(CON_ConsoleInit("../data/graphics/fonts/ConsoleFont.bmp", Screen, 100, Con_Init) == 0,
+	 "Unable to initialize console");
+  
+  /* Add some commands to the console */
+  CON_AddCommand(&PrintMe, "printme");
+  CON_AddCommand(&AlphaChange, "alpha");
+  
+  CON_ListCommands();
+  
   /* **********************************************************************
    * TEST - initialize game, display and client.
    * *********************************************************************/

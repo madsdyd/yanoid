@@ -20,6 +20,8 @@
 */
 #include "display.hh"
 #include "game.hh"
+#include "ConsoleSource/CON_console.h"
+
 /* **********************************************************************
  * The global display
  * *********************************************************************/
@@ -36,4 +38,37 @@ void TDisplay::Render(SDL_Surface * surface) {
   for (i = GameState->MapState->Entities.begin(); i != End; i++) {
     (*i)->Render(surface);
   }
+
+  SDL_Event event;
+  if (SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_KEYDOWN:
+	switch (event.key.keysym.sym) {
+	  case SDLK_BACKQUOTE:
+	    if (!ConsoleDown){
+	      ConsoleDown = true;
+	      SDL_EnableUNICODE(1);
+	    } else {
+	      ConsoleDown = false;
+	      SDL_EnableUNICODE(0);
+	    }
+	    return;
+	default:
+	  break;
+	}
+	break;
+    default:
+      break;
+    }
+    /* If the console is down send events that were not
+     * filtered out yet to the console */
+    if (ConsoleDown) {
+      CON_ConsoleEvents(&event);
+    }
+  }
+
+  if (ConsoleDown) {
+    CON_DrawConsole();
+  }
+
 }
