@@ -80,9 +80,9 @@ bool TMenu::Run() {
       d.w = background->w;
       d.h = background->h;
       LogLine(LOG_VERBOSE, "Blitting screen onto background");
-      // SDL_LockSurface(Screen);
+      SDL_LockSurface(Screen);
       SDL_BlitSurface(Screen, &d, background, &d);
-      // SDL_UnlockSurface(Screen);
+      SDL_UnlockSurface(Screen);
       LogLine(LOG_VERBOSE, "Screen blitted, setting alpha");
       SDL_SetAlpha(background, SDL_SRCALPHA, 64);
       LogLine(LOG_VERBOSE, "Alpha set");
