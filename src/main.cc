@@ -125,6 +125,7 @@ void DupLogToConsole(string arg) {
  * *********************************************************************/
 
 int main(int argc, char ** argv) {
+  int atExitResponse = 0;
   /* **********************************************************************
    * Initialize the logging stuff, if present
    * *********************************************************************/
@@ -192,8 +193,10 @@ int main(int argc, char ** argv) {
     LogFatal("Unable to initialize SDL: " << SDL_GetError());
     return -1;
   }
+
+  atExitResponse = atexit(SDL_Quit);
   /* Make sure it is shutdown, when we exit */
-  Assert(0 == atexit(SDL_Quit), 
+  Assert(0 == atExitResponse, 
 	 "Unable to register SDL_Quit with atexit");
   LogLine(LOG_VERBOSE, "SDL initialized");
   /* Set a caption */
