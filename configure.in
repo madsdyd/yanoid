@@ -94,7 +94,7 @@ dnl ------------------------------------------------------------
 dnl Check for Python. 
 dnl ------------------------------------------------------------
 
-MBD_CHECK_PYTHON
+MBD_CHECK_PYTHON([2.0])
 AC_MSG_RESULT([$PACKAGE uses
 PYTHON          : $PYTHON
 PYTHON_VERSION  : $PYTHON_VERSION
@@ -183,6 +183,8 @@ dnl                      YANOID_CPPFLAGS="$YANOID_CPPFLAGS -DDATA_DIR=\\\"$withv
 dnl ------------------------------------------------------------
 dnl Print messages about missing or incomplete stuff.
 dnl ------------------------------------------------------------
+AC_MSG_CHECKING(if there were any problems with the environment)
+
 have_trouble=no
 if test "x$have_SDL" = "xno" ; then
     have_trouble=yes
@@ -229,7 +231,7 @@ if test "x$mbd_check_python_failure" != "xno"; then
 *** in your path. If you use a package based system, you may need to
 *** install a "python-devel" package or similar.
 *** Fixing this problem is required for yanoid to work.
-*** Most Linux distributions include at least Python 1.5 - never
+*** Most Linux distributions include at least Python 2.0 - never
 *** version may be found at http://www.python.org
 ])
 fi
@@ -238,6 +240,8 @@ dnl Final check, test for any troubles
 if test "x$have_trouble" != "xno" ; then
     AC_MSG_ERROR([Unable to continue])
 fi
+
+AC_MSG_RESULT(no)
 
 dnl ------------------------------------------------------------
 dnl Set final flags, output Makefiles.

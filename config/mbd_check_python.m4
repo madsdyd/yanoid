@@ -54,7 +54,7 @@ AC_DEFUN([MBD_CHECK_PYTHON],
   mbd_check_python_msg="OK"
 
   dnl Locate python in the users path
-  AC_PATH_PROG(PYTHON, python python2.1 python2.0 python1.6 python1.5)
+  AC_PATH_PROG(PYTHON, python python2.1 python2.0)
 
   dnl The version check is taken verbatim from pygtk/"GED",
   dnl except that we do not error
@@ -65,13 +65,10 @@ AC_DEFUN([MBD_CHECK_PYTHON],
     prog="
 import sys, string
 minver = '$1'
-pyver = string.split(sys.version)[0]  # first word is version string
+pyver  = string.split(sys.version)[0]  # first word is version string
 # split strings by '.' and convert to numeric
 minver = map(string.atoi, string.split(minver, '.'))
-if hasattr(sys, 'version_info'):
-    pyver = sys.version_info[:3]
-else:
-    pyver = map(string.atoi, string.split(pyver, '.'))
+pyver  = map(string.atoi, string.split(pyver, '.'))
 # we can now do comparisons on the two lists:
 if pyver >= minver:
         sys.exit(0)
