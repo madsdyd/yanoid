@@ -270,6 +270,14 @@ bool TMap::AddEntity(string type, string hitfunction,
     e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
     return true;
+  } else if ("brick-delay" == type) {
+    /* Add a brick that automatically disappears after a while 
+       w is used as the time to stay in millisecs */
+    TEntity * e = new TDelayBrick(x, y, hitfunction, w);
+    MapState->Entities.push_back(e);
+    /* And, this counts towards the bricks. */
+    MapState->num_bricks++;
+    return true;
   } else if ("hole" == type) {
     TEntity * e = new THole(x, y, w, h);
     // TEntity * e = new TEntity(x, y, w, h);

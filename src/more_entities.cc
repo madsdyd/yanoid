@@ -72,6 +72,23 @@ void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
 }
 
 /* **********************************************************************
+ * DelayBrick
+ * *********************************************************************/
+TDelayBrick::TDelayBrick(int x_, int y_, string removefunction, int millisecs_tolive) :
+  TEntity(x_, y_, 0, 0, 0, "BRICK"), millisecs_left(millisecs_tolive) {
+  SetScriptHitCall(removefunction);
+}
+
+void TDelayBrick::Update(Uint32 deltatime) {
+  millisecs_left -= deltatime;
+  // LogLineExt(LOG_VER_2, ("millisecs_left : %i", millisecs_left));
+  if (millisecs_left < 0) {
+    ExecuteScriptHitCall();
+    removable = true;
+  }
+}
+
+/* **********************************************************************
  * PowerUp
  * *********************************************************************/
 /* **********************************************************************

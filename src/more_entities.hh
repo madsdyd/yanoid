@@ -42,6 +42,20 @@ public:
 };
 
 /* **********************************************************************
+ * A delay brick is an invisible brick that never disappears
+ * *********************************************************************/
+class TDelayBrick : public TEntity {
+protected:
+  int millisecs_left;
+public: 
+  TDelayBrick(int x_, int y_, string removefunction, int millisecs_tolive);
+  virtual ~TDelayBrick() {};
+  virtual void Render(SDL_Surface *) {};
+  virtual void Update(Uint32 deltatime);
+  virtual void OnCollision(TEntity& other, Uint32 currenttime=0) {};
+};
+
+/* **********************************************************************
  * The paddle is the paddle
  * *********************************************************************/
 class TPaddle : public TPixmapEntity {

@@ -36,12 +36,10 @@ powerups = [ [9, "powerup_spawn_ball()"],
              [1, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_1000.png", "1000")']
 
              ]
-
-# Calculate the total weights, when loaded
+#Calculate the weigths of all powerups.
 totalweights = 0
 for powerup in powerups:
     totalweights = totalweights + powerup[0]
-
 
 # This function spawns a powerup and is the one scripts should call.
 def RandomlySpawnPowerup():
@@ -50,6 +48,40 @@ def RandomlySpawnPowerup():
         weight = randrange(0, totalweights, 1)
         sum = 0
         for powerup in powerups:
+            sum = sum + powerup[0]
+            if (weight <= sum):
+                # Use this powerup
+                eval(powerup[1])
+                break
+
+######################################################################
+# This is for bonus levels.
+
+bpowerups = [ [2, "powerup_spawn_life()"],
+                  [1, "powerup_spawn_remove_life()"],
+                  
+                  [1, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-1000.png", "-1000")'],
+                  [2, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-500.png", "-500")'],
+                  [3, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-100.png", "-100")'],
+                  [20, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_100.png", "100")'],
+                  [8, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_500.png", "500")'],
+                  [4, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_1000.png", "1000")']
+]
+
+# Calculate the total weights, when loaded
+btotalweights = 0
+for powerup in bpowerups:
+    btotalweights = btotalweights + powerup[0]
+
+bpowerup_spawn_probability = 30;
+
+# This function spawns a bonus powerup 
+def RandomlySpawnBonusPowerup():
+    if (randrange(0, 100, 1) > (100 - bpowerup_spawn_probability)):
+        # Spawn one from the list
+        weight = randrange(0, btotalweights, 1)
+        sum = 0
+        for powerup in bpowerups:
             sum = sum + powerup[0]
             if (weight <= sum):
                 # Use this powerup
