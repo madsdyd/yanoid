@@ -10,10 +10,10 @@ for script in scripts:
 
 # Define a number of smaller functions here.
 def static_hit():
-    PlaySound("sounds/blip.wav")
+    PlaySound("sounds/bang_on_metal.wav")
 
 def paddle_hit():
-    PlaySound("sounds/blip.wav")
+    PlaySound("sounds/bang_on_metal.wav")
 
 def ball_hit():
     a = 0
