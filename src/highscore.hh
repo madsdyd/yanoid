@@ -27,7 +27,6 @@
 #include <SDL/SDL.h>
 #include <list>
 #include "entity.hh"
-#include "fontmanager.hh"
 
 const unsigned int MAX_RANKINGS = 100;
 
@@ -41,7 +40,6 @@ protected:
   HS_DisplayMode DisplayMode;
   std::list<pair<std::string, Score> > Rankings;
   unsigned int NumRankings;
-  fonthandle_t * fontHandle;
   bool close;
   int cursorpos_x, cursorpos_y;
   char name[4];

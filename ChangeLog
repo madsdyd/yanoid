@@ -1,5 +1,9 @@
 2001-12-18  Mads Bondo Dydensborg  <madsdyd@ripley>
 
+	* DrawText
+	Removed all usage of the DrawText API. Bumped version number to
+	0.3.3. Still needs to remove a number of files from the cvs.
+
 	* Version
 	Bumped the version number to 0.3.2.
 

@@ -25,7 +25,6 @@
 #include "debug.hh"
 #include "ressourcemanager.hh"
 #include "soundmanager.hh"
-#include "fontmanager.hh"
 #include "text.hh"
 #include "screen.hh"
 #include <iomanip.h>
@@ -53,13 +52,6 @@ THighscore::THighscore(int x_, int y_):
   for (int i = 3 ; i < 10 ; ++i) {
     Rankings.push_back(make_pair(string("yaNOID"),s--)); 
   }
-  // load font transparent 1, or solid 0
-  fontHandle 
-    = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
-  if (!fontHandle) {
-    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
-    exit(-1);
-  }
   name[0] = '_';
   name[1] = '_';
   name[2] = '_';
@@ -71,7 +63,6 @@ THighscore::THighscore(int x_, int y_):
  * *********************************************************************/
 THighscore::~THighscore()
 {
-  FontManager->ReleaseRessource(fontHandle);
   delete TextRender;
   LogLine(LOG_TODO, "Clean up THighscore destructor");
 }
