@@ -159,4 +159,4 @@ CFLAGS="$CFLAGS $YANOID_CFLAGS"
 CXXFLAGS="$CXXFLAGS $YANOID_CXXFLAGS"
 LIBS="$LIBS $YANOID_LIBS"
 
-AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile Makefile)
+AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile data/music/Makefile Makefile)
