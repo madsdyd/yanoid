@@ -120,8 +120,9 @@ pr. default. For some distributions you may have to install "devel"
 packages to be able to compile. (Eg, glibc-devel, etc).
 
 Non-standard libraries or programs:
-SDL, SDL_mixer, SDL_image, python<version > 2.0>, artsc,
-esd, audiofile, vorbis, smpeg, jpeg, png, z, ogg & tiff.
+SDL >= 1.2.2, SDL_mixer >= 1.1, SDL_image >= 1.1, 
+python<version > 2.0>, artsc, esd, audiofile, 
+vorbis, smpeg, jpeg, png, z, ogg & tiff.
 
 SDL, SDL_mixer & SDL_image is in fact part of many distributions and
 if you have a "correct" installation of the SDL, SDL_mixer and
