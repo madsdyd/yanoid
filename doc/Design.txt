@@ -1,0 +1,80 @@
+This document contains design notes.
+
+Have a look at Design.fig.
+
+In this file, there overall of yanoid is displayed. In the following
+each class (object, singleton, whatever, I suck at design and
+formalism) is depicted. In the following I will try to explain each
+objects role.
+
+First a general description.
+
+TGame maintains the games state. On each client a full copy of the
+state will be present, and each client will run a TGame
+instance. TGames synchronize their state via TNetwork objects.
+
+The role of the TInput object is to receive "raw" input events from
+the local keyboard, mouse, whatever, and map it to "game
+actions/commands". E.g. pressing "left" may issue the command 
+"(key-press 'left)" (Maybe commands will also go directly to the game 
+and display - haven't thought this totally through).
+
+On each client, a TDisplay object will read the state from a TGame
+(using shared memory or a function call, or something) and render a
+representation of the state to the local screen. The TDisplay class
+will also know wheter or not to display the menu and console. 
+
+The TMenu class somehow displays all menus, and whenever a user does
+something, a script is executed that may change the menu state, the
+display state or the game state. Similarly to the console (the console
+may wish to consume raw input events, possibly forwarded from the
+display)
+
+Below is a more detailed description of each class/objects
+responsibilities.
+
+Warning: I have not described "TEntity" - it will be an entity
+in the game world, say a ball, a paddle, a brick, a powerup, etc.
+It will be the basic unit that we operate on, subject to physics, 
+etc.
+
+Template for class descriptions
+
+************************************************************
+Class       : <ClassName>
+Description : <ClassDescription>
+
+Contracts:  
+<List of contracts - responsibilities>
+- <Summary>
+  <What does this imply>
+
+    ::<List of methods to support this contract>
+
+      Description of method
+
+Responsibilities: Hmm. 
+
+************************************************************
+Class       : TGame
+Description : This class maintains the games state, rules
+              etc on a client. It synchronizes with other 
+	      TGames on other clients.
+Contracts:
+
+- Change the game state according to the rules and entity behavouir
+  "Know the game state", "Know the rules", "Know the entities", 
+  "Run Rules", "Run behavoir", etc.
+
+  void  ::Update(TimeNow)
+ 
+    This method will update the game to the current time, through
+    discrete intervals.  
+
+- Supply the gamestate
+  Implies most of the stuff from Change the gamestate
+  
+  TGameState  ::GetState()
+
+
+Argh, kan ikke nå at skrive mere lige nu.
