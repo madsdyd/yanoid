@@ -27,10 +27,11 @@
 
 class TSurfaceManager : public TRessourceManager<SDL_Surface> {
 protected:
+  Uint32 ColorKey;
   SDL_Surface * LoadRessource(string filename);
   void UnloadRessource(SDL_Surface * surface);
 public:
-  TSurfaceManager() : TRessourceManager<SDL_Surface>() {};
+  TSurfaceManager();
 };
 
 extern TSurfaceManager * SurfaceManager;

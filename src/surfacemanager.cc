@@ -18,6 +18,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include "screen.hh"
 #include "surfacemanager.hh"
 #include "log.hh"
 #include <SDL/SDL_image.h>
@@ -26,6 +27,14 @@
  * The surface manager
  * *********************************************************************/
 TSurfaceManager * SurfaceManager;
+
+/* **********************************************************************
+ * Construction
+ * *********************************************************************/
+TSurfaceManager::TSurfaceManager() : TRessourceManager<SDL_Surface>() {
+  ColorKey = SDL_MapRGB(Screen->format, 0, 0, 0);
+}
+
 
 /* **********************************************************************
  * Load and realease
@@ -38,6 +47,7 @@ SDL_Surface * TSurfaceManager::LoadRessource(string filename) {
     return NULL;
   } else {
     // LogLine(LOG_VERBOSE, "Converting display format");
+    SDL_SetColorKey(tmp1, SDL_SRCCOLORKEY, ColorKey);
     SDL_Surface * res = SDL_DisplayFormat(tmp1);
     SDL_FreeSurface(tmp1);
     return res;
