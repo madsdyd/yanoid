@@ -10,6 +10,8 @@
 
 powerup_spawn_probability = 20;
 
+# Do I need to import math, before importing random?
+from math import *
 from random import randrange
 
 # The powerups are defined in here. The first number in each sublist
