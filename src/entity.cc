@@ -98,13 +98,14 @@ void TEntity::setMotion(TMotion* m)
 void TEntity::Update(Uint32 deltatime) 
 {
   /* Sanity check */
-  if (y() < -1000 || y() > 1600 || x() < -1000 || x() > 1800) {
+  if (!removable && 
+      (y() < -1000.0 || y() > 1600.0 || x() < -1000.0 || x() > 1800.0)) {
     LogLineExt(LOG_ERROR, 
 	       ("Entity %s is way outside screen - removing it", 
 		name.c_str()));
     removable = true;
   }
-
+  
   if (move_type == STATIONARY) {
     changed = false;
     return;
