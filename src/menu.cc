@@ -21,6 +21,7 @@
 */
 #include "menu.hh"
 #include "screen.hh"
+#include "client.hh"
 #include "fontmanager.hh"
 #include <SDL/SDL.h>
 #include "ConsoleSource/DT_drawtext.h"
@@ -72,7 +73,7 @@ TAboutMenu::TAboutMenu() : TMenu() {
 void TAboutMenu::Render() {
   SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
   RenderSplash();
-  string text = "Here is room for a about text";
+  string text = "Here is room for an about text";
   int drawx = (Screen->w - text.size()*16) / 2;
   DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
 
@@ -101,7 +102,7 @@ TMenu::TMenu() {
 }
 
 TMenu::~TMenu() {
-  if (font) delete font;
+  if (font) FontManager->ReleaseRessource(font);
 }
 
 /* **********************************************************************
@@ -221,7 +222,7 @@ TPreGameMenu::~TPreGameMenu() {
 }
 
 void TPreGameMenu::SelectFocused() {
-  LogLineExt(LOG_VERBOSE, ("TPreGameMenu, selected %s", items[focused].c_str()));
+  // LogLineExt(LOG_VERBOSE, ("TPreGameMenu, selected %s", items[focused].c_str()));
   /* Yes, this stinks */
   switch (focused) {
   case 0: /* Start game */
@@ -236,5 +237,33 @@ void TPreGameMenu::SelectFocused() {
   case 3: /* Exit */
     cancel = true;
     return;
+  default:
+    LogLineExt(LOG_ERROR, ("TPreGameMenu - focused out of range %i", focused));
+  }  
+}
+
+/* **********************************************************************
+ * The in game menu
+ * *********************************************************************/
+TInGameMenu::TInGameMenu(TClient * client) : TMenu(), Client(client) {
+  items.push_back("Resume game");
+  items.push_back("Toggle console");
+  items.push_back("End game");
+}
+
+void TInGameMenu::SelectFocused() {
+  switch(focused) {
+  case 0: /* Resume game is the same as cancelling the menu */
+    cancel = true;
+    return;
+  case 1: /* Toggle the console */
+    Client->ToggleConsole();
+    cancel = true;
+    return;
+  case 2: /* Exit is close */
+    close = true;
+    return;
+  default:
+    LogLineExt(LOG_ERROR, ("TInGameMenu - focused out of range %i", focused));
   }
 }

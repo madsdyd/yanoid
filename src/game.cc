@@ -27,9 +27,7 @@
 /* **********************************************************************
  * The constructor currently constructs a single entity
  * *********************************************************************/
-TGame::TGame() {
-  lastupdate = 0; // TODO: Fix
-
+TGame::TGame() : lastupdate(0) {
   /* Get a map */
   Map = new TMap();
   if (!Map) {

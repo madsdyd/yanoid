@@ -29,14 +29,21 @@ protected:
   /* Various stuff for timekeeping */
   Uint32 game_start;
   Uint32 game_lastupdate;
+  Uint32 pausetime;
+  int paused;
   /* Splitting stuff up, to make it easier to handle */
   void UpdateGame();
   void Render();
+  void HandleEvents();
+  bool HandleGlobalKeys(SDL_Event * event);
+  void PauseGame();
+  void ContinueGame();
 public:
   TClient();
   ~TClient();
   inline TGame * GetGame() const { return Game; }
   void Run();
+  void ToggleConsole();
 };
 
 /* Out global client - we can never have more than this. */

@@ -70,9 +70,11 @@ public:
 
 /* TInGameMenu returns false if the player wants to continue a game,
    true if we wants to exit (current game) */
+class TClient;
 class TInGameMenu : public TMenu{
 protected:
+  TClient * Client;
   virtual void SelectFocused();
 public:
-  TInGameMenu();
+  TInGameMenu(TClient * client);
 };

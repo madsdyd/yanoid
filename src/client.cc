@@ -29,6 +29,9 @@
 
 #include "menu.hh"
 
+#include "motion.hh"
+#include "ConsoleSource/CON_console.h"
+
 /* **********************************************************************
  * The global client
  * *********************************************************************/
@@ -40,13 +43,29 @@ static const Uint32 max_deltaticks = 10;
 /* **********************************************************************
  * Constructor, destructor
  * *********************************************************************/
-TClient::TClient() {
-  Game = NULL;
-};
+TClient::TClient() : Game(NULL), paused(0) {};
 
 TClient::~TClient() {
   if (Game) {
     delete Game;
+  }
+}
+
+/* **********************************************************************
+ * The pause stuff
+ * *********************************************************************/
+void TClient::PauseGame() {
+  if (0 == paused) {
+    pausetime = SDL_GetTicks();
+  }
+  paused++;
+}
+
+void TClient::ContinueGame() {
+  paused--;
+  if (0 == paused) {
+    pausetime = SDL_GetTicks() - pausetime;
+    game_start += pausetime;
   }
 }
 
@@ -93,13 +112,22 @@ void TClient::Run() {
     
     /* Get the system to display the game state */
     Render();
+
+    /* Handle SDL events */
+    HandleEvents();
+
+    /* If we are not in a game, show the menu, or something ... */
+
   }
+
+  delete MyPre;
 }
 
 /* **********************************************************************
  * GameUpdate updates the time in the game
  * *********************************************************************/
 void TClient::UpdateGame() {
+  if (paused > 0) { return; };
   /* Update the deltatick */
   Uint32 deltaticks = SDL_GetTicks() - game_start - game_lastupdate;
   
@@ -119,7 +147,121 @@ void TClient::UpdateGame() {
  * Render calls the appropiate modules for rendering
  * *********************************************************************/
 void TClient::Render() {
-    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-    Display->Render(Screen);
-    SDL_Flip(Screen);
+  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  Display->Render(Screen);
+  SDL_Flip(Screen);
+}
+
+/* **********************************************************************
+ * HandleEvents handles SDL events.
+ * *********************************************************************/
+bool TClient::HandleGlobalKeys(SDL_Event * event) {
+  switch (event->type) {
+  case SDL_KEYDOWN:
+    switch (event->key.keysym.sym) {
+      /* The in game menu is bound to escape */
+    case SDLK_ESCAPE: {	
+      TInGameMenu * InGameMenu = new TInGameMenu(this);
+      PauseGame();
+      QuitClient = InGameMenu->Run();
+      ContinueGame();
+      delete InGameMenu;
+      return true;
+    }
+    /* The console is bound to a number of keys */
+    case SDLK_BACKQUOTE:
+    case SDLK_F1:
+    case SDLK_F3:
+      ToggleConsole();
+      return true;
+      /* FullScreenToggle is bound to F11 */
+    case SDLK_F11:
+      SDL_WM_ToggleFullScreen(Screen);
+      return true;
+    }
+  }
+  /* Falling true - unhandled */
+  return false;
+}
+
+void TClient::HandleEvents() {
+  TEntity * paddle = Game->GetState()->MapState->GetPaddle();
+
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    /* Check for global events */
+    if (HandleGlobalKeys(&event)) {
+      break;
+    }
+    /* Unhandled */
+    /* If the console is down send events to it */
+    if (ConsoleDown) {
+      CON_ConsoleEvents(&event);
+    } else {
+      /* Treat events */
+      switch (event.type) {
+      case SDL_KEYDOWN:
+	switch (event.key.keysym.sym) {
+	case SDLK_LEFT:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( -0.5 );
+	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
+	  break;
+	case SDLK_RIGHT:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.5 );
+	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
+	  break;
+	case SDLK_UP:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.5 );
+	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( M_PI_2 );	
+	  break;
+	case SDLK_DOWN:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.5 );
+	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
+	  break;
+	}
+	break;
+      case SDL_KEYUP:
+	switch (event.key.keysym.sym) {
+	case SDLK_LEFT:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.0 );
+	  break;
+	case SDLK_RIGHT:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.0 );
+	  break;
+	case SDLK_UP:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.0 );
+	  break;
+	case SDLK_DOWN:
+	  if (!paddle) break;
+	  paddle->getMotion()->setVelocity( 0.0 );
+	  break;
+	}
+      default:
+	break;
+      }
+    } /* Console up */
+  }
+}
+
+/* **********************************************************************
+ * ToggleConsole - pauses the game, when the console is displayed.
+ * *********************************************************************/
+void TClient::ToggleConsole() {
+  ConsoleDown = !ConsoleDown;
+  if (ConsoleDown){
+    /* Was up, has been moved down */
+    PauseGame();
+    SDL_EnableUNICODE(1);
+  } else {
+    /* Was down, has been moved up */
+    SDL_EnableUNICODE(0);
+    ContinueGame();
+  }
 }

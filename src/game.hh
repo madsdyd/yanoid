@@ -51,6 +51,8 @@ public:
 class TGame {
 protected:
   Uint32 lastupdate;
+  /* used to store time that is skipped - add to lastupdate */
+  Uint32 pausetime;
   TMap * Map;
   TGameState GameState;
   void handleCollisions();

@@ -27,10 +27,8 @@
 
 /* The TDisplay class renders stuff */
 class TDisplay {
-protected:
-  bool ConsoleDown;
 public:
-  TDisplay() : ConsoleDown(false) {};
+  TDisplay() {};
   void Render(SDL_Surface * surface);
 };
 

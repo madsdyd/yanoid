@@ -1,7 +1,9 @@
 2001-11-04  Mads Bondo Dydensborg  <madsdyd@mother>
 
 	* Menu
-	Implemented the pre game menu.
+	Implemented the pre game menu
+	Implemented the in game menu
+	Still lacks game "turns" stuff
 
 2001-11-03  Mads Bondo Dydensborg  <madsdyd@mother>
 
