@@ -1,3 +1,10 @@
+2001-10-11  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* Collsion
+	Collision code is ok, but the actions carried out on a collosion
+	is not.
+	Added a ball which gets loaded when map1.py is loaded.
+
 2001-10-07  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* Python
