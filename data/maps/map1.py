@@ -15,7 +15,7 @@ for x in range(6, 750, 79):
                          "graphics/bricks/green2_75.png")
             else:
                 AddBrick("brick", x, y, "basic_brick_hit()",
-                         "graphics/bricks/red_75.png")
+                         "graphics/bricks/red2_75.png")
         else:
             if (x % 2 == 1):
                 AddBrick("brick-stay-3", x, y, "basic_brick_hit()",
