@@ -39,6 +39,7 @@ THole::~THole() {
  * Collision
  * *********************************************************************/
 void THole::OnCollision(TEntity& other) {
+  LogLine(LOG_VERBOSE, "THole::OnCollision called");
   if (TEntity::BALL == other.getEntityType()) {
     /* Ah, hit by a ball */
     other.MarkDying();

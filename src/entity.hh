@@ -79,7 +79,7 @@ public:
   void setMotion(TMotion* m);
 
   /* Called when this entity collidies with another */
-  void OnCollision(TEntity& other);
+  virtual void OnCollision(TEntity& other);
 
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }

@@ -22,7 +22,9 @@
 
 #include "map.hh"
 #include "ressourcemanager.hh"
+#include "entity.hh"
 #include "pixmap_entity.hh"
+#include "more_entities.hh"
 #include "globals.hh"
 #include "motion.hh"
 #include "interprenter.hh"
@@ -203,6 +205,12 @@ bool TMap::AddEntity(string type, string hitfunction,
     e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
     return true;
+  } else if ("hole" == type) {
+    TEntity * e = new THole(x, y, w, h);
+    e->SetScriptHitCall(hitfunction);
+    MapState->Entities.push_back(e);
+    LogLine(LOG_VERBOSE, "hole created");
+    return true;
   } else if ("default-ball" == type) {
     if (!MapState->paddle) {
       LogLine(LOG_ERROR, "Can't add default ball, with no paddle");
@@ -275,6 +283,7 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
  * *********************************************************************/
 void TMap::Update(Uint32 deltatime) {
   TEntitiesIterator i;
+  TEntitiesIterator candi;
   for (i = MapState->Entities.begin(); i != MapState->Entities.end(); i++) {
     (*i)->Update(deltatime);
 
@@ -282,7 +291,7 @@ void TMap::Update(Uint32 deltatime) {
     // y axis we have to check if the current entity should be moved
     // to another pos. in the list. We want to order by y axis 
     // because it speeds up the collision detection.
-    TEntitiesIterator candi = i;
+    candi = i;
     if (i != MapState->Entities.begin())
       --candi;
 
@@ -299,6 +308,23 @@ void TMap::Update(Uint32 deltatime) {
 	i = candi;
     }
   }
+  /* Clean out entities that are no longer alive */
+  TEntity * tmp;
+  for (i = MapState->Entities.begin(); i != MapState->Entities.end();) {
+    candi = i;
+    i++;
+    if ((*candi)->IsRemovable()) {
+      tmp = (*candi);
+      if (TEntity::BALL == tmp->getEntityType()) {
+	MapState->num_balls--;
+	LogLine(LOG_VERBOSE, "Ball removed");
+	Assert(MapState->num_balls >= 0, "Cant have a negative number of balls");
+      }
+      MapState->Entities.erase(candi);
+      delete tmp;
+    }
+  }
+
 }
 
 
