@@ -52,7 +52,8 @@ void TDisplay::Render(SDL_Surface * surface) {
 	QuitGame = true;
 	break;
       case SDLK_BACKQUOTE:
-	if (!ConsoleDown){
+      case SDLK_F1:
+	 if (!ConsoleDown){
 	  ConsoleDown = true;
 	  SDL_EnableUNICODE(1);
 	} else {
