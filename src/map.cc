@@ -481,7 +481,8 @@ void TMap::Update(Uint32 deltatime) {
   }
   /* Clean out entities that are no longer alive */
   TEntity * tmp;
-  // Note, End should be unchanged from above. */
+  // Note, End could be changed above... 
+  End = MapState->Entities.end();
   for (i = MapState->Entities.begin(); i != End;) {
     candi = i;
     i++;
