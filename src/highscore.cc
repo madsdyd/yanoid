@@ -45,7 +45,7 @@ THighscore::THighscore(int x_, int y_):
   close(false), cursorpos_x(0), cursorpos_y(0)
 {
   LogLine(LOG_TODO, "Clean up THighscore contructor");
-  Rankings.push_back(make_pair(string("MBD"),7445)); 
+  Rankings.push_back(make_pair(string("MBD"),7785)); 
   Rankings.push_back(make_pair(string("BS"),3940)); 
   Rankings.push_back(make_pair(string("JCD"),2370)); 
   Score s = 42;
