@@ -21,9 +21,9 @@ for x in range(6, 750, 79):
                 AddBrick("brick-stay-3", x, y, "basic_brick_hit()",
                          "graphics/bricks/yellow_stay_75.png")
             else:
-                AddBrick("brick", x, y,
+                AddBrick("brick", x + 13, y + 5,
                          "power_up_add_ball_hit()",
-                         "graphics/powerups/yellow_l.png")
+                         "graphics/powerups/red_b.png")
                 
             
 # Add the walls
