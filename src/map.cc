@@ -354,7 +354,23 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
       LogLine(LOG_WARNING, "no current_script_entity");
       return false;
     }
-  } else {
+  } /* "spawn-ball" */ 
+  else if ("powerup" == action) {
+    LogLine(LOG_VERBOSE, "powerup added");
+    if (!current_script_entity) {
+      LogLine(LOG_WARNING, "no current_script_entity");
+      return false;
+    }
+    /* Add a powerup at the location of the current entity */
+    TEntity * e 
+      = new TPowerUp(static_cast<int>(current_script_entity->x()), 
+		     static_cast<int>(current_script_entity->y()), 
+		     arg1, arg2);
+    e->setName("powerup");
+    EntitiesToAddToMapState.push_back(e);
+    return true;
+  } /* "powerup" */
+  else {
     return false;
   }
 }

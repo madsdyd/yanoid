@@ -20,6 +20,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "log.hh"
+#include "motion.hh"
 #include "entity.hh"
 #include "pixmap_entity.hh"
 #include "more_entities.hh"
@@ -56,7 +57,33 @@ void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
   }
 }
 
-
+/* **********************************************************************
+ * PowerUp
+ * *********************************************************************/
+/* **********************************************************************
+ * Constructor, very similar to TBrick
+ * *********************************************************************/
+TPowerUp::TPowerUp(int x, int y, string pixmap, string hitfunction)
+  : TPixmapEntity(x, y, 0, pixmap, "POWERUP", MOVING, PIXEL) {
+  SetScriptHitCall(hitfunction);
+  setMotion(new TFreeMotion);
+  dynamic_cast<TFreeMotion*>(getMotion())->setDir(1.5 * M_PI);
+  dynamic_cast<TFreeMotion*>(getMotion())->setVelocity(0.2);
+  dynamic_cast<TFreeMotion*>(getMotion())->setAccel(0.1);
+}
+  
+/* **********************************************************************
+ * Collision - also very similar to bricks, except that we only remove
+ * if hit by a paddle or shot.
+ * *********************************************************************/
+void TPowerUp::OnCollision(TEntity& other, Uint32 currenttime=0) {
+  if ("PADDLE" == other.getEntityType()) {
+    /* Make sure our hitfunction is called - 
+       it should spawn a relevant powerup... */
+    TPixmapEntity::OnCollision(other, currenttime);
+    removable = true;
+  }
+}
 /* **********************************************************************
  * THole constructor
  * *********************************************************************/

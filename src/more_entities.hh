@@ -28,7 +28,9 @@
 class TEntity;
 class TPixmapEntity;
 
-/* This is a brick... */
+/* **********************************************************************
+ * A brick is, well, a brick.
+ * *********************************************************************/
 class TBrick : public TPixmapEntity {
 protected:
   int hitnum;
@@ -38,6 +40,20 @@ public:
   virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
 };
 
+/* **********************************************************************
+ * A powerup is a special kind of brick, that move slowly toward 
+ * the bottom of the screen. It only reacts to collisions with
+ * the paddle and possibly shots.
+ * *********************************************************************/
+class TPowerUp : public TPixmapEntity {
+public:
+  TPowerUp(int x, int y, string pixmap, string hitfunction);
+  virtual void OnCollision(TEntity& other, Uint32 currenttime = 0);
+};
+
+/* **********************************************************************
+ * A THole is an entity that "kills" other entities. It is not visible
+ * *********************************************************************/
 
 /* A THole is an entity that kills balls.
    It is not visible. */
