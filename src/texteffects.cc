@@ -26,9 +26,8 @@
 #include "screen.hh"
 #include <math.h>
 
-TTextEffect::TTextEffect(const char *str_, SDL_Surface *surface_, 
-			   TText * _TextRender) :
-  surface(surface_), str(str_), TextRender(_TextRender)
+TTextEffect::TTextEffect(const char *str_, TText * _TextRender) :
+  str(str_), TextRender(_TextRender)
 {
   /* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,
      as expected by OpenGL for textures */
@@ -69,8 +68,10 @@ TTextEffect::TTextEffect(const char *str_, SDL_Surface *surface_,
 TTextEffect::~TTextEffect() 
 {
   cerr << "erasiong bg" << endl;
-  if (background)
+  if (background) {
     SDL_FreeSurface(background);
+    background = 0;
+  }
 }
 
 

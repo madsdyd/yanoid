@@ -185,23 +185,28 @@ bool TClient::NextMap() {
     {
       PauseGame();
       Render();
-      TTextEffectSpaced tfx(Game->GetState()->MapState->mapname.c_str(), 
-			    Screen, TextRender);
-      tfx.setLocation(TPoint((Screen->w -  
+      TTextEffectSpaced * tfx = 
+	new TTextEffectSpaced(Game->GetState()->MapState->mapname.c_str(), 
+			      TextRender);
+      tfx->setLocation(TPoint((Screen->w -  
 			      Game->GetState()->MapState->mapname.size()
 			      // * DT_FontWidth(*font))/2, 
 			      * TextRender->GetGlyphWidth())/2, 
 			     Screen->h / 2));
-      tfx.setDuration(1500);
-      tfx.setPostHoldTime(500);
-      tfx.start();
-      while(!tfx.isStopped()) {
-	tfx.update(Screen, SDL_GetTicks());
-	SDL_Flip(Screen);
+      tfx->setDuration(1500);
+      tfx->setPostHoldTime(500);
+      tfx->start();
+      effects.push_back(tfx);
+      Uint32 _last_update = SDL_GetTicks();
+      while(!tfx->isStopped()) {
+	Uint32 tmp = SDL_GetTicks();
+	Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
+	Render();
+	HandleEvents();
+	_last_update = tmp;
       }
       ContinueGame();
     }
-    
     
     Game->GetState()->status = TGameState::PLAYING;
     delete TextRender;
@@ -290,18 +295,25 @@ void TClient::Run() {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
 	const char* str = "Game Over";
-	TTextEffectJumping tfx(str, Screen, TextRender);
-	tfx.setLocation(TPoint((Screen->w - strlen(str) 
+	TTextEffectJumping * tfx = 
+	  new TTextEffectJumping(str, TextRender);
+	tfx->setLocation(TPoint((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2, 
 				* TextRender->GetGlyphWidth())/2, 
 			       Screen->h / 2));
-	tfx.setDuration(1500);
-	tfx.setPostHoldTime(500);
-	tfx.start();
-	while(!tfx.isStopped()) {
-	  tfx.update(Screen, SDL_GetTicks());
-	  SDL_Flip(Screen);
+	tfx->setDuration(1500);
+	tfx->setPostHoldTime(500);
+	tfx->start();
+	effects.push_back(tfx);
+	Uint32 _last_update = SDL_GetTicks();
+	while(!tfx->isStopped()) {
+	  Uint32 tmp = SDL_GetTicks();
+	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
+	  Render();
+	  HandleEvents();
+	  _last_update = tmp;
 	}
+
 	if (Highscore->isCandidate(Game->GetState()->score)) {
 	  Highscore->displayNameInput(Game->GetState()->score);
 	  Highscore->Run();
@@ -326,19 +338,21 @@ void TClient::Run() {
 	Game->GetState()->current_shot_time_left = 0;
 
 	const char* str = "You lost the ball..";
-	TTextEffectSwirling tfx(str, Screen, TextRender);
-	tfx.setLocation(TPoint((Screen->w - strlen(str) 
+	TTextEffectSwirling * tfx = 
+	  new TTextEffectSwirling(str, TextRender);
+	tfx->setLocation(TPoint((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2,
 				* TextRender->GetGlyphWidth())/2,
 			       Screen->h / 2));
-	tfx.start();
+	tfx->setDuration(1500);
+	tfx->setPostHoldTime(1000);
+	tfx->start();
+	effects.push_back(tfx);
 	Uint32 _last_update = SDL_GetTicks();
-	while(!tfx.isStopped()) {
+	while(!tfx->isStopped()) {
 	  Uint32 tmp = SDL_GetTicks();
 	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
-	  Game->GetState()->MapState->GetPaddle()->Render(Screen);
-	  tfx.update(Screen, tmp);
-	  SDL_Flip(Screen);
+	  Render();
 	  HandleEvents();
 	  _last_update = tmp;
 	}
@@ -371,17 +385,23 @@ void TClient::Run() {
 	 * Do a text effect that says the level is complete.
 	 * *********************************************************************/
 	const char* str = "Level complete!";
-	TTextEffectSpaced tfx(str, Screen, TextRender);
-	tfx.setLocation(TPoint((Screen->w - strlen(str) 
+	TTextEffectSpaced * tfx = 
+	  new TTextEffectSpaced(str, TextRender);
+	tfx->setLocation(TPoint((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2, 
 				* TextRender->GetGlyphWidth())/2, 
 			       Screen->h / 2 - 40));
-	tfx.setDuration(1500);
-	tfx.setDuration(500);
-	tfx.start();
-	while(!tfx.isStopped()) {
-	  tfx.update(Screen, SDL_GetTicks());
-	  SDL_Flip(Screen);
+	tfx->setDuration(1500);
+	tfx->setPostHoldTime(500);
+	tfx->start();
+	effects.push_back(tfx);
+	Uint32 _last_update = SDL_GetTicks();
+	while(!tfx->isStopped()) {
+	  Uint32 tmp = SDL_GetTicks();
+	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
+	  Render();
+	  HandleEvents();
+	  _last_update = tmp;
 	}
 	
 	/* **********************************************************************
@@ -397,17 +417,23 @@ void TClient::Run() {
 	  /* No bonus */
 	  sprintf(msg, "No time bonus");
 	}
-	TTextEffectSpaced tfx2(msg, Screen, TextRender);
-	tfx2.setLocation(TPoint((Screen->w - strlen(msg) 
+	TTextEffectSpaced * tfx2 = 
+	  new TTextEffectSpaced(msg, TextRender);
+	tfx2->setLocation(TPoint((Screen->w - strlen(msg) 
 				 // * DT_FontWidth(*font))/2, 
 				 * TextRender->GetGlyphWidth())/2, 
 				Screen->h / 2 + 40));
-	tfx2.setDuration(1500);
-	tfx2.setDuration(500);
-	tfx2.start();
-	while(!tfx2.isStopped()) {
-	  tfx2.update(Screen, SDL_GetTicks());
-	  SDL_Flip(Screen);
+	tfx2->setDuration(1500);
+	tfx2->setPostHoldTime(500);
+	tfx2->start();
+	effects.push_back(tfx2);
+	_last_update = SDL_GetTicks();
+	while(!tfx2->isStopped()) {
+	  Uint32 tmp = SDL_GetTicks();
+	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
+	  Render();
+	  HandleEvents();
+	  _last_update = tmp;
 	}
 
 	/* **********************************************************************

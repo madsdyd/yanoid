@@ -32,7 +32,6 @@ class TText;
 class TTextEffect : public TEffect {
 protected:
   std::vector<TPoint> char_points;
-  SDL_Surface * surface;
   const char* str;
   TText * TextRender;
   // Helper functions
@@ -40,39 +39,39 @@ protected:
   virtual void saveBackground();
   virtual void blitBackground();
 public:
-  TTextEffect(const char *str, SDL_Surface *surface, TText * _TextRender);
+  TTextEffect(const char *str, TText * _TextRender);
   ~TTextEffect();
 };
 
 
 class TTextEffectDisplay : public TTextEffect {
 public:
-  TTextEffectDisplay(const char* str, SDL_Surface* surf, TText * _TextRender) :
-    TTextEffect(str,surf,_TextRender) {}
+  TTextEffectDisplay(const char* str, TText * _TextRender) :
+    TTextEffect(str,_TextRender) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
 
 class TTextEffectSpaced : public TTextEffect {
 public:
-  TTextEffectSpaced(const char* str, SDL_Surface* surf, TText * _TextRender) :
-    TTextEffect(str,surf,_TextRender) {}
+  TTextEffectSpaced(const char* str, TText * _TextRender) :
+    TTextEffect(str,_TextRender) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
 
 class TTextEffectJumping : public TTextEffect {
 public:
-  TTextEffectJumping(const char* str, SDL_Surface* surf, TText * _TextRender) :
-    TTextEffect(str,surf,_TextRender) {}
+  TTextEffectJumping(const char* str, TText * _TextRender) :
+    TTextEffect(str,_TextRender) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
 
 class TTextEffectSwirling : public TTextEffect {
 public:
-  TTextEffectSwirling(const char* str, SDL_Surface* surf, TText * _TextRender) :
-    TTextEffect(str,surf,_TextRender) {}
+  TTextEffectSwirling(const char* str, TText * _TextRender) :
+    TTextEffect(str,_TextRender) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
