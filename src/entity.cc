@@ -244,6 +244,14 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
   TEntity* ball;
   TEntity* tother;
 
+  /* Peters syge forslag */
+  /*  if ("BALL" == getEntityType() && "STATIC" == other.getEntityType()) {
+    if (y() < 20) {
+      setY(550);
+      return;
+    }
+    }*/
+
   /* Mega if on this beeing a ball */
   if (getEntityType() == "BALL" && "POWERUP" != other.getEntityType()) {
     /* LogLineExt(LOG_VERBOSE, ("BALL has collided with %s", 

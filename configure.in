@@ -183,8 +183,8 @@ fi
 
 dnl Set profile flags
 if test "x$enable_profile" = "xyes" ; then
-  YANOID_CFLAGS="$YANOID_CFLAGS -pg"; 
-  YANOID_CXXFLAGS="$YANOID_CXXFLAGS -pg"
+  YANOID_CFLAGS="$YANOID_CFLAGS -pg -O"; 
+  YANOID_CXXFLAGS="$YANOID_CXXFLAGS -pg -O"
 fi
 
 

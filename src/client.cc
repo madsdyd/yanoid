@@ -401,6 +401,7 @@ void TClient::UpdateGame() {
     Game->Update(game_lastupdate);
     deltaticks -= max_deltaticks;
   }
+  
   if (deltaticks != 0) {
     game_lastupdate += deltaticks;
     Game->Update(game_lastupdate);
