@@ -119,8 +119,10 @@ void TClient::Run() {
       /* Handle SDL events */
       HandleEvents();
 
-      /* Check for Game Over, display menu */
       switch(Game->GetState()->status) {
+      /* **********************************************************************
+       * Game Over, display menu (DEAD)
+       * *********************************************************************/
       case TGameState::DEAD: {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
@@ -130,7 +132,9 @@ void TClient::Run() {
 	QuitCurrentGame = true;
 	break;
       }
-      /* CUT is when a ball is lost */
+      /* **********************************************************************
+       * Ball lost (CUT)
+       * *********************************************************************/
       case TGameState::CUT: {
 	PauseGame();
 	//	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
@@ -170,7 +174,9 @@ void TClient::Run() {
 	Game->GetState()->status = TGameState::PLAYING;
 	break;
       }
-      /* MAPDONE == All bricks gone (yeepee) */
+      /* **********************************************************************
+       * All bricks gone (MAPDONE)
+       * *********************************************************************/
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
 	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
