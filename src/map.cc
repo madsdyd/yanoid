@@ -231,7 +231,7 @@ bool TMap::AddEntity(string type, string hitfunction,
     e->setMotion(new TFreeMotion);
     //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
     dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(2 * M_PI / 5);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.15);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.19);
     e->setName("Default Ball");
     MapState->Entities.push_back(e);
     MapState->num_balls++;
