@@ -47,6 +47,7 @@ public:
   ~TGame();
   void Update(Uint32 currenttime);
   TGameState * GetState();
+  bool LoadMap(string mapname);
 };
 
 /* The global game variable */

@@ -1,3 +1,12 @@
+2001-10-04  Mads Bondo Dydensborg  <madsdyd@mother>
+
+	* Version 0.0.6
+	Jonas have added paths, motion, bounding boxes and simple
+	collision detection. No comments, though :-)
+	I added some more autoconf voodoo to fix embedding python, and a
+	beginning of map loading.
+	Tagging this is version 0.0.6
+
 2001-09-28  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* Interprenter

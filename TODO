@@ -5,9 +5,10 @@ a game that can be considered ready for the SDL contest.
 For more specific "TODO" items, look in the bottom.
 
 * Autotool
-- Fix the Python mess (make sure that required libs are present)
+- Fix Python autoconf
+  - version checking
+  - libs and such for 1.5.2?
 - Make sure that we fail when something essentiel is missing
-- Inform the user in the end about stuff that is missing.
 
 * Implementation
 - Input system

@@ -18,16 +18,43 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include <Python.h>
+
 #include "map.hh"
+#include "ressourcemanager.hh"
 #include "pixmap_entity.hh"
 #include "globals.hh"
 #include "motion.hh"
+#include "interprenter.hh"
 
 /* **********************************************************************
- * Testing: A temporary TMap variable to use with some statix functions
+ * Testing: A temporary TMap variable to use with some static functions
  * *********************************************************************/
 TMap * CurrentMap = NULL;
 
+/* **********************************************************************
+ * These static methods are not so great, but for now, they will have to
+ * do.
+ * *********************************************************************/
+
+/* **********************************************************************
+ * Add a brick to the current map
+ * *********************************************************************/
+static PyObject * AddBrick(PyObject * self, PyObject * args) {
+  int x; int y; char * type; char * pixmap;
+  if (!CurrentMap || !PyArg_ParseTuple(args, "iiss", &x, &y, &type, &pixmap)) {
+    return NULL;
+  }
+  CurrentMap->AddBrick(x, y, type, pixmap);
+  return Py_None;
+}
+
+static PyMethodDef map_methods[] = {
+  {"AddBrick", AddBrick, 4},
+  {NULL, NULL}
+};
+
+static bool ConnectedToInterprenter = false;
 
 /* **********************************************************************
  * TMapState destructor
@@ -114,6 +141,23 @@ TMap::TMap() {
   MapState.Entities.push_back(e);
   e->setName("Floater 1");
 
+  /*
+  for (int x = 0; x < 760; x += 60) {
+    for (int y = 0; y < 200; y += 20) {
+      MapState.Entities.push_back(new TEntity(x, y));
+    }
+  }
+  */
+  
+  /* This is probably a stupid way to do it - but at least we make
+     sure that we have connected the map handling commands to the 
+     interprenter */
+  if (!ConnectedToInterprenter) {
+    if (Interprenter->AddModule("yanoid_map", map_methods)) {
+      ConnectedToInterprenter = true;
+      CurrentMap = this;
+    }
+  }
 }
 
 /* **********************************************************************
@@ -121,6 +165,31 @@ TMap::TMap() {
  * *********************************************************************/
 TMap::~TMap() {
   LogLine(LOG_TODO, "Clean up TMap?");
+}
+
+/* **********************************************************************
+ * AddBrick 
+ * This will need to be refined to allow for different types, etc.
+ * *********************************************************************/
+void TMap::AddBrick(int x, int y, string type, string pixmap) {
+  /* Note, type is ignored for now ... */
+  TEntity * e = new TPixmapEntity(x, y, 0, pixmap);
+  e->setName("whadaumean I need a name?");
+  MapState.Entities.push_back(e);
+}
+
+/* **********************************************************************
+ * Load a map - set the current pointer, load the python mapname into the
+ * interprenter, unset the current pointer, return
+ * *********************************************************************/
+
+bool TMap::LoadMap(string mapname) {
+  CurrentMap = this;
+  bool result = Interprenter->RunSimpleFile(PathManager->Resolve(mapname));
+  /* Eventually we may want to unset the current map - currently we just 
+     keep it, such that we can do our stuff from the console */
+  // CurrentMap = NULL;
+  return result;
 }
 
 /* **********************************************************************

@@ -29,9 +29,12 @@ class TInterprenter {
 public:
   TInterprenter();
   ~TInterprenter();
-  /* Run a simple string - return true for no fault, false otherwise */
+  /* Add a module */
+  bool AddModule(string module, PyMethodDef * methods);
+  /* Run scripts - return true for no fault, false otherwise */
   bool RunSimpleString(char * script);
   bool RunSimpleString(string script);
+  bool RunSimpleFile(string script);
 };
 
 extern TInterprenter * Interprenter;

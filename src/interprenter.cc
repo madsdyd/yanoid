@@ -74,11 +74,21 @@ TInterprenter::TInterprenter() {
     PyImport_AddModule("yanoid");
     Py_InitModule("yanoid", yanoid_methods);
     PyRun_SimpleString("import yanoid");
-    /* Load the yanoid wrapper function */
+    /* Load the yanoid wrapper functions for testing the console */
+    if (!RunSimpleFile(PathManager->Resolve("scripts/yanoid.py"))) {
+      LogLine(LOG_ERROR, "Unable to load scripts/yanoid.py");
+    }
+    /* Load the map interface */
+    if (!RunSimpleFile(PathManager->Resolve("scripts/map_interface.py"))) {
+      LogLine(LOG_ERROR, "Unable to load scripts/map_interface.py");
+    }
+
+#ifdef NOCLUE
     char * tmp = strdup(PathManager->Resolve("scripts/yanoid.py").c_str());
     FILE * tmpf = fopen(tmp, "r");
     PyRun_SimpleFile(tmpf, tmp);
     free(tmp);
+#endif
   } else {
     LogFatal("Unable to initialize Python interprenter");
     exit(-1);
@@ -93,6 +103,22 @@ TInterprenter::~TInterprenter() {
 }
 
 /* **********************************************************************
+ * Add a module
+ * *********************************************************************/
+bool TInterprenter::AddModule(string module, PyMethodDef * methods) {
+  char * tmp = strdup(module.c_str());
+  if (PyImport_AddModule(tmp)) {
+    Py_InitModule(tmp, methods);
+    free(tmp);
+    return RunSimpleString("import " + module);
+  } else {
+    free(tmp);
+    return false;
+  }
+}
+
+
+/* **********************************************************************
  * Run a simple string
  * *********************************************************************/
 bool TInterprenter::RunSimpleString(char * script) {
@@ -101,6 +127,23 @@ bool TInterprenter::RunSimpleString(char * script) {
 
 bool TInterprenter::RunSimpleString(string script) {
   char * tmp = strdup(script.c_str());
-  return (0 == PyRun_SimpleString(tmp));
+  bool result = (0 == PyRun_SimpleString(tmp));
   free(tmp);
+  return result;
+}
+/* **********************************************************************
+ * Run a simple file
+ * *********************************************************************/
+bool TInterprenter::RunSimpleFile(string script) {
+  char * tmp = strdup(script.c_str());
+  FILE * tmpf = fopen(tmp, "r");
+  bool result;
+  if (tmpf) {
+    result = (0 == PyRun_SimpleFile(tmpf, tmp));
+    fclose(tmpf);
+  } else {
+    result = false;
+  }
+  free(tmp);
+  return result;
 }

@@ -41,6 +41,10 @@ protected:
 public:
   TMap();
   ~TMap();
+  /* Add a brick, initialize with parameters (will change). */
+  void AddBrick(int x, int y, string type, string pixmap);
+  /* Temporary loading function */
+  bool LoadMap(string mapname);
   inline TMapState * GetState() { return &MapState; }
   void Update(Uint32 deltatime);
 };

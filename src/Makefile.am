@@ -14,7 +14,7 @@ yanoid_LDADD = ConsoleSource/libSDL_console.la
 
 # none of these are installed - here for dist
 
-noinst_HEADERS = interprenter.hh \
+noinst_HEADERS = globals.hh interprenter.hh \
 		 map.hh point.hh entity.hh pixmap_entity.hh \
 		 path.hh game.hh velocity.hh motion.hh \
 		 display.hh client.hh \

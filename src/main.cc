@@ -66,6 +66,15 @@ void Python(char * String) {
   Interprenter->RunSimpleString(String);
 }
 
+/* Load a map */
+void LoadMap(char * map) {
+  if (Game->LoadMap(map)) {
+    CON_ConOut("Map %s succesfully loaded", map);
+  } else {
+    CON_ConOut("Error loading map %s", map);
+  }
+}
+
 /* Prints the string you pass it into the console */
 void PrintMe(char *String)
 {
@@ -251,6 +260,7 @@ int main(int argc, char ** argv) {
   CON_AddCommand(&AlphaChange, "alpha");
   CON_AddCommand(&DisplayHighscore, "highscore");
   CON_AddCommand(&Python, "i");
+  CON_AddCommand(&LoadMap, "loadmap");
   
   CON_ListCommands();
   
