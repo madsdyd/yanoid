@@ -19,13 +19,14 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <math.h> // defines PI
 #include "display.hh"
+#include "client.hh"
 #include "game.hh"
 #include "highscore.hh"
 #include "ConsoleSource/CON_console.h"
 #include "ConsoleSource/DT_drawtext.h"
 #include "motion.hh"
-#include <math.h> // defines PI
 
 /* **********************************************************************
  * The global display
@@ -39,7 +40,7 @@ TDisplay * Display;
 void TDisplay::Render(SDL_Surface * surface) {
   static int ticks = 0;
 
-  TGameState * GameState = Game->GetState();
+  TGameState * GameState = Client->GetGame()->GetState();
   TEntitiesIterator End = GameState->MapState->Entities.end();
   TEntitiesIterator i;
   for (i = GameState->MapState->Entities.begin(); i != End; i++) {
@@ -74,7 +75,7 @@ void TDisplay::Render(SDL_Surface * surface) {
 	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
 	break;
       case SDLK_ESCAPE:	
-	QuitGame = true;
+	QuitClient = true;
 	break;
       case SDLK_BACKQUOTE:
       case SDLK_F1:

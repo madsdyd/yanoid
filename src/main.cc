@@ -71,7 +71,8 @@ void Python(char * String) {
 
 /* Load a map */
 void LoadMap(char * map) {
-  if (Game->LoadMap(map)) {
+  if (!Client || !(Client->GetGame())) { return; };
+  if (Client->GetGame()->LoadMap(map)) {
     CON_ConOut("Map %s succesfully loaded", map);
   } else {
     CON_ConOut("Error loading map %s", map);
@@ -82,20 +83,6 @@ void LoadMap(char * map) {
 void PrintMe(char *String)
 {
   CON_ConOut("%s", String);
-}
-
-/* Checks the order of the y values of the entities */
-void CheckEntities(char * ignored) {
-  TEntities * Entities = &(Game->GetState()->MapState->Entities);
-  TEntitiesIterator End = Entities->end();
-  int y = -1;
-  for (TEntitiesIterator i = Entities->begin(); i != End; i++) {
-    if ((*i)->y() >= y) {
-      y = (*i)->y();
-    } else {
-      CON_ConOut("Ups, %i is < %i", (*i)->y(), y);
-    }
-  }
 }
 
 /* lets the user change the alpha level */
@@ -284,7 +271,6 @@ int main(int argc, char ** argv) {
   CON_AddCommand(&DisplayHighscore, "highscore");
   CON_AddCommand(&Python, "i");
   CON_AddCommand(&LoadMap, "loadmap");
-  CON_AddCommand(&CheckEntities, "checkentities");
   
   CON_ListCommands();
   
@@ -294,17 +280,14 @@ int main(int argc, char ** argv) {
   Interprenter->RunSimpleString("help()");
   
   /* **********************************************************************
-   * TEST - initialize game, display and client.
+   * Initialize Display and client;
    * *********************************************************************/
-  Game    = new TGame();
-  Display = new TDisplay();
+  Client    = new TClient();
+  Display   = new TDisplay();
   Highscore = new THighscore(Screen->w / 2  - 160, Screen->h / 2 - 150);
 
-  TClient * Client = new TClient();
-  
-
   /* **********************************************************************
-   * Do nothing for at very short time
+   * Display a splash screen.
    * *********************************************************************/
   /* More testing */
   SDL_Rect src, dest;
@@ -327,13 +310,13 @@ int main(int argc, char ** argv) {
   }
 #endif 
 
-  // Test the client
+  /* Run the client */
   Client->Run();
 
-  // Delete the stuff
-  delete Client;
+  /* Delete various stuff */
   delete Display;
-  delete Game;
+  delete Highscore;
+  delete Client;
   
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(mysurf);

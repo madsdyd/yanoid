@@ -21,7 +21,7 @@
 
 #include "globals.hh"
 
-bool QuitGame = false;
+bool QuitClient = false;
 
 
 

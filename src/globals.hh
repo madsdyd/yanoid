@@ -24,7 +24,7 @@
 
 #include "entity.hh"
 
-extern bool QuitGame;
+extern bool QuitClient;
 
 #endif
 

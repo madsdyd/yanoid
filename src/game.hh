@@ -19,17 +19,29 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* This is the TGameState class, used for passing information from the 
-   TGame to the TDisplay class 
-   This _WILL_ change. Several times. */
 #include <SDL/SDL.h>
 #include "log.hh"
 #include "map.hh"
 
 
+/* This is the TGameState class, used for passing information from the 
+   TGame to the TDisplay class 
+   This _WILL_ change. Several times. */
 class TGameState {
 public:
   TMapState * MapState;
+  /* This stuff will move/change */
+  typedef enum { PLAYING, CUT, DEAD } StatusType;
+  StatusType status;
+  int lives; /* This will go/move somewhere else */
+  int score;
+  
+  TGameState() {
+    /* We start in cut, 5 lives, no score */
+    status = CUT;
+    lives = 5;
+    score = 0;
+  }
   ~TGameState() {
     LogLine(LOG_TODO, "TGameState::~ Clean up stuff?");
   }
@@ -50,5 +62,3 @@ public:
   bool LoadMap(string mapname);
 };
 
-/* The global game variable */
-extern TGame * Game;

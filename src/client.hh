@@ -20,8 +20,24 @@
 */
 /* This contains the TClient module */
 
+#include <SDL/SDL.h>
+
+class TGame;
 class TClient {
+protected:
+  TGame * Game;
+  /* Various stuff for timekeeping */
+  Uint32 game_start;
+  Uint32 game_lastupdate;
+  /* Splitting stuff up, to make it easier to handle */
+  void UpdateGame();
+  void Render();
 public:
-  TClient() {};
+  TClient();
+  ~TClient();
+  inline TGame * GetGame() const { return Game; }
   void Run();
 };
+
+/* Out global client - we can never have more than this. */
+extern TClient * Client;
