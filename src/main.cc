@@ -31,6 +31,9 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include <iostream>
+
 #include "SDL/SDL.h"
 #include "debug.hh"
 #include "log.hh"
@@ -44,7 +47,19 @@ int main(int argc, char ** argv) {
   Log = new TLog();
   Assert(Log != NULL, "Unable to create Log object");
 #endif
-  
+
+  /* **********************************************************************
+   * Print our version, and so on.
+   * *********************************************************************/
+  cout << "Yet Another Arkanoid (yanoid) version " << VERSION << endl
+       << "Copyright (C) 2001 Mads Bondo Dydensborg "
+       << "<mads@dydensborg.dk> et al." << endl 
+       << "Yet Another Arkanoid comes with ABSOLUTLY NO WARRANTY." << endl
+       << "This is free software, and you are welcome to "
+       << "redistribute it" << endl 
+       << "under certain conditions. See the file COPYING for details." 
+       << endl;
+
   /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
