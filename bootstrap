@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script can be used to bootstrap thx's autotool setup.
+# This script can be used to bootstrap yanoid's autotool setup.
 # Due to a minor bug in automake version 1.4, the toplevel Makefile.in 
 # will be patched. This is only relevant if you plan on doing a 
 # make dist - I use that, which is why I like it to work.
