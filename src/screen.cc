@@ -20,3 +20,4 @@
 */
 #include "screen.hh"
 SDL_Surface * Screen = NULL;
+SDL_Surface * Splash = NULL;

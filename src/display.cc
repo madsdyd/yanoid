@@ -52,7 +52,7 @@ void TDisplay::Render(SDL_Surface * surface) {
   TEntity * paddle = GameState->MapState->GetPaddle();
 
   SDL_Event event;
-  if (SDL_PollEvent(&event)) {
+  while (SDL_PollEvent(&event)) {
     switch (event.type) {
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {

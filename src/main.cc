@@ -204,20 +204,24 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
   Screen = SDL_SetVideoMode(800, 600, 0, 
 			    SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN
+			    // SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN
 			    );
   // | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
 
 #ifdef DEBUG
   string tmp = "";
+  if (SDL_FULLSCREEN & Screen->flags) {
+    tmp += "SDL_FULLSCREEN ";
+  }
   if (SDL_HWSURFACE & (Screen->flags)) {
     tmp += "SDL_HWSURFACE ";
   }
+  if (SDL_SWSURFACE & (Screen->flags)) {
+    tmp += "SDL_SWSURFACE ";
+  }
   if (SDL_DOUBLEBUF & Screen->flags) {
     tmp += "SDL_DOUBLEBUF ";
-  }
-  if (SDL_FULLSCREEN & Screen->flags) {
-    tmp += "SDL_FULLSCREEN ";
   }
   LogLineExt(LOG_VERBOSE, ("Videomode set (%ix%i - %s)", 
 			   Screen->w, Screen->h, tmp.c_str()));
@@ -316,14 +320,13 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Load and display a splash screen.
    * *********************************************************************/
-  SDL_Surface * mysurf 
-    = SurfaceManager->RequireRessource("graphics/yanoid.png");
-  Assert(NULL != mysurf, "Error getting SDL_Surface for splash screen");
+  Splash = SurfaceManager->RequireRessource("graphics/yanoid.png");
+  Assert(NULL != Splash, "Error getting SDL_Surface for splash screen");
   SDL_Rect src, dest;
-  src.x = 0; src.y = 0; src.w = mysurf->w; src.h = mysurf->h;
+  src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
   dest.x = (Screen->w-src.w)/2; dest.y = (Screen->h-src.h)/2;
   dest.w = src.w; dest.h = src.h;
-  SDL_BlitSurface(mysurf, &src, Screen, &dest);
+  SDL_BlitSurface(Splash, &src, Screen, &dest);
   SDL_UpdateRect(Screen, 0, 0, 0, 0);
   /* Let the impression sink in... ;-) */
   SDL_Delay(2000);
@@ -349,7 +352,7 @@ int main(int argc, char ** argv) {
   delete Client;
   
   // TODO: Freeing surface, etc.
-  SurfaceManager->ReleaseRessource(mysurf);
+  SurfaceManager->ReleaseRessource(Splash);
   LogLine(LOG_TODO, "Seems music is not released");
   /* **********************************************************************
    * Exit gracefully

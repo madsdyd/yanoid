@@ -27,6 +27,8 @@
 #include "game.hh"
 #include "display.hh"
 
+#include "menu.hh"
+
 /* **********************************************************************
  * The global client
  * *********************************************************************/
@@ -61,6 +63,11 @@ void TClient::Run() {
      The client represents the session. As long as it is running, 
      something will go onto the screen, input will be handled, etc.
      However, when the client is exicted, the game ends. */
+
+  TPreGameMenu * MyPre = new TPreGameMenu();
+
+  QuitClient = !MyPre->Run();
+  
   while(!QuitClient) {
 
     /* Make sure we have a valid game (This will go, when

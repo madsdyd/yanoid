@@ -23,30 +23,56 @@
 /* This unit declares to very simple menus, a pre game menu, and an in game menu 
    These are very simpleminded things. */
 
+#include <SDL/SDL.h>
+#include <vector>
+#include "fontmanager.hh"
+
 class TMenu {
-private:
-  
+protected:
+  fonthandle_t * font;
+  /* The menu items */
+  typedef vector<string> TItems;
+  typedef vector<string>::iterator TItemsIterator;
+  TItems items;
+  unsigned int focused;  /* The item that is currently focused */
+  bool cancel;  /* Set to true, if the user cancelled this menu */
+  bool close;   /* Set to true, if some action has been selected, that
+		   should close the menu */
+  virtual bool HandleEvent(SDL_Event * event);
+  /* Called when the user selects the current entry */
+  virtual void SelectFocused() = 0;
+  /* Called when Run decides it is time to render the menu */
+  virtual void Render();
+  /* Called to render the splash menu */
+  void RenderSplash();
+  /* Called when the items should be rendered */
+  void RenderItems(int xlow, int ylow, int xhigh, int yhigh);
 public:
   TMenu(); 
-  ~TMenu();
-}
-
-class TPreGameMenu {
-private:
-  
-public:
-  TPreGameMenu();
-  ~TPreGameMenu();
-  /* This procedure takes over everything, which is probably not
-     a good idea, but easiest to do now 
-     returns true if the player wants to start a new game, false if
-     we wants to exit */
+  virtual ~TMenu();
   bool Run();
 };
 
-class TInGameMenu {
-private:
-  
+
+/* TPreGameMenu, returns true if the player wants to start
+   a new game, false if exit has been choosen */
+class THelpMenu;
+class TAboutMenu;
+class TPreGameMenu : public TMenu {
+protected:
+  THelpMenu * HelpMenu;
+  TAboutMenu * AboutMenu;
+  void SelectFocused();
 public:
-  T
-}
+  TPreGameMenu();
+  ~TPreGameMenu();
+};
+
+/* TInGameMenu returns false if the player wants to continue a game,
+   true if we wants to exit (current game) */
+class TInGameMenu : public TMenu{
+protected:
+  virtual void SelectFocused();
+public:
+  TInGameMenu();
+};

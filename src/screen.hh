@@ -25,5 +25,6 @@
 #define __SCREEN_HH__
 #include "SDL/SDL.h"
 
-extern SDL_Surface * Screen;
+extern SDL_Surface * Screen; /* The Sreen */
+extern SDL_Surface * Splash; /* The splash logo */
 #endif

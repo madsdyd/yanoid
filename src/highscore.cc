@@ -50,6 +50,10 @@ THighscore::THighscore(int x_, int y_):
   // load font transparent 1, or solid 0
   fontHandle 
     = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+  if (!fontHandle) {
+    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+    exit(-1);
+  }
 }
 
 /* **********************************************************************
