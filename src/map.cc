@@ -265,7 +265,8 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
 
   /* First, try and make things work */
   TEntity * paddle = 
-    new TPixmapEntity(x, y, 0, pixmap);
+    new TPixmapEntity(x, y, 0, pixmap, TEntity::BOX, TEntity::MOVING);
+  paddle->setName("Paddle");
   if ("FreeMotion" == pathtype) {
     paddle->setMotion(new TFreeMotion);    
     dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir(angle);

@@ -89,34 +89,35 @@ void TGame::handleCollisions()
   // alot of cycles..
   for (TEntitiesIterator i1 = themap->Entities.begin() ; 
        i1 != end ; ++i1) {
-    int maxy = (*i1)->y() + (*i1)->h();
+    /* We only check moving stuff against stationary objects */
     TEntity::EntityType i1type = (*i1)->getEntityType();
+    if (i1type == TEntity::STATIONARY) {
+      continue;
+    }
+    // LogLine(LOG_VER_2, "Checking " + (*i1)->getName());
+    int maxy = (*i1)->y() + (*i1)->h();
     TEntity::CollisionType i1coll = (*i1)->getCollisionType();
-    TEntitiesIterator i2 = i1;
-    i2++;
+    // TEntitiesIterator i2 = i1;
+    // i2++;
+    TEntitiesIterator i2 = themap->Entities.begin();
     for ( ; *i2 != *i1 && i2 != end ; ++i2) {
-
+      if (i1 == i2) {
+	continue;
+      }
       // Check to see if the y for the i2 iterator is
       // bigger than maxy. If so we know that the rest
       // of the objects in the list must be located at a
       // too high y to bee colliding and we can skip the tests
-      Assert((*i2) != NULL, "(*i2) == NULL - how come?");
       if (maxy < (*i2)->y())
 	break;
       
-      // Next we check to see if both i1 and i2 are of
-      // type STATIONARY since it doesn't make sense to 
-      // collision detect stationary entities. At the same time use 
-      // shortcut or to determine if bounding box detection fails.
-
-      if (i1type == TEntity::STATIONARY && (*i2)->getEntityType() == i1type 
-	  || (! (*i1)->boundingBoxCollision(*(*i2))))
+      /* If there are no collision between the current two entities, 
+	 continue */
+      if (! (*i1)->boundingBoxCollision(*(*i2)))
 	continue;
       
-      /*
-      LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
-	      " and " + (*i2)->getName());
-      */
+      /*LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
+	" and " + (*i2)->getName());*/
       // this section is for debugging only
       {
 

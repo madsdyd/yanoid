@@ -84,6 +84,20 @@ void PrintMe(char *String)
   CON_ConOut("%s", String);
 }
 
+/* Checks the order of the y values of the entities */
+void CheckEntities(char * ignored) {
+  TEntities * Entities = &(Game->GetState()->MapState->Entities);
+  TEntitiesIterator End = Entities->end();
+  int y = -1;
+  for (TEntitiesIterator i = Entities->begin(); i != End; i++) {
+    if ((*i)->y() >= y) {
+      y = (*i)->y();
+    } else {
+      CON_ConOut("Ups, %i is < %i", (*i)->y(), y);
+    }
+  }
+}
+
 /* lets the user change the alpha level */
 void AlphaChange(char *alpha)
 {
@@ -270,6 +284,7 @@ int main(int argc, char ** argv) {
   CON_AddCommand(&DisplayHighscore, "highscore");
   CON_AddCommand(&Python, "i");
   CON_AddCommand(&LoadMap, "loadmap");
+  CON_AddCommand(&CheckEntities, "checkentities");
   
   CON_ListCommands();
   
