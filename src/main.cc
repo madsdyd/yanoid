@@ -20,13 +20,15 @@
 */
 /* This is the main file for yanoid. It performs the following:
 
--1) Initialize the log system
+-3) Initialize the log system
+-2) Print version information
+-1) Initialize ressource management systems
 0) Initialize SDL (and, potentially other libs)
 1) Initialize video
 2) Initialize audio
-3) Initialize ressource management systems
+3) 
 4) Perform the main menu/game loop
-5) Shutdown */
+5) Shutdown (Delete ressources) */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -38,6 +40,7 @@
 #include "debug.hh"
 #include "log.hh"
 #include "screen.hh"
+#include "ressourcemanager.hh"
 
 int main(int argc, char ** argv) {
   /* **********************************************************************
@@ -46,6 +49,7 @@ int main(int argc, char ** argv) {
 #ifdef DEBUG
   Log = new TLog();
   Assert(Log != NULL, "Unable to create Log object");
+  LogLine(LOG_VERBOSE, "Log object created");
 #endif
 
   /* **********************************************************************
@@ -59,6 +63,17 @@ int main(int argc, char ** argv) {
        << "redistribute it" << endl 
        << "under certain conditions. See the file COPYING for details." 
        << endl;
+
+  /* **********************************************************************
+   * Initialize the ressource management system
+   * *********************************************************************/
+
+  PathManager = new TPathManager();
+  Assert(PathManager != NULL, "Unable to create pathmanager");
+  LogLine(LOG_VERBOSE, "PathManager created");
+
+  /* Add out datapath */
+  PathManager->AddPath(YANOID_DATADIR);
 
   /* **********************************************************************
    * Initialize SDL
@@ -83,10 +98,22 @@ int main(int argc, char ** argv) {
   LogLine(LOG_VERBOSE, "Videomode set (800x600, fullscreen)");
 
 
+  /* **********************************************************************
+   * Do nothing for at very short time
+   * *********************************************************************/
+  
+
 
   /* **********************************************************************
    * Exit gracefully
    * *********************************************************************/
-  LogLine(LOG_VERBOSE, "Exiting gracefully");
+
+  LogLine(LOG_VERBOSE, "Deleting PathManager");
+  delete(PathManager);
+#ifdef DEBUG
+  LogLine(LOG_VERBOSE, "Deleting Log object - Exiting gracefully");
+  delete(Log);
+#endif
+
   return 0;
 }
