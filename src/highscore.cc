@@ -24,6 +24,7 @@
 #include "log.hh"
 #include "debug.hh"
 #include "ressourcemanager.hh"
+#include "soundmanager.hh"
 #include "fontmanager.hh"
 #include "ConsoleSource/DT_drawtext.h"
 #include "screen.hh"
@@ -167,13 +168,16 @@ bool THighscore::HandleEvent(SDL_Event * event) {
   if (SDL_KEYDOWN == event->type) {
     switch (event->key.keysym.sym) {
     case SDLK_DOWN: 
+      SoundManager->PlaySound("sounds/menu_move.wav");
       cursorpos_y = (cursorpos_y < 2) ? cursorpos_y+1 : cursorpos_y;
       break;
     case SDLK_UP: 
+      SoundManager->PlaySound("sounds/menu_move.wav");
       cursorpos_y = (cursorpos_y > 0) ? cursorpos_y-1 : cursorpos_y;
       break;
     case SDLK_RIGHT: 
       // take special care of End and Del
+      SoundManager->PlaySound("sounds/menu_move.wav");
       if (cursorpos_y == 2) {
 	if (cursorpos_x == 6 || cursorpos_x == 7) {
 	  cursorpos_x = 8;
@@ -184,6 +188,7 @@ bool THighscore::HandleEvent(SDL_Event * event) {
       break;
     case SDLK_LEFT: 
       // take special care of End and Del
+      SoundManager->PlaySound("sounds/menu_move.wav");
       if (cursorpos_y == 2) {
 	if (cursorpos_x == 6 || cursorpos_x == 7) {
 	  cursorpos_x = 5;
@@ -199,12 +204,13 @@ bool THighscore::HandleEvent(SDL_Event * event) {
     case SDLK_SPACE:
     case SDLK_RETURN: {
       if (DisplayMode == HIGHSCORE) {
-	      close = true;
-	      name[0] = '_';
-	      name[1] = '_';
-	      name[2] = '_';
-	      curchar = 0;
-	      return false;
+	SoundManager->PlaySound("sounds/menu_choose.wav");
+	close = true;
+	name[0] = '_';
+	name[1] = '_';
+	name[2] = '_';
+	curchar = 0;
+	return false;
       }
       if (cursorpos_y == 2) {
 	if (cursorpos_x == 6 || cursorpos_x == 7) {

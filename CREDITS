@@ -48,7 +48,8 @@ menu_move.wav       - From the KDE project
 		      GPL, renamed from KDE_Window_DeIconify.wav
 peep.wav            - From the KDE project
 		      GPL, renamed from KDE_Beep_Pop.wav
-
+menu_choose.wav     - From EgoBoo game, GPL
+powerup_bad.wav     - From EgoBoo game, GPL
 
 ----------------------------------------------------------------------
 * GRAPHICS

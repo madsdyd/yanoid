@@ -225,6 +225,7 @@ bool TMenu::HandleEvent(SDL_Event * event) {
     }
     case SDLK_SPACE:
     case SDLK_RETURN: {
+      SoundManager->PlaySound("sounds/menu_choose.wav");
       SelectFocused();
       return true;
     }
