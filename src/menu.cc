@@ -356,17 +356,17 @@ public:
 class TAboutMenu : public TDialogMenu {
 public:
   TAboutMenu() : TDialogMenu("Return") {
-    AddLines("Yanoid was created for the 2001 SDL contest by");
+    AddLines("YaNOID was created for the 2001 SDL contest by");
+    AddLines("    ");
+    AddLines("Mads Bondo Dydensborg <mads@dydensborg.dk>");
+    AddLines("Programming                               ");
     AddLines("    ");
     AddLines("Jonas Christian Drewsen <jcd@xspect.dk>");
-    AddLines("Programming & artist");
+    AddLines("Programming & artist                   ");
     AddLines("    ");
-    AddLines("Bjarke Soerensen <bs@wasd.dk>");
-    AddLines("Artist");
+    AddLines("Bjarke Sørensen <bs@wasd.dk>");
+    AddLines("Artist                      ");
     AddLines("      ");
-    AddLines("Mads Bondo Dydensborg <mads@dydensborg.dk>");
-    AddLines("Programming");
-    AddLines("    ");
     AddLines("Visit the project homepage at http://www.sf.net/projects/yanoid/");
   };
 };
@@ -378,14 +378,14 @@ public:
 class TExitMenu : public TDialogMenu {
 public:
   TExitMenu() : TDialogMenu("OK") {
-    AddLines("Thank you for playing Yanoid!");
+    AddLines("Thank you for playing YaNOID!               ");
     AddLines("     ");
-    AddLines("Visit the project homepage at");
+    AddLines("Visit the project homepage at               ");
     AddLines("     ");
-    AddLines(">>>>> http://www.sf.net/projects/yanoid/ <<<<<");
+    AddLines(">>>> http://www.sf.net/projects/yanoid/ <<<<");
     AddLines("     ");
-    AddLines("for updates to Yanoid, or if you want to join "
-	     "in the development.");
+    AddLines("for updates to YaNOID, or if you want to    "
+	     "join in the development.                    ");
   }
 };
 
