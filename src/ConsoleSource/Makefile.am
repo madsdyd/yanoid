@@ -1,6 +1,6 @@
 ## Source directory
 
-h_sources = CON_consolecommands.h DT_drawtext.h
+h_sources = CON_console.h CON_consolecommands.h DT_drawtext.h
 cc_sources = CON_console.c CON_consolecommands.c DT_drawtext.c
 
 #library_includedir=$(includedir)/$(GENERIC_LIBRARY_NAME)

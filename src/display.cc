@@ -42,21 +42,22 @@ void TDisplay::Render(SDL_Surface * surface) {
   SDL_Event event;
   if (SDL_PollEvent(&event)) {
     switch (event.type) {
-      case SDL_KEYDOWN:
-	switch (event.key.keysym.sym) {
-	  case SDLK_BACKQUOTE:
-	    if (!ConsoleDown){
-	      ConsoleDown = true;
-	      SDL_EnableUNICODE(1);
-	    } else {
-	      ConsoleDown = false;
-	      SDL_EnableUNICODE(0);
-	    }
-	    return;
-	default:
-	  break;
+    case SDL_KEYDOWN:
+      switch (event.key.keysym.sym) {
+      case SDLK_BACKQUOTE:
+      case SDLK_ESCAPE:
+	if (!ConsoleDown){
+	  ConsoleDown = true;
+	  SDL_EnableUNICODE(1);
+	} else {
+	  ConsoleDown = false;
+	  SDL_EnableUNICODE(0);
 	}
+	return;
+      default:
 	break;
+      }
+      break;
     default:
       break;
     }
@@ -66,7 +67,7 @@ void TDisplay::Render(SDL_Surface * surface) {
       CON_ConsoleEvents(&event);
     }
   }
-
+  
   if (ConsoleDown) {
     CON_DrawConsole();
   }

@@ -208,7 +208,8 @@ int main(int argc, char ** argv) {
   
   /* Init the console */
   // hacky
-  Assert(CON_ConsoleInit("../data/graphics/fonts/ConsoleFont.bmp", Screen, 100, Con_Init) == 0,
+  Assert(CON_ConsoleInit(PathManager->Resolve("graphics/fonts/ConsoleFont.bmp").c_str(), 
+			 Screen, 100, Con_Init) == 0,
 	 "Unable to initialize console");
   
   /* Add some commands to the console */
@@ -224,9 +225,6 @@ int main(int argc, char ** argv) {
   Display = new TDisplay();
   TClient * Client = new TClient();
   
-
-
-
 
   /* **********************************************************************
    * Do nothing for at very short time
@@ -260,8 +258,7 @@ int main(int argc, char ** argv) {
   
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(mysurf);
-  SurfaceManager->ReleaseRessource(mysurf);
-
+  LogLine(LOG_TODO, "Seems music is not released");
   /* **********************************************************************
    * Exit gracefully
    * *********************************************************************/
