@@ -42,7 +42,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
   changed(true),  collidecorner(0), removable(false), AngleModifier(0.05)
   , is_dying(false)
 {
-  cerr << "MJELLO" << endl;
+
 }
 
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
@@ -266,7 +266,7 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
       // if the ball is on the way down the drain, skip collision response
       if ( tother->getEntityType() == TEntity::PADDLE && 
 	   (ball->y() + ball->h()) > tother->y() ) {
-	cerr << "marked dying " << motion->getDir() << endl;
+
 	ball->getMotion()->setVelocity(0.5);
 	ball->setX(colx);
 	ball->setY(coly);
@@ -377,7 +377,7 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 	    // if the ball hits the middle of the bat no angle modifier is applied
 	    modangle = (fabs(tother->w()/2 - lx) < (tother->w() * 0.3)) ? 0 : modangle;
 	    newangle += modangle * tother->AngleModifier;
-	    cerr << "lx :" << lx << " modangle: " << modangle << " tother->w(): " << tother->w() << endl;
+	    //	    cerr << "lx :" << lx << " modangle: " << modangle << " tother->w(): " << tother->w() << endl;
 	  }
 	}else{
 	  /*

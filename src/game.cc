@@ -43,8 +43,23 @@ static PyObject * AdjustScore(PyObject * self, PyObject * args) {
   return Py_BuildValue("");
 }
 
+/* **********************************************************************
+ * Adds a new map to the maplist for the game
+ * *********************************************************************/
+static PyObject * AddMap(PyObject * self, PyObject * args) {
+  char * mapname;
+
+  if (!CurrentGame || !PyArg_ParseTuple(args, "s", &mapname)) {
+    return NULL;
+  }
+
+  CurrentGame->AddMapName(mapname);
+  return Py_BuildValue("");
+}
+
 static PyMethodDef game_methods[] = {
   {"AdjustScore", AdjustScore, METH_VARARGS},
+  {"AddMap", AddMap, METH_VARARGS},
   {NULL, NULL}
 };
 

@@ -22,7 +22,7 @@
 #include <SDL/SDL.h>
 #include "log.hh"
 #include "map.hh"
-
+#include <vector>
 
 /* This is the TGameState class, used for passing information from the 
    TGame to the TDisplay class 
@@ -35,11 +35,13 @@ public:
   StatusType status;
   int lives; /* This will go/move somewhere else */
   int score;
+  int currentmap;
   TGameState() {
     /* We start in cut, 5 lives, no score */
     status = CUT;
     lives = 5;
     score = 0;
+    currentmap = 0;
   }
   ~TGameState() {
     LogLine(LOG_TODO, "TGameState::~ Clean up stuff?");
@@ -53,6 +55,7 @@ protected:
   /* used to store time that is skipped - add to lastupdate */
   Uint32 pausetime;
   TMap * Map;
+  std::vector<std::string> map_names;
   TGameState GameState;
   static bool ModuleAdded;
   void handleCollisions(Uint32 currenttime);
@@ -60,6 +63,9 @@ public:
   TGame();
   ~TGame();
   static bool AddModule();
+  std::string GetMapName(int i) const{ return map_names[i]; }
+  void AddMapName(const std::string& n) { map_names.push_back(n); }
+  bool HasMap(unsigned int i) { return map_names.size() > i; }
   void Update(Uint32 currenttime);
   TGameState * GetState();
   bool LoadMap(string mapname);

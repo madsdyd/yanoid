@@ -26,7 +26,6 @@
 #include <SDL/SDL.h>
 #include "ConsoleSource/DT_drawtext.h"
 
-
 /* **********************************************************************
  * The Base TMenu class
  * *********************************************************************/
@@ -378,4 +377,6 @@ void TInGameMenu::SelectFocused() {
     LogLineExt(LOG_ERROR, ("TInGameMenu - focused out of range %i", focused));
   }
 }
+
+
 

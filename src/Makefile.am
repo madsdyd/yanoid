@@ -9,7 +9,7 @@ yanoid_SOURCES = soundmanager.cc more_entities.cc interprenter.cc \
 		surfacemanager.cc musicmanager.cc \
 		ressourcemanager.cc highscore.cc \
 	        debug.cc log.cc screen.cc main.cc globals.cc  \
-		menu.cc fontmanager.cc
+		menu.cc fontmanager.cc texteffects.cc
 
 yanoid_LDADD = ConsoleSource/libSDL_console.la
 
@@ -22,4 +22,4 @@ noinst_HEADERS = soundmanager.hh more_entities.hh globals.hh interprenter.hh \
 		 surfacemanager.hh musicmanager.hh \
 		 ressourcemanager.hh highscore.hh \
 		 debug.hh log.hh screen.hh \
-		 menu.hh fontmanager.hh
+		 menu.hh fontmanager.hh texteffects.hh

@@ -31,6 +31,8 @@
 #include "menu.hh"
 
 #include "motion.hh"
+#include "texteffects.hh"
+#include "ConsoleSource/DT_drawtext.h"
 
 /* **********************************************************************
  * The global client
@@ -90,11 +92,16 @@ void TClient::Run() {
     /* A new game was started */
     Game = new TGame();
     Assert(Game != NULL, "Could not create a default game");
-    /* Load a default map for now */
-    if (Game->LoadMap("maps/map1.py")) {
-      CON_ConOut("Map maps/map1.py succesfully loaded");
-    } else {
-      CON_ConOut("Error loading map maps/map1.py");
+    /* Load map names from maplist file */
+    Interprenter->RunSimpleFile("maps/maplist.py");
+    if (Game->HasMap(Game->GetState()->currentmap)) {
+      if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap).c_str())) {
+	CON_ConOut("Map maps/map1.py succesfully loaded");
+      } else {
+	CON_ConOut("Error loading map maps/map1.py");
+      }
+    }else{
+      	CON_ConOut("Error loading maplist file");
     }
     /* Initialize the timer stuff */
     game_start      = SDL_GetTicks();
@@ -126,9 +133,24 @@ void TClient::Run() {
       /* CUT is when a ball is lost */
       case TGameState::CUT: {
 	PauseGame();
-	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
-	RoundOverMenu->Run();
-	delete RoundOverMenu;
+	//	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
+	//	RoundOverMenu->Run();
+	//	delete RoundOverMenu;
+	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+	if (!font) {
+	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+	  exit(-1);
+	}
+	const char* str = "You lost the ball..";
+	TTextEffects tfx(str, Screen, font, TTextEffects::SIMPLE_DISPLAY);
+	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
+	tfx.setDuration(1500);
+	tfx.start();
+	while(!tfx.isStopped()) {
+	  tfx.update(SDL_GetTicks());
+	  SDL_Flip(Screen);
+	}
+
 	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
@@ -151,20 +173,45 @@ void TClient::Run() {
       /* MAPDONE == All bricks gone (yeepee) */
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
-	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
-	MapDoneMenu->Run();
-	delete MapDoneMenu;
+	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+	if (!font) {
+	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+	  exit(-1);
+	}
+	const char* str = "Level complete!";
+	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_SPACED_ANIM);
+	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
+	tfx.setDuration(1500);
+	tfx.start();
+	while(!tfx.isStopped()) {
+	  tfx.update(SDL_GetTicks());
+	  SDL_Flip(Screen);
+	}
+
+	//	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
+	//	MapDoneMenu->Run();
+	//	delete MapDoneMenu;
 	/* Initialize the timer stuff */
 	game_start      = SDL_GetTicks();
 	game_lastupdate = 0;
 	LogLine(LOG_VERBOSE, "Game->Update(0)");
 	Game->Update(0);
 	Game->GetState()->status = TGameState::PLAYING;
-	if (Game->LoadMap("maps/map2.py")) {
-	  CON_ConOut("Map maps/map2.py succesfully loaded");
-	} else {
-	  CON_ConOut("Error loading map maps/map1.py");
+	Game->GetState()->currentmap++;
+
+	// Are there any maps left in out maplist?
+	if (!Game->HasMap(Game->GetState()->currentmap)) {
+	    CON_ConOut("No More Maps -> resetting");
+	    Game->GetState()->currentmap = 0;
 	}
+
+	// load the next map
+	if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap).c_str())) {
+	  CON_ConOut("Map succesfully loaded");
+	} else {
+	  CON_ConOut("Error loading map");
+	}
+
 	break;
       }
       case TGameState::PLAYING: ;
@@ -259,14 +306,14 @@ void TClient::HandleEvents() {
 	switch (event.key.keysym.sym) {
 	case SDLK_LEFT:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( -0.5 );
-	  paddle->getMotion()->setAccel( -0.001 );
+	  paddle->getMotion()->setVelocity( -0.4 );
+	  paddle->getMotion()->setAccel( -0.002 );
 	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_RIGHT:
 	  if (!paddle) break;
-	  paddle->getMotion()->setVelocity( 0.5 );
-	  paddle->getMotion()->setAccel( 0.001 );
+	  paddle->getMotion()->setVelocity( 0.4 );
+	  paddle->getMotion()->setAccel( 0.002 );
 	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_UP:

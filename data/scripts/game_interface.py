@@ -6,3 +6,9 @@
 def AdjustScore(dscore):
     "Adjust the current score"
     yanoid_game.AdjustScore(dscore)
+
+# AddMap
+# Add a mapname to the list of maps in the game
+def AddMap(mapname):
+    "Add a map to the list of maps in the game"
+    yanoid_game.AddMap(mapname)
