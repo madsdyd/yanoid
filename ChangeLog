@@ -1,3 +1,18 @@
+2001-12-09  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Tagging
+	Tagging version 3.0.1 - bumping version number.
+
+	* Togglecheat 
+	Fixed to work again
+
+	* TDelayBrick
+	Is now removed correctly, which means the bonuslevel now
+	works. Added as level 2
+
+	* Powerup
+	Ballspeed powerup should now be working
+
 2001-12-09  Jonas Christian Drewsen  <jcd@diller.emdrupborg.dk>
 
 	* Animation:
