@@ -275,7 +275,7 @@ bool TMap::AddEntity(string type, string hitfunction,
     // TEntity * e = new TEntity(x, y, w, h);
     e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
-    LogLine(LOG_VERBOSE, "hole created");
+    // LogLine(LOG_VERBOSE, "hole created");
     return true;
   } else if ("default-ball" == type) {
     if (!MapState->paddle) {
