@@ -48,7 +48,6 @@
 #include "surfacemanager.hh"
 #include "musicmanager.hh"
 #include "soundmanager.hh"
-#include "fontmanager.hh"
 
 #include "console.hh"
 #include "game.hh"
@@ -283,14 +282,6 @@ int main(int argc, char ** argv) {
   Assert(SoundManager != NULL, "Unable to create SoundManager");
   LogLine(LOG_VERBOSE, "SoundManager Initialized");
   
-
-  /* **********************************************************************
-   * Initialize the FontManager
-   * *********************************************************************/
-  FontManager = new TFontManager();
-  Assert(FontManager != NULL, "Unable to create FontManager");
-  LogLine(LOG_VERBOSE, "FontManager Initialized");
-  
   /* **********************************************************************
    * Initialize the console (requires SDL to be initialized )
    * *********************************************************************/
@@ -384,8 +375,6 @@ int main(int argc, char ** argv) {
   delete SoundManager;
   LogLine(LOG_VERBOSE, "Deleting MusicManager");
   delete MusicManager;
-  LogLine(LOG_VERBOSE, "Deleting FontManager");
-  delete FontManager;
   LogLine(LOG_VERBOSE, "Deleting Console");
   delete Console;
   LogLine(LOG_VERBOSE, "Deleting SurfaceManager");

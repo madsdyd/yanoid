@@ -4,12 +4,6 @@ other projects.
 ----------------------------------------------------------------------
 * CODE
 
-* Console
-The console sources was taken from the SDL_console code. 
-Author  : Garrett Banuk
-Homepage: http://www.mongeese.org/SDL_Console/
-License : ? (Probably GPL, fill in)
-
 * Pixel collision code
 The code in entity.cc that does pixel perfect collision detection was
 taken from libsge
@@ -54,9 +48,8 @@ powerup_bad.wav     - From EgoBoo game, GPL
 ----------------------------------------------------------------------
 * GRAPHICS
 
-The font used for the menus was the ones that came with the 
+The font used to be used for the menus is the one that came with the
 SDL_Console code, although edited in color.
 
-The font used for the console came with the SDL_Console code.
 
 
