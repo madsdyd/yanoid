@@ -51,7 +51,8 @@ void BackTrace() {
 
 /* If this works well, I want to extend this assert to do some
    interaction with the user */
-bool CustomAssert(bool expr, char * description, int linenum, char * filename) {
+bool CustomAssert(bool expr, const char * description, 
+		  int linenum, const char * filename) {
   if (!expr) {
     cerr << "CustomAssert failed at " << filename << ":" << linenum << " \""
 	 << description << "\"" << endl;

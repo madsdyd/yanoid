@@ -30,7 +30,7 @@
    debug directive, expect for FATAL, which is always there
  */
 #include <iostream>
-#include <strstream>
+#include <sstream>
 
 using namespace std;
 
@@ -59,7 +59,7 @@ extern bool duptoconsole;
 /* Log line is the usual interface to the log */
 //    loglinetmp.form _line << ends; 
 #define LogLineExt( _level, _line ) \
-  { ostrstream loglinetmp; \
+  { ostringstream loglinetmp; \
     loglinetmp << "Fix LogLineExt" << ends; \
     Log->AddLine( _level, __FILE__, __LINE__, loglinetmp.str()); }
 

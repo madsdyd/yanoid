@@ -100,7 +100,11 @@ void TEffect::run(SDL_Surface *Screen) {
 	  begin_time = 0;
 	  return;
 	}
+	default:
+	  break;
 	}
+      default:
+	break;
       }
     }
     

@@ -230,6 +230,8 @@ bool TMenu::HandleEvent(SDL_Event * event) {
     case SDLK_ESCAPE: {
       cancel = true;
     }
+    default:
+      break;
     }
   }
   return false;
@@ -251,8 +253,8 @@ void TDialogMenu::SelectFocused() {
 };
 
 TDialogMenu::TDialogMenu(string caption,
-			 bool capture_background = false, 
-			 bool display_splash = true) 
+			 bool capture_background, 
+			 bool display_splash) 
   : TMenu(capture_background, display_splash) {
   items.push_back(caption);
 };

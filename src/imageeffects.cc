@@ -24,7 +24,10 @@
 #include "debug.hh"
 #include <stdlib.h>
 #include <math.h>
-#include <strstream.h>
+#include <sstream>
+
+using std::vector;
+using std::ostringstream;
 
 TImageParticleEffect::TImageParticleEffect(SDL_Surface *img,
 					   int w, int h) :  
@@ -213,10 +216,10 @@ void TImageParticleEffect::blit()
       ((Uint32*)surface->pixels)[index] = ((Uint32*)image->pixels)[count];
       break;
     default:
-      ostrstream ost;
+      ostringstream ost;
       ost << "Error blitting pixels, unknown bpp of " <<  bpp;
       ost.put(0);
-      Assert(0,ost.str());
+      Assert(0, ost.str().c_str());
     }
 
     count++;
@@ -263,10 +266,10 @@ void TImageParticleEffect::saveBackground()
       ((Uint32*)background->pixels)[count] = ((Uint32*)surface->pixels)[index];
       break;
     default:
-      ostrstream ost;
+      ostringstream ost;
       ost << "Error blitting pixels, unknown bpp of " <<  bpp;
       ost.put(0);
-      Assert(0,ost.str());
+      Assert(0, ost.str().c_str());
     }
 
     count++;
@@ -311,10 +314,10 @@ void TImageParticleEffect::blitBackground()
       ((Uint32*)surface->pixels)[index] = ((Uint32*)background->pixels)[count];
       break;
     default:
-      ostrstream ost;
+      ostringstream ost;
       ost << "Error blitting pixels, unknown bpp of " <<  bpp;
       ost.put(0);
-      Assert(0,ost.str());
+      Assert(0, ost.str().c_str());
     }
 
     count++;

@@ -549,7 +549,7 @@ bool TClient::HandleGlobalKeys(SDL_Event * event) {
   default:
     break;
   }
-  /* Falling true - unhandled */
+  /* Falling thru - unhandled */
   return false;
 }
 
@@ -618,9 +618,11 @@ void TClient::HandleEvents() {
 	  Game->GetState()->MapState->MovingEntities.push_back(shot);
 	  Game->GetState()->current_shot_time_left = 
 	    Game->GetState()->time_between_shots;
-	}
-	default: 
-	break;}
+	} 
+	break;
+      }
+      default:
+	break;
       }
       break;
     case SDL_KEYUP:

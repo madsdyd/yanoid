@@ -109,11 +109,11 @@ protected:
 
   /* The actual ressources are stored in here */
   typedef std::map<string, storage_t *> TNameToStorageMap;
-  typedef TNameToStorageMap::iterator   TNameToStorageMapIterator;
+  typedef typename TNameToStorageMap::iterator   TNameToStorageMapIterator;
   /* This is for looking up storage_t, when we get a ressource */
   
   typedef std::map<res_t *, storage_t *> TRessourceToStorageMap;
-  typedef TRessourceToStorageMap::iterator TRessourceToStorageMapIterator;
+  typedef typename TRessourceToStorageMap::iterator TRessourceToStorageMapIterator;
   TNameToStorageMap NameToStorageMap;
   TRessourceToStorageMap RessourceToStorageMap;
 

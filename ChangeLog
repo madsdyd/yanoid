@@ -1,3 +1,8 @@
+2002-12-06  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+        * Compilation
+	Fixed compilation with gcc 3.2
+
 2002-04-04 Samuel Listopad II <samlii@listopad>
 
 	* Bugfixes
@@ -7,6 +12,13 @@
 	Fixed next ball starting too quickly after losing
 	  it.
 	
+2002-03-14  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Bugfixes
+	Added bugfix from Samual Listopad
+	Bumped version number.
+	Tagging and releasing version 0.4.0.
+
 2002-03-9  Jonas Christian Drewsen  <drewsen@mmm>
 
 	* Bugfixes

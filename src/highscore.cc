@@ -27,7 +27,7 @@
 #include "soundmanager.hh"
 #include "text.hh"
 #include "screen.hh"
-#include <iomanip.h>
+#include <iomanip>
 
 /* **********************************************************************
  * The global highscore
@@ -267,6 +267,8 @@ bool THighscore::HandleEvent(SDL_Event * event) {
       name[2] = '_';
       curchar = 0;
     }
+    default:
+      break;
     }
   }
   return false;

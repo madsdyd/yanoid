@@ -34,8 +34,8 @@
 void BackTrace();
 
 /* A custom assert */
-extern bool CustomAssert( bool expr, char * description , 
-			  int linenum, char * filename);
+extern bool CustomAssert( bool expr, const char * description , 
+			  int linenum, const char * filename);
 #define Assert( expr, description ) \
   if ( CustomAssert( (bool)(expr), description, __LINE__, __FILE__) ) { \
   raise(SIGSEGV); \

@@ -11,9 +11,16 @@ dnl Setup initial stuff
 dnl ------------------------------------------------------------
 
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE(yanoid, "0.3.6")
+
+dnl ------------------------------------------------------------
+dnl Make CDPATH not influence stuff. 
+dnl ------------------------------------------------------------
+CDPATH=${ZSH_VERSION+.}:
+
+
+AM_INIT_AUTOMAKE(yanoid, "0.4.0")
 dnl Enable --maintainer-mode
-AM_MAINTAINER_MODE
+dnl AM_MAINTAINER_MODE
 dnl Put config.h in src
 AM_CONFIG_HEADER(src/config.h)
 dnl Interestingly enough, the SDL check fails if we say that we are 
