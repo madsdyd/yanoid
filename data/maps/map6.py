@@ -6,13 +6,13 @@ SetMapName("Bucket of candy - by JCD")
 x = 400
 for y in range(100, 100+20*13, 20):
     AddBrick("brick-stay", x-2*45, y, "stay_brick_hit()",
-             "graphics/objects/weird_brick.png")
+             "graphics/bricks/gray_weird_48.png")
     AddBrick("brick-stay", x+2*45, y, "stay_brick_hit()",
-             "graphics/objects/weird_brick.png")
+             "graphics/bricks/gray_weird_48.png")
 
 for x2 in range(x-2*45,x+100,45):
     AddBrick("brick-stay", x2, 100+20*13, "stay_brick_hit()",
-             "graphics/objects/weird_brick.png")
+             "graphics/bricks/gray_weird_48.png")
 
 
 for y in range(100, 100+20*12, 25):

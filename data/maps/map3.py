@@ -29,7 +29,7 @@ AddBrick("brick", 400, 250, "basic_brick_hit()",
 
 for x in range(-3, 4):
         AddBrick("brick-stay", 410-x*40, 325, "stay_brick_hit()",
-                 "graphics/objects/weird_brick.png")
+                 "graphics/bricks/gray_weird_48.png")
             
 # Add the walls
 AddEntity("static", -10, -10, 11, 620, "static_hit()")
