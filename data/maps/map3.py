@@ -25,7 +25,7 @@ for x in range(-3, 4):
 AddEntity("static", -10, -10, 11, 620, "static_hit()")
 AddEntity("static", 799, -10, 10, 620, "static_hit()")
 AddEntity("static", 1, -10, 798, 11, "static_hit()")
-AddEntity("hole", 1, 550, 798, 50, "static_hit()")
+AddEntity("hole", 1, 550, 798, 50, "")
 
 # Add a paddle
 SetPaddle(400, 500, "graphics/objects/basic_paddle.png")
