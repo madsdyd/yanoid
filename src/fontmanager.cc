@@ -19,47 +19,33 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
-#ifndef __HIGHSCORE_HH__
-#define __HIGHSCORE_HH__
-
-#include <string>
-#include <SDL/SDL.h>
-#include <list>
-#include "entity.hh"
 #include "fontmanager.hh"
+#include "log.hh"
+#include <SDL/SDL.h>
+#include "ConsoleSource/DT_drawtext.h"
 
-const unsigned int MAX_RANKINGS = 100;
+/* **********************************************************************
+ * The font manager
+ * *********************************************************************/
+TFontManager * FontManager;
 
-typedef unsigned int Score;
+/* **********************************************************************
+ * Load and realease
+ * **********************************************************************/
+fonthandle_t * TFontManager::LoadRessource(string filename) {
+  fonthandle_t * tmp1 = new fonthandle_t;
+  *tmp1 = DT_LoadFont(filename.c_str(), 0); 
+  if (*tmp1 < 0) {
+    LogLine(LOG_ERROR, "Error loading ressource");
+    delete tmp1;
+    return NULL;
+  }
+  return tmp1;
+}
 
-class THighscore : public TEntity {
-protected:
-  typedef enum HS_DisplayMode { INPUT, HIGHSCORE, NONE } HS_DisplayMode;
-  HS_DisplayMode DisplayMode;
-  std::list<pair<std::string, Score> > Rankings;
-  unsigned int NumRankings;
-  fonthandle_t * fontHandle;
-public:
-  THighscore(int x_, int y_);
-  virtual ~THighscore();
-
-  bool isCandidate(const Score& s);
-
-  bool update(const std::string& name, const Score& s);
-
-  void displayNameInput();
-  void displayRankings();
-  void displayNone();
-  
-  /* Num visible rankings */
-  void setNumRankings(unsigned int n) { NumRankings = n; }
-
-  virtual void Update(Uint32 currenttime);
-  virtual void Render(SDL_Surface * surface);
-};
-
-/* The global highscore variable */
-extern THighscore *Highscore;
-
-#endif
+void TFontManager::UnloadRessource(fonthandle_t * font) {
+  if (font)
+    delete font;
+  else
+    LogLine(LOG_ERROR, "Error. Tried to Unload NULL font");
+}

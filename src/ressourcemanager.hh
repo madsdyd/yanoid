@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include "log.hh"
+#include "debug.hh"
 
 /* **********************************************************************
  * The PathManager

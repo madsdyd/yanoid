@@ -8,7 +8,8 @@ yanoid_SOURCES = interprenter.cc \
 		display.cc client.cc \
 		surfacemanager.cc musicmanager.cc \
 		ressourcemanager.cc highscore.cc \
-	        debug.cc log.cc screen.cc main.cc globals.cc  
+	        debug.cc log.cc screen.cc main.cc globals.cc  \
+		menu.cc fontmanager.cc
 
 yanoid_LDADD = ConsoleSource/libSDL_console.la
 
@@ -20,4 +21,5 @@ noinst_HEADERS = globals.hh interprenter.hh \
 		 display.hh client.hh \
 		 surfacemanager.hh musicmanager.hh \
 		 ressourcemanager.hh highscore.hh \
-		 debug.hh log.hh screen.hh
+		 debug.hh log.hh screen.hh \
+		 menu.hh fontmanager.hh

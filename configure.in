@@ -55,9 +55,9 @@ dnl Check for SDL version.
 SDL_VERSION=1.1.8
 AM_PATH_SDL($SDL_VERSION, have_SDL=yes, have_SDL=no)
 dnl Should the -lSDL go in here? Maybe not.
-YANOID_CFLAGS="$YANOID_CFLAGS $SDL_CFLAGS -pg"
-YANOID_CXXFLAGS="$YANOID_CXXFLAGS $SDL_CFLAGS -pg"
-YANOID_LIBS="$YANOID_LIBS $SDL_LIBS -pg"
+YANOID_CFLAGS="$YANOID_CFLAGS $SDL_CFLAGS"
+YANOID_CXXFLAGS="$YANOID_CXXFLAGS $SDL_CFLAGS"
+YANOID_LIBS="$YANOID_LIBS $SDL_LIBS"
 
 dnl Check for SDL extension libs
 saved_LIBS="$LIBS"
@@ -250,4 +250,4 @@ CFLAGS="$YANOID_CFLAGS"
 CXXFLAGS="$YANOID_CXXFLAGS"
 LIBS="$YANOID_LIBS"
 
-AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile data/music/Makefile data/scripts/Makefile data/maps/Makefile Makefile)
+AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile data/music/Makefile data/scripts/Makefile data/maps/Makefile data/objects/Makefile Makefile)

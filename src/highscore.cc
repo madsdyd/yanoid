@@ -24,6 +24,7 @@
 #include "log.hh"
 #include "debug.hh"
 #include "ressourcemanager.hh"
+#include "fontmanager.hh"
 #include "ConsoleSource/DT_drawtext.h"
 #include <sstream>
 #include <iomanip.h>
@@ -48,8 +49,7 @@ THighscore::THighscore(int x_, int y_):
   }
   // load font transparent 1, or solid 0
   fontHandle 
-     = DT_LoadFont(PathManager->Resolve("graphics/fonts/LargeFont.bmp").c_str(), 0);
-  Assert(fontHandle != -1, "Unable to load highscore fontmap.");
+    = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
 }
 
 /* **********************************************************************
@@ -57,6 +57,7 @@ THighscore::THighscore(int x_, int y_):
  * *********************************************************************/
 THighscore::~THighscore()
 {
+  FontManager->ReleaseRessource(fontHandle);
   LogLine(LOG_TODO, "Clean up THighscore destructor");
 }
 
@@ -66,7 +67,6 @@ THighscore::~THighscore()
 void THighscore::Update(Uint32 currenttime) {
   static Uint32 lastupdate = 0;
   //  Uint32 deltatime = currenttime - lastupdate;
- 
   lastupdate = currenttime;
 }
 
@@ -89,7 +89,7 @@ void THighscore::Render(SDL_Surface * surface)
       RankLine << setw(20) << i->first 
 	       << setw(10) << setiosflags(ios::right) << i->second;
       cerr << RankLine.str() << endl;
-      DT_DrawText(RankLine.str().c_str(), surface, fontHandle, drawx, drawy);
+      DT_DrawText(RankLine.str().c_str(), surface, *fontHandle, drawx, drawy);
       drawy += 20;
     }
   }

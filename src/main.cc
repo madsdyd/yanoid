@@ -47,6 +47,7 @@
 #include "ressourcemanager.hh"
 #include "surfacemanager.hh"
 #include "musicmanager.hh"
+#include "fontmanager.hh"
 #include "ConsoleSource/CON_console.h"
 #include "game.hh"
 #include "display.hh"
@@ -245,11 +246,6 @@ int main(int argc, char ** argv) {
   Assert(PathManager != NULL, "Unable to create SurfaceManager");
   LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
 
-  /* Load the splash surface - also a kind of test */
-  SDL_Surface * mysurf 
-    = SurfaceManager->RequireRessource("graphics/yanoid.png");
-  Assert(NULL != mysurf, "Error getting SDL_Surface *");
-  
   /* **********************************************************************
    * Initialize the music manager (requires SDL to be initialized and 
    * the audio mode to be set!)
@@ -270,6 +266,13 @@ int main(int argc, char ** argv) {
     = MusicManager->RequireRessource("sounds/yanoid.ogg");
   Assert(NULL != oggmusic, "Error getting Mix_Music *");
 #endif
+  /* **********************************************************************
+   * Initialize the FontManager
+   * *********************************************************************/
+  FontManager = new TFontManager();
+  Assert(FontManager != NULL, "Unable to create FontManager");
+  LogLine(LOG_VERBOSE, "FontManager Initialized");
+  
   /* **********************************************************************
    * Initialize the console (requires SDL to be initialized )
    * *********************************************************************/
@@ -311,14 +314,18 @@ int main(int argc, char ** argv) {
   Highscore = new THighscore(Screen->w / 2  - 160, Screen->h / 2 - 150);
 
   /* **********************************************************************
-   * Display a splash screen.
+   * Load and display a splash screen.
    * *********************************************************************/
+  SDL_Surface * mysurf 
+    = SurfaceManager->RequireRessource("graphics/yanoid.png");
+  Assert(NULL != mysurf, "Error getting SDL_Surface for splash screen");
   SDL_Rect src, dest;
   src.x = 0; src.y = 0; src.w = mysurf->w; src.h = mysurf->h;
   dest.x = (Screen->w-src.w)/2; dest.y = (Screen->h-src.h)/2;
   dest.w = src.w; dest.h = src.h;
   SDL_BlitSurface(mysurf, &src, Screen, &dest);
   SDL_UpdateRect(Screen, 0, 0, 0, 0);
+  /* Let the impression sink in... ;-) */
   SDL_Delay(2000);
 
 #ifndef NO_MUSIC_THREAD
@@ -348,6 +355,8 @@ int main(int argc, char ** argv) {
    * Exit gracefully
    * *********************************************************************/
 
+  LogLine(LOG_VERBOSE, "Deleting FontManager");
+  delete FontManager;
   LogLine(LOG_VERBOSE, "Deleting SurfaceManager");
   delete SurfaceManager;
   LogLine(LOG_VERBOSE, "Deleting PathManager");

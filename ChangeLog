@@ -1,3 +1,9 @@
+2001-11-03  Mads Bondo Dydensborg  <madsdyd@mother>
+
+	* Menu
+	Added a fontmanager, made the highscore use it
+	Added menu class, no implementation yet
+
 2001-11-02  Mads Bondo Dydensborg  <madsdyd@ripley>
         * Graphics
 	Added graphics from Bjarke

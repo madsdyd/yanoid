@@ -20,46 +20,33 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __HIGHSCORE_HH__
-#define __HIGHSCORE_HH__
+/* This unit declares to very simple menus, a pre game menu, and an in game menu 
+   These are very simpleminded things. */
 
-#include <string>
-#include <SDL/SDL.h>
-#include <list>
-#include "entity.hh"
-#include "fontmanager.hh"
-
-const unsigned int MAX_RANKINGS = 100;
-
-typedef unsigned int Score;
-
-class THighscore : public TEntity {
-protected:
-  typedef enum HS_DisplayMode { INPUT, HIGHSCORE, NONE } HS_DisplayMode;
-  HS_DisplayMode DisplayMode;
-  std::list<pair<std::string, Score> > Rankings;
-  unsigned int NumRankings;
-  fonthandle_t * fontHandle;
-public:
-  THighscore(int x_, int y_);
-  virtual ~THighscore();
-
-  bool isCandidate(const Score& s);
-
-  bool update(const std::string& name, const Score& s);
-
-  void displayNameInput();
-  void displayRankings();
-  void displayNone();
+class TMenu {
+private:
   
-  /* Num visible rankings */
-  void setNumRankings(unsigned int n) { NumRankings = n; }
+public:
+  TMenu(); 
+  ~TMenu();
+}
 
-  virtual void Update(Uint32 currenttime);
-  virtual void Render(SDL_Surface * surface);
+class TPreGameMenu {
+private:
+  
+public:
+  TPreGameMenu();
+  ~TPreGameMenu();
+  /* This procedure takes over everything, which is probably not
+     a good idea, but easiest to do now 
+     returns true if the player wants to start a new game, false if
+     we wants to exit */
+  bool Run();
 };
 
-/* The global highscore variable */
-extern THighscore *Highscore;
-
-#endif
+class TInGameMenu {
+private:
+  
+public:
+  T
+}
