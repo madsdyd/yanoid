@@ -272,22 +272,7 @@ void TGame::handleCollisions(Uint32 currenttime)
 	 continue */
       if (! (*i1)->boundingBoxCollision(*(*i2)))
 	continue;
-      
-      // Take special care of paddle collisions 
-      // (Must be handled in special Paddle class derived from TEntity later)
-      if (i1type == "PADDLE" && (*i2)->getMoveType() == TEntity::STATIONARY) {
-	TEntity * paddle = GameState.MapState->GetPaddle();
-	if (paddle->getCollideCorner() < 3) {
-	  paddle->getMotion()->setCurrentVelocity( 0.0 );
-	  paddle->getMotion()->setAccel( 0.0 );
-	  paddle->setX((*i2)->x() + (*i2)->w());
-	}else{
-	  paddle->getMotion()->setCurrentVelocity( 0.0 );
-	  paddle->getMotion()->setAccel( 0.0 );
-	  paddle->setX((*i2)->x() - paddle->w());
-	}
-      }
-	
+
       /* Call the OnCollision events for both entities 
 	 This ensures that STATIONARY can react to collisions. */
       (*i1)->OnCollision(*(*i2),currenttime);

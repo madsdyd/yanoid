@@ -65,6 +65,11 @@ SDL application that uses SDL_mixer.
 * Pause game on minimize (sleep to reduce CPU usage as well)
 
 **********************************************************************
+** IDEERS
+
+- Ball on fire. Makes more damage that normal ball.
+
+**********************************************************************
 ** IN YOUR DREAMS (stuff that we will NOT have time for)
 
 * Network system 

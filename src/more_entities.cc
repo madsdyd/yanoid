@@ -91,10 +91,15 @@ TPowerUp::TPowerUp(int x, int y, string pixmap, string hitfunction)
  * if hit by a paddle or shot.
  * *********************************************************************/
 void TPowerUp::OnCollision(TEntity& other, Uint32 currenttime=0) {
+  /* Check if we allready have collided */
+  if (LastUpdate == currenttime) {
+    return;
+  }
+
   if ("PADDLE" == other.getEntityType()) {
     /* Make sure our hitfunction is called - 
        it should spawn a relevant powerup... */
-    TPixmapEntity::OnCollision(other, currenttime);
+    ExecuteScriptHitCall();
     removable = true;
   }
 }
@@ -197,6 +202,40 @@ TPaddle::~TPaddle() {
   SurfaceManager->ReleaseRessource(widesurface);
   SurfaceManager->ReleaseRessource(narrowsurface);
 }
+
+
+/* **********************************************************************
+ * Called, when this entity collides with another
+ * *********************************************************************/
+void TPaddle::OnCollision(TEntity& other,Uint32 currenttime) {
+
+  /* This must only be called, when at least boundingCollision have been 
+     called 
+     The purpose of this method is to resolve collisions between this object
+     and the other. */
+  /* Check if we have already collided */
+  if (LastUpdate == currenttime) {
+    return;
+  }
+  
+  /* We do not want the paddle to script on 
+     hitting powerups */
+  if ( "POWERUP" != other.getEntityType() ) {
+    if ( other.getMoveType() == TEntity::STATIONARY ) {
+	if (getCollideCorner() < 3) {
+	  getMotion()->setCurrentVelocity( 0.0 );
+	  getMotion()->setAccel( 0.0 );
+	  setX(other.x() + other.w());
+	}else{
+	  getMotion()->setCurrentVelocity( 0.0 );
+	  getMotion()->setAccel( 0.0 );
+	  setX(other.x() - w());
+	}
+    }
+    ExecuteScriptHitCall();
+  }
+}
+
 
 /* **********************************************************************
  * Update to track our max x and y position. Yes, this will only

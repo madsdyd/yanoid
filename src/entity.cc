@@ -398,13 +398,8 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
     
   } /* If ball in collision */
   
-  /* Execute the script associated with this entity */
-  /* HACK: We do not want the paddle to script on 
-     hitting powerups */
-  if ("PADDLE" != getEntityType() 
-      || "POWERUP" != other.getEntityType()) {
-    ExecuteScriptHitCall();
-  }
+  ExecuteScriptHitCall();
+
 }
 
 /* **********************************************************************

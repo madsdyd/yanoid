@@ -58,6 +58,7 @@ public:
 	  const std::string wide_pixmap_path,
 	  const std::string narrow_pixmap_path);
   virtual ~TPaddle();
+  virtual void OnCollision(TEntity& other, Uint32 time = 0);
   void Update(Uint32 deltatime);
   void GoNormal();
   void GoNarrow(int seconds);
