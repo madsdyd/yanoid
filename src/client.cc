@@ -123,6 +123,7 @@ void TClient::Run() {
 	QuitCurrentGame = true;
 	break;
       }
+      /* CUT is when a ball is lost */
       case TGameState::CUT: {
 	PauseGame();
 	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
@@ -133,11 +134,21 @@ void TClient::Run() {
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
 	  LogLine(LOG_ERROR, "Error running interprenter -RoundStart()-");
 	}
+	/* This is a hack to reset the paddle, when a map is done */
+	{
+	  TEntity * paddle = Game->GetState()->MapState->GetPaddle();
+	  if (paddle) {
+	    paddle->setX(380.0);
+	    paddle->getMotion()->setVelocity( 0.0 );
+	    paddle->getMotion()->setAccel( 0.0 );
+	  }
+	}
 	/* Set the game status ... hmm. may not be appropiate */
 	LogLine(LOG_VERBOSE, "Setting game to PLAYING state");
 	Game->GetState()->status = TGameState::PLAYING;
 	break;
       }
+      /* MAPDONE == All bricks gone (yeepee) */
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
 	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
@@ -250,13 +261,13 @@ void TClient::HandleEvents() {
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( -0.5 );
 	  paddle->getMotion()->setAccel( -0.001 );
-	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
+	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_RIGHT:
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( 0.5 );
 	  paddle->getMotion()->setAccel( 0.001 );
-	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
+	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_UP:
 	  if (!paddle) break;

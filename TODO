@@ -6,7 +6,6 @@ yanoid before the game can be considered ready for the contest.
 
 - Collision code is flaky (JCD, is on the way)
 - Paddle should not leave the map (JCD?)
-- Paddle should be reset in a number of cases (ball lost most notably) (MBD)
 - Autoconf code for Python 2.2b is broken (MBD)
 - Complete the gameplay (map changing) code (JCD)
 - More maps (BS,...)?

@@ -4,6 +4,7 @@
 	Added soundmanager
 	Added sound when a brick goes (should probably be scriptable)
 	Fixed menu background missing
+	Reset ball position and movement, when ball is lost
 
 2001-11-17  Mads Bondo Dydensborg  <madsdyd@mother>
 
