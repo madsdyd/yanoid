@@ -375,7 +375,7 @@ int main(int argc, char ** argv) {
 #ifndef NO_MUSIC_THREAD
   // Test the MOD music
   if ( ! Mix_PlayingMusic() ) {
-    Mix_PlayMusic(modmusic, 0);
+    Mix_PlayMusic(modmusic, -1);
   }
 
   // Test the ogg vorbis music

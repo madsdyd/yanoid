@@ -2,14 +2,6 @@
 
 SetMapName("Classic 1 - by MBD")
 
-# Define a hit function for testing purposes
-def powerup_ball_spawn():
-    yanoid_map.PowerUp("powerup", "graphics/powerups/yellow_l.png",
-                       "powerup_ball_hit()")
-    
-def powerup_ball_hit():
-    yanoid_map.PowerUp("spawn-ball", "graphics/balls/red.png",
-                       "ball_hit()")
 
 # Add a number of bricks
 for x in range(6, 750, 79):
@@ -31,8 +23,7 @@ for x in range(6, 750, 79):
                          "graphics/bricks/yellow_stay_75.png")
             else:
                 AddBrick("brick", x, y,
-#                         "power_up_add_ball_hit()",
-                         "powerup_ball_spawn()",
+                         "basic_brick_hit()",
                          "graphics/bricks/red2_75.png")
                 
             
