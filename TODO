@@ -1,29 +1,24 @@
 The following is a list of stuff that needs to be implemented in
 yanoid before the game can be considered ready for the contest. 
 
+TODO: Clean up this file, assign priorities and tasks...
 
+* Add a small random angle to balls, when colliding with bricks, to
+  stop never ending loops on e.g. "Diagonal Frustration".
 
-********************************************************************** 
-** CHECK LIST BEFORE SUBMITTING
+* Ballspeed powerup
 
-- Check 1 MB requirement
-- Check that dist builds
-- Check that dist actually install all required files
-- Check that dist actually runs
-- ??
+* Profile the binary
 
+* Add a statistics option to log framerate
+
+* Do not reset paddle, allow first ball to be "fired"
 
 **********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
-- More maps (BS,MBD...)
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
-
-Stuff that seems to be fixed:
-- Sometimes the game crashes when it wants to display the in game 
-  menu. Related to the text effects? (MBD, JCD?) <-- fixed?
-  Fixed, but no background now... Weirdness and ? posted to SDL list.
 
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we probably should do)
@@ -34,6 +29,7 @@ Stuff that seems to be fixed:
 
 * Sounds (BS)
 - brick effect sounds (explosion, disappear, whatever)
+- sound for loosing a ball
 
 * Pixel perfect collision detection?
 
@@ -89,3 +85,8 @@ SDL application that uses SDL_mixer.
   collide with. This appears to happen mostly when the framerate drops
   below a certain threshhold. Fix? May be OK to decrease the virtual time
   step, but it is alread quite low...
+
+* The highscore class is rather impressed with negative scores...
+
+* The highscore class seems to accept empty names, but will ignore them 
+  in the list.
