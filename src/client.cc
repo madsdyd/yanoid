@@ -320,17 +320,46 @@ void TClient::Run() {
        * *********************************************************************/
       case TGameState::MAPDONE: {
 	/* **********************************************************************
-	 * Do a text effect
+	 * Do a text effect that says the level is complete.
 	 * *********************************************************************/
 	const char* str = "Level complete!";
-	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_SPACED_ANIM);
-	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
+	TTextEffects tfx(str, Screen, font, 
+			 TTextEffects::CHARACTER_SPACED_ANIM);
+	tfx.setLocation(TPoint((Screen->w - strlen(str) 
+				* DT_FontWidth(*font))/2, 
+			       Screen->h / 2 - 40));
 	tfx.setDuration(1500);
 	tfx.start();
 	while(!tfx.isStopped()) {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
+	
+	/* **********************************************************************
+	 * Times below 3 minutes gives a bonus for each second
+	 * *********************************************************************/
+	int below_par = Game->GetState()->gametime/1000 - 180;
+	char msg[25];
+	if (below_par < 0) {
+	  /* Bonus! */
+	  Game->GetState()->score -= 5*below_par;
+	  sprintf(msg, "Time bonus %i points", -5*below_par);
+	} else {
+	  /* No bonus */
+	  sprintf(msg, "No time bonus");
+	}
+	TTextEffects tfx2(msg, Screen, font, 
+			  TTextEffects::CHARACTER_SPACED_ANIM);
+	tfx2.setLocation(TPoint((Screen->w - strlen(msg) 
+				* DT_FontWidth(*font))/2, 
+				Screen->h / 2 + 40));
+	tfx2.setDuration(1500);
+	tfx2.start();
+	while(!tfx2.isStopped()) {
+	  tfx2.update(SDL_GetTicks());
+	  SDL_Flip(Screen);
+	}
+
 	/* **********************************************************************
 	 * Change maps
 	 * *********************************************************************/
