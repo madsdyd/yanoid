@@ -146,6 +146,8 @@ else:
     changequote(<<, >>)dnl
     PYTHON_LIBS=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"LIBS\")"`
     PYTHON_SYSLIBS=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"SYSLIBS\")"`
+    PYTHON_MODLIBS=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"MODLIBS\")"`
+    PYTHON_SYSLIBS="$PYTHON_SYSLIBS $PYTHON_MODLIBS"
     PYTHON_XLINKER=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"LINKFORSHARED\")"`
     changequote([, ])dnl
     PYTHON_LIBS="$PYTHON_LIBS $PYTHON_SYSLIBS $PYTHON_XLINKER"
