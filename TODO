@@ -3,6 +3,9 @@ yanoid before the game can be considered ready for the contest.
 
 TODO: Clean up this file, assign priorities and tasks...
 
+* To compile on gcc 3.0 (and other c++) we need to use std::string or
+  open the std namespace all over....(Kim Schulz)
+
 * Add a small random angle to balls, when colliding with bricks, to
   stop never ending loops on e.g. "Diagonal Frustration".
 
