@@ -367,6 +367,7 @@ TPreGameMenu::TPreGameMenu() : TMenu(false) {
   items.push_back("Highscore");
   items.push_back("Help");
   items.push_back("About");
+  items.push_back("Toggle fullscreen");
   items.push_back("Exit yanoid");
 }
 
@@ -393,7 +394,10 @@ void TPreGameMenu::SelectFocused() {
   case 3:
     AboutMenu->Run();
     return;
-  case 4: /* Exit */
+  case 4:
+    SDL_WM_ToggleFullScreen(Screen);
+    return;
+  case 5: /* Exit */
     cancel = true;
     return;
   default:
