@@ -7,10 +7,16 @@ yanoid before the game can be considered ready for the contest.
 - Collision code is flaky (JCD, is on the way) <-- fixed?
 - Paddle should not leave the map (JCD?)
 - More maps (BS,MBD...)?
+- Game over should not autoremove (player should be allowed to view his 
+  score)
 
 
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)
+
+* The highscore list?
+
+* Pixel perfect collision detection?
 
 * Powerups (MBD)
 
