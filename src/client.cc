@@ -601,3 +601,15 @@ void TClient::ToggleConsole() {
     ContinueGame();
   }
 }
+
+/* **********************************************************************
+ * ToggleMusic - pauses/resumes the music
+ * *********************************************************************/
+void TClient::ToggleMusic() {
+  if (Mix_PausedMusic()) {
+    Mix_RewindMusic();
+    Mix_ResumeMusic();
+  } else {
+    Mix_PauseMusic();
+  }
+}

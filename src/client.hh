@@ -48,6 +48,7 @@ public:
   static bool AddModule();
   void Run();
   void ToggleConsole();
+  void ToggleMusic();
 };
 
 /* Out global client - we can never have more than this. */
