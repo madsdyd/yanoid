@@ -37,7 +37,7 @@ void TClient::Run() {
     Game->Update(ticks-start);
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
     Display->Render(Screen);
-    SDL_UpdateRect(Screen, 0, 0, 0, 0);
+    // SDL_UpdateRect(Screen, 0, 0, 0, 0);
     SDL_Flip(Screen);
     ticks = SDL_GetTicks();
     count++;

@@ -20,6 +20,11 @@
 */
 #include "debug.hh"
 #ifdef DEBUG
+
+#ifdef HAVE_EXECINFO_H
+#include <execinfo.h> 
+#endif
+
 #include <iostream>
 
 /* If this works well, I want to extend this assert to do some
@@ -28,6 +33,18 @@ bool CustomAssert(bool expr, char * description, int linenum, char * filename) {
   if (!expr) {
     cerr << "CustomAssert failed at " << filename << ":" << linenum << " \""
 	 << description << "\"" << endl;
+
+#ifdef HAVE_EXECINFO_H
+    cerr << "Dumping stacktrace" << endl;
+    void *aTrace[32];
+    char **tString;
+    int size, i;   
+    size = backtrace(aTrace, 32);
+    tString = backtrace_symbols(aTrace, size);
+    for (i = 0; i < size; i++) {
+      cerr << "In " << tString[i] << endl;;
+    }
+#endif
     return true;
   } 
   return false;
