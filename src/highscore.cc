@@ -283,13 +283,36 @@ void THighscore::Render(SDL_Surface * surface)
       DT_DrawText(score, surface, *fontHandle, drawx, drawy);
       drawy += 20;
     }
+#ifdef OLD
     string tmp = ">>> Return <<<";
     /* Toogle x times pr second */
     int offset = ((SDL_GetTicks() - start_time) / 225) % 3;
     tmp[offset] = 0x1F;
     tmp[tmp.size()-1-offset] = 0x1E;
+#endif
+    string left  = "      ";
+    string right = "      ";
+    left[0]  = 0x1F;
+    left[1]  = 0x1F;
+    left[2]  = 0x1F;
+    left[3]  = 0x1F;
+    left[4]  = 0x1F;
+    right[1] = 0x1E;
+    right[2] = 0x1E;
+    right[3] = 0x1E;
+    right[4] = 0x1E;
+    right[5] = 0x1E;
+    string tmp = "Return";
+    tmp = left + tmp + right;
+    /* Toogle x times pr second */
+    int offset = ((SDL_GetTicks() - start_time) / 225) % 5;
+    tmp[offset] = '>';
+    tmp[tmp.size()-1-offset] = '<';
+    // tmp[offset] = 0x1F;
+      // tmp[tmp.size()-1-offset] = 0x1E;
+    
     DT_DrawText(tmp.c_str(), surface, *fontHandle, 
-		400-7 * DT_FontWidth(*fontHandle), 450);
+		400-9 * DT_FontWidth(*fontHandle), 450);
   }
   break;
   case INPUT: {
