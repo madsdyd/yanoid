@@ -140,23 +140,20 @@ void TClient::Run() {
       }
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
-	PauseGame();
 	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
 	MapDoneMenu->Run();
 	delete MapDoneMenu;
-	ContinueGame();
-	LogLine(LOG_TODO, "Need to reset map time?");
+	/* Initialize the timer stuff */
+	game_start      = SDL_GetTicks();
+	game_lastupdate = 0;
+	LogLine(LOG_VERBOSE, "Game->Update(0)");
+	Game->Update(0);
+	Game->GetState()->status = TGameState::PLAYING;
 	if (Game->LoadMap("maps/map2.py")) {
 	  CON_ConOut("Map maps/map2.py succesfully loaded");
 	} else {
 	  CON_ConOut("Error loading map maps/map1.py");
 	}
-	/* Initialize the timer stuff */
-	game_start      = SDL_GetTicks();
-	game_lastupdate = 0;
-	LogLine(LOG_VERBOSE, "Game->Update(0)");
-	Game->GetState()->status = TGameState::PLAYING;
-	Game->Update(0);
 	break;
       }
       case TGameState::PLAYING: ;
