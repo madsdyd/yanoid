@@ -1,3 +1,4 @@
+#!/bin/bash
 YANOIDVERSION=`cat configure.in | grep "AM_INIT_AUTOMAKE" | sed -e's/.*"\(.*\)".*/\1/'`
 PACKDIR=yanoid-$YANOIDVERSION
 rm -rf /tmp/$PACKDIR
