@@ -245,7 +245,7 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
   TEntity* tother;
 
   /* Mega if on this beeing a ball */
-  if (getEntityType() == "BALL") {
+  if (getEntityType() == "BALL" && "POWERUP" != other.getEntityType()) {
     /* LogLineExt(LOG_VERBOSE, ("BALL has collided with %s", 
        other.getEntityType().c_str())); */
 	       

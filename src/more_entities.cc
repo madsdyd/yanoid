@@ -81,8 +81,8 @@ TPowerUp::TPowerUp(int x, int y, string pixmap, string hitfunction)
   SetScriptHitCall(hitfunction);
   setMotion(new TFreeMotion);
   dynamic_cast<TFreeMotion*>(getMotion())->setDir(1.5 * M_PI);
-  dynamic_cast<TFreeMotion*>(getMotion())->setVelocity(0.2);
-  dynamic_cast<TFreeMotion*>(getMotion())->setAccel(0.1);
+  dynamic_cast<TFreeMotion*>(getMotion())->setVelocity(0.05);
+  dynamic_cast<TFreeMotion*>(getMotion())->setAccel(10.0);
 }
   
 /* **********************************************************************

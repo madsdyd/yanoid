@@ -4,11 +4,11 @@
 
 # This global variable can be set from the maps, and define
 # the probability of spawning a powerup when RandomlySpawnPowerup
-# is called, in percent. Default is 19 %, which means that in 10 % of the
+# is called, in percent. Default is 20 %, which means that in 20 % of the
 # cases, a powerup is spawned
 # NOTE: There are currently no way to reset this value. 
 
-powerup_spawn_probability = 10;
+powerup_spawn_probability = 20;
 
 from random import randrange
 

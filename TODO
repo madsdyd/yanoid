@@ -34,7 +34,6 @@ Stuff that seems to be fixed:
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)
 
-* Pixel perfect collision detection?
 
 * no sounds from paddle when colliding with bricks (MBD)
 - Remove point for highscore "menu"? (JCD)
@@ -50,6 +49,9 @@ Stuff that seems to be fixed:
 - powerup sounds
 - bad sounds
 - gem sounds
+
+* Pixel perfect collision detection?
+
 
 * Autotool (MBD)
 - Make sure that we fail when something essentiel is missing
