@@ -10,7 +10,6 @@ yanoid before the game can be considered ready for the contest.
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
 - precache sounds (MBD)
-- No points for bricks that stay (MBD)
 - Remove point for highscore? (JCD)
 
 Stuff that seems to be fixed:

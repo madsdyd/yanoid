@@ -245,8 +245,8 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 
   /* Mega if on this beeing a ball */
   if (getEntityType() == "BALL") {
-    LogLineExt(LOG_VERBOSE, ("BALL has collided with %s", 
-			     other.getEntityType().c_str()));
+    /* LogLineExt(LOG_VERBOSE, ("BALL has collided with %s", 
+       other.getEntityType().c_str())); */
 	       
     ball = this;
     tother = &other;
@@ -415,7 +415,7 @@ void TEntity::ExecuteScriptHitCall() {
       LogLine(LOG_WARNING, "TEntity::ExecuteScriptHitCall error");
     }
   } else {
-    LogLineExt(LOG_VERBOSE, ("No script for %s", name.c_str()));
+    // LogLineExt(LOG_VERBOSE, ("No script for %s", name.c_str()));
   }
   current_script_entity = NULL;
 }

@@ -63,12 +63,15 @@ bool TMenu::Run() {
   if (cap_back) {
     LogLine(LOG_VERBOSE, "Capturing the screen");
     /* Copy the screen - make it a background */
+    SDL_LockSurface(Screen);
     background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
 				      Screen->format->BitsPerPixel,
 				      Screen->format->Rmask,
 				      Screen->format->Gmask,
 				      Screen->format->Bmask,
 				      Screen->format->Amask);
+    SDL_UnlockSurface(Screen);
+    LogLine(LOG_VERBOSE, "background created");
     if (background == NULL) {
       LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
     } else {
@@ -76,8 +79,13 @@ bool TMenu::Run() {
       d.x = 0; d.y = 0; 
       d.w = background->w;
       d.h = background->h;
+      LogLine(LOG_VERBOSE, "Blitting screen onto background");
+      // SDL_LockSurface(Screen);
       SDL_BlitSurface(Screen, &d, background, &d);
+      // SDL_UnlockSurface(Screen);
+      LogLine(LOG_VERBOSE, "Screen blitted, setting alpha");
       SDL_SetAlpha(background, SDL_SRCALPHA, 64);
+      LogLine(LOG_VERBOSE, "Alpha set");
     }
   }
   /* While until the menu is done */
