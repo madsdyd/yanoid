@@ -303,12 +303,6 @@ int main(int argc, char ** argv) {
     = MusicManager->RequireRessource("music/yanoid.mod");
   Assert(NULL != modmusic, "Error getting Mix_Music *");
 
-  /* A small ogg vorbis test */
-  /*
-  Mix_Music * oggmusic
-    = MusicManager->RequireRessource("sounds/yanoid.ogg");
-  Assert(NULL != oggmusic, "Error getting Mix_Music *");
-  */
 #endif
   /* **********************************************************************
    * Initialize the sound manager
