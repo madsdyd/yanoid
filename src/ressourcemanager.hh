@@ -214,6 +214,10 @@ res_t * TRessourceManager <res_t>::RequireRessource(string name) {
 
 template <typename res_t>
 void TRessourceManager <res_t>::ReleaseRessource(res_t * ressource) {
+  if (NULL == ressource) {
+    LogLine(LOG_WARNING, "ReleaseRessource on NULL pointer");
+    return;
+  }
   /* Lookup the ressource in the storage map */
   storage_t * tmp = RessourceToStorageMap[ressource];
   if (!tmp) {
@@ -229,11 +233,15 @@ void TRessourceManager <res_t>::ReleaseRessource(res_t * ressource) {
  * *********************************************************************/
 template <typename res_t>
 res_t * TRessourceManager <res_t>::DuplicateRessource(res_t * ressource) {
+  if (NULL == ressource) {
+    LogLine(LOG_ERROR, "DuplicateRessource on NULL pointer");
+    return NULL;
+  }
   /* Look up the ressource */
   storage_t * tmp = RessourceToStorageMap[ressource];
   if (!tmp) {
     LogLine(LOG_ERROR, "DuplicateRessource on unmapped ressource");
-    return;
+    return NULL;
   }
   LogLine(LOG_VER_2, "Duplicating ressource " + tmp->GetName());
   return tmp->TakeRessource();

@@ -19,29 +19,22 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include "musicmanager.hh"
-#include "log.hh"
+#ifndef __SOUNDMANAGER_HH__
+#define __SOUNDMANAGER_HH__
 
-/* **********************************************************************
- * The music manager
- * *********************************************************************/
-TMusicManager * MusicManager = NULL;
+#include "ressourcemanager.hh"
 
-/* **********************************************************************
- * Load and realease
- * **********************************************************************/
-Mix_Music * TMusicManager::LoadRessource(string filename) {
-  Mix_Music * tmp1 = Mix_LoadMUS(filename.c_str()); 
-  if (!tmp1) {
-    LogLine(LOG_ERROR, "Error loading ressource");
-    return NULL;
-  }
-  return tmp1;
-}
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
-void TMusicManager::UnloadRessource(Mix_Music * music) {
-  if (music)
-    Mix_FreeMusic(music);
-  else
-    LogLine(LOG_ERROR, "Error. Tried to Unload NULL music");
-}
+class TSoundManager : public TRessourceManager<Mix_Chunk> {
+protected:
+  Mix_Chunk * LoadRessource(string filename);
+  void UnloadRessource(Mix_Chunk * sound);
+public:
+  TSoundManager() : TRessourceManager<Mix_Chunk>() {};
+};
+
+extern TSoundManager * SoundManager;
+
+#endif

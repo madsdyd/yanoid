@@ -19,19 +19,19 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include "musicmanager.hh"
+#include "soundmanager.hh"
 #include "log.hh"
 
 /* **********************************************************************
- * The music manager
+ * The sound manager
  * *********************************************************************/
-TMusicManager * MusicManager = NULL;
+TSoundManager * SoundManager = NULL;
 
 /* **********************************************************************
  * Load and realease
  * **********************************************************************/
-Mix_Music * TMusicManager::LoadRessource(string filename) {
-  Mix_Music * tmp1 = Mix_LoadMUS(filename.c_str()); 
+Mix_Chunk * TSoundManager::LoadRessource(string filename) {
+  Mix_Chunk * tmp1 = Mix_LoadWAV(filename.c_str()); 
   if (!tmp1) {
     LogLine(LOG_ERROR, "Error loading ressource");
     return NULL;
@@ -39,9 +39,9 @@ Mix_Music * TMusicManager::LoadRessource(string filename) {
   return tmp1;
 }
 
-void TMusicManager::UnloadRessource(Mix_Music * music) {
-  if (music)
-    Mix_FreeMusic(music);
+void TSoundManager::UnloadRessource(Mix_Chunk * sound) {
+  if (sound)
+    Mix_FreeChunk(sound);
   else
-    LogLine(LOG_ERROR, "Error. Tried to Unload NULL music");
+    LogLine(LOG_ERROR, "Error. Tried to Unload NULL sound");
 }

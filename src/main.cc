@@ -47,6 +47,7 @@
 #include "ressourcemanager.hh"
 #include "surfacemanager.hh"
 #include "musicmanager.hh"
+#include "soundmanager.hh"
 #include "fontmanager.hh"
 #include "ConsoleSource/CON_console.h"
 #include "game.hh"
@@ -260,7 +261,7 @@ int main(int argc, char ** argv) {
 
 #ifndef NO_MUSIC_THREAD
   MusicManager = new TMusicManager();
-  Assert(PathManager != NULL, "Unable to create MusicManager");
+  Assert(MusicManager != NULL, "Unable to create MusicManager");
   LogLine(LOG_VERBOSE, "MusicManager Initialized");
 
   /* A small MOD test */
@@ -275,6 +276,14 @@ int main(int argc, char ** argv) {
   Assert(NULL != oggmusic, "Error getting Mix_Music *");
   */
 #endif
+  /* **********************************************************************
+   * Initialize the sound manager
+   * *********************************************************************/
+  SoundManager = new TSoundManager();
+  Assert(SoundManager != NULL, "Unable to create SoundManager");
+  LogLine(LOG_VERBOSE, "SoundManager Initialized");
+  
+
   /* **********************************************************************
    * Initialize the FontManager
    * *********************************************************************/
@@ -389,7 +398,10 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Exit gracefully
    * *********************************************************************/
-
+  LogLine(LOG_VERBOSE, "Deleting SoundManager");
+  delete SoundManager;
+  LogLine(LOG_VERBOSE, "Deleting MusicManager");
+  delete MusicManager;
   LogLine(LOG_VERBOSE, "Deleting FontManager");
   delete FontManager;
   LogLine(LOG_VERBOSE, "Deleting SurfaceManager");

@@ -23,21 +23,22 @@
 #include "entity.hh"
 #include "pixmap_entity.hh"
 #include "more_entities.hh"
-#include "musicmanager.hh"
+#include "soundmanager.hh"
 /* **********************************************************************
  * TBrick
  * *********************************************************************/
 TBrick::TBrick(int x_, int y_, string pixmap, string hitfunction)
   : TPixmapEntity(x_, y_, 0, pixmap) {
   SetScriptHitCall(hitfunction);
+  // HitSound = NULL;
   /* This _must_ go */
-  HitSound = MusicManager->RequireRessource("sounds/pop.wav");
+  HitSound = SoundManager->RequireRessource("sounds/pop.wav");
 };
 /* **********************************************************************
  * ~TBrick
  * *********************************************************************/
 TBrick::~TBrick() {
-  MusicManager->ReleaseRessource(HitSound);
+  SoundManager->ReleaseRessource(HitSound);
 };
 
 /* **********************************************************************
@@ -46,7 +47,9 @@ TBrick::~TBrick() {
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
   removable = true;
   TPixmapEntity::OnCollision(other, currenttime);
-  Mix_PlayMusic(HitSound, 0);
+  if (HitSound) {
+    Mix_PlayChannel(-1, HitSound, 0);
+  }
 }
 
 

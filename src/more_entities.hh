@@ -31,7 +31,7 @@ class TPixmapEntity;
 /* This is a brick... */
 class TBrick : public TPixmapEntity {
 protected:
-  Mix_Music * HitSound;
+  Mix_Chunk * HitSound;
 public:
   TBrick(int x_, int y_, string pixmap, string hitfunction);
   virtual ~TBrick();
