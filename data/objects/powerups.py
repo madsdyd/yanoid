@@ -8,7 +8,7 @@
 # cases, a powerup is spawned
 # NOTE: There are currently no way to reset this value. 
 
-powerup_spawn_probability = 95;
+powerup_spawn_probability = 10;
 
 from random import randrange
 
@@ -43,7 +43,7 @@ def RandomlySpawnPowerup():
 
 # Extra ball
 def powerup_spawn_ball():
-    yanoid_map.PowerUp("powerup", "graphics/powerups/yellow_l.png",
+    yanoid_map.PowerUp("powerup", "graphics/powerups/red_b.png",
                        "powerup_ball_hit()")
     
 def powerup_ball_hit():
@@ -56,7 +56,7 @@ def powerup_spawn_life():
                        "powerup_life_hit()")
     
 def powerup_life_hit():
-    yanoid_map.PowerUp("extra-life", "", "")
+    AdjustLives(1)
 
 
 # Shot (simple)

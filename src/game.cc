@@ -44,6 +44,18 @@ static PyObject * AdjustScore(PyObject * self, PyObject * args) {
 }
 
 /* **********************************************************************
+ * Adjust the lives, add the value to lives
+ * *********************************************************************/
+static PyObject * AdjustLives(PyObject * self, PyObject * args) {
+  int dlives;
+  if (!CurrentGame || !PyArg_ParseTuple(args, "i", &dlives)) {
+    return NULL;
+  }
+  CurrentGame->GetState()->lives += dlives;
+  return Py_BuildValue("");
+}
+
+/* **********************************************************************
  * Adds a new map to the maplist for the game
  * *********************************************************************/
 static PyObject * AddMap(PyObject * self, PyObject * args) {
@@ -61,6 +73,7 @@ static PyObject * AddMap(PyObject * self, PyObject * args) {
  * *********************************************************************/
 static PyMethodDef game_methods[] = {
   {"AdjustScore", AdjustScore, METH_VARARGS},
+  {"AdjustLives", AdjustLives, METH_VARARGS},
   {"AddMap", AddMap, METH_VARARGS},
   {NULL, NULL}
 };

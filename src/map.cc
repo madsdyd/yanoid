@@ -406,15 +406,6 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
   } /* "spawn-ball" */ 
 
   /* **********************************************************************
-   * add-life action
-   * *********************************************************************/
-  else if ("add-life" == action) {
-    /* No arguments - arg1 and arg2 are ignored. */
-    LogLine(LOG_TODO, "Implement add-life");
-    return true;
-  } /* "add-life" */
-  
-  /* **********************************************************************
    * enable-shot
    * *********************************************************************/
   else if ("enable-shot" == action) {
