@@ -111,12 +111,24 @@ void TClient::Run() {
     Game->GetState()->status = TGameState::PLAYING;
     Game->Update(0);
     QuitCurrentGame = false; /* May be changed by the in game menu */
+
+    /* **********************************************************************
+     * Main game loop.
+     * *********************************************************************/
+
     while(!QuitCurrentGame) {
-      /* Update the game state */
+
+      /* **********************************************************************
+       * Update the game state
+       * *********************************************************************/
       UpdateGame();
-      /* Get the system to display the game state */
+      /* **********************************************************************
+       * Display the game state
+       * *********************************************************************/
       Render();
-      /* Handle SDL events */
+      /* **********************************************************************
+       *  Handle SDL events
+       * *********************************************************************/
       HandleEvents();
 
       switch(Game->GetState()->status) {
@@ -168,7 +180,6 @@ void TClient::Run() {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
-
 	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
@@ -299,6 +310,12 @@ bool TClient::HandleGlobalKeys(SDL_Event * event) {
       /* FullScreenToggle is bound to F11 */
     case SDLK_F11:
       SDL_WM_ToggleFullScreen(Screen);
+      return true;
+    /* A very non fancy screenshot function */
+    case SDLK_F12:
+      SDL_LockSurface(Screen);
+      SDL_SaveBMP(Screen, "screenshot.bmp");
+      SDL_UnlockSurface(Screen);
       return true;
     }
   }
