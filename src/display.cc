@@ -43,10 +43,10 @@ void TDisplay::Render(SDL_Surface * surface) {
   TGameState * GameState = Client->GetGame()->GetState();
   TEntitiesIterator End = GameState->MapState->Entities.end();
   TEntitiesIterator i;
+
   for (i = GameState->MapState->Entities.begin(); i != End; i++) {
     (*i)->Render(surface);
   }
-
   
   /* **********************************************************************
    * Draw the HUD...
@@ -62,7 +62,7 @@ void TDisplay::Render(SDL_Surface * surface) {
 
   // Draw lives
   sprintf(framerate, "Lives %i", GameState->lives);
-  DT_DrawText(framerate, surface, 1, 400-7*10, drawy);
+  //  DT_DrawText(framerate, surface, 1, 400-7*10, drawy);
 
   // Draw time
   int minutes = GameState->gametime/60000;
@@ -74,6 +74,11 @@ void TDisplay::Render(SDL_Surface * surface) {
 
   // Draw num_bricks
   sprintf(framerate, "Bricks %i", GameState->MapState->num_bricks);
+  SDL_Rect dest;
+  dest.x = 1;
+  dest.y = surface->h-40;
+  dest.w = 100;
+  dest.h = 40;
   DT_DrawText(framerate, surface, 1, 800-9*20, surface->h-40);
 
   // Draw framerate
@@ -81,6 +86,7 @@ void TDisplay::Render(SDL_Surface * surface) {
   ticks = SDL_GetTicks();
   if (ticks != oldticks) {
     sprintf(framerate, "%.2f", 1000.0 / (ticks - oldticks));
+    SDL_FillRect(Screen, &dest, SDL_MapRGB(Screen->format, 0, 0, 0));
     DT_DrawText(framerate, surface, 1, 1, surface->h-40);
   }
 

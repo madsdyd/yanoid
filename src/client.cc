@@ -420,6 +420,7 @@ void TClient::Run() {
  * GameUpdate updates the time in the game
  * *********************************************************************/
 void TClient::UpdateGame() {
+
   if (paused > 0) { return; };
   /* Update the deltatick */
   Uint32 deltaticks = SDL_GetTicks() - game_start - game_lastupdate;
@@ -505,12 +506,16 @@ void TClient::HandleEvents() {
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( -0.4 );
 	  paddle->getMotion()->setAccel( -0.002 );
+	  if (paddle->getMotion()->getCurrentVelocity() > 0)
+	    paddle->getMotion()->setCurrentVelocity(0);
 	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_RIGHT:
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( 0.4 );
 	  paddle->getMotion()->setAccel( 0.002 );	 
+	  if (paddle->getMotion()->getCurrentVelocity() < 0)
+	    paddle->getMotion()->setCurrentVelocity(0);
 	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_UP:
