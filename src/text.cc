@@ -73,3 +73,19 @@ void TText::Print(SDL_Surface * surface, int x, int y, string text) {
     dest.x += GlyphWidth;
   }
 }
+
+void TText::Print(SDL_Surface * surface, int x, int y, const char ch) {
+  SDL_Rect src;
+  SDL_Rect dest;
+  src.w = GlyphWidth;
+  src.h = GlyphHeight;
+  dest.y = y;
+  dest.x = x;
+  unsigned char glyph;
+  glyph = ch; // static_cast<unsigned char>(ch);
+  // cout << "Got -" << glyph << "- as a glyph" << endl;
+  src.x = GlyphWidth * (glyph % 16);
+  src.y = GlyphHeight * (glyph / 16);
+  // cout << "Blitting from (" << src.x << ", " << src.y << ")" << endl;
+  SDL_BlitSurface(font, &src, surface, &dest);
+}

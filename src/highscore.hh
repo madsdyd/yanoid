@@ -33,8 +33,10 @@ const unsigned int MAX_RANKINGS = 100;
 
 typedef int Score;
 
+class TText;
 class THighscore : public TEntity {
 protected:
+  TText * TextRender;
   typedef enum HS_DisplayMode { INPUT, HIGHSCORE, NONE } HS_DisplayMode;
   HS_DisplayMode DisplayMode;
   std::list<pair<std::string, Score> > Rankings;

@@ -21,14 +21,14 @@
 */
 
 #include "texteffects.hh"
-#include "ConsoleSource/DT_drawtext.h"
+#include "text.hh"
 #include "debug.hh"
 #include "screen.hh"
 #include <math.h>
 
 TTextEffects::TTextEffects(const char *str_, SDL_Surface *surface_, 
-			  fonthandle_t * Font, EffectType et) :
-  type(et), surface(surface_), str(str_), font(Font)
+			  TText * _TextRender, EffectType et) :
+  type(et), surface(surface_), str(str_), TextRender(_TextRender)
 {
   /* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,
      as expected by OpenGL for textures */
@@ -50,8 +50,10 @@ TTextEffects::TTextEffects(const char *str_, SDL_Surface *surface_,
 #endif
   
   int slen = strlen(str_);
-  int cw = DT_FontWidth(*font) * slen;
-  int ch = DT_FontHeight(*font);
+  int cw = //DT_FontWidth(*font) * slen;
+    TextRender->GetGlyphWidth() * slen;
+  int ch = // DT_FontHeight(*font);
+    TextRender->GetGlyphHeight();
   background = SDL_CreateRGBSurface(SDL_HWSURFACE, cw,
 				    ch, 32,
 				    rmask, gmask, bmask, amask);
@@ -105,13 +107,18 @@ TTextEffects::simpleDisplay(Uint32 currenttime) {
     return;
   }
 
-  if (!surface || !str || !font)
+  if (!surface || !str || !TextRender)
     return;
 
 
-  DT_DrawText(str , surface, *font, 
+  /* DT_DrawText(str , surface, *font, 
 	      static_cast<int>(Location.x()), 
-	      static_cast<int>(Location.y()));
+	      static_cast<int>(Location.y())); */
+  TextRender->Print(surface, 	      
+		    static_cast<int>(Location.x()), 
+		    static_cast<int>(Location.y()),
+		    str);
+				     
 }
 
 void 
@@ -129,7 +136,7 @@ TTextEffects::characterSpacedAnim(Uint32 currenttime)
   if ( (currenttime - begin_time) > Duration-500)
     return;
 
-  if (!surface || !str || !font)
+  if (!surface || !str || !TextRender)
     return;
 
   if (!no_erase) {
@@ -139,7 +146,8 @@ TTextEffects::characterSpacedAnim(Uint32 currenttime)
     no_erase=false;
   }
 
-  int fontwidth = DT_FontWidth(*font);
+  int fontwidth = //DT_FontWidth(*font);
+    TextRender->GetGlyphWidth();
   double timepct = static_cast<double>(currenttime-begin_time)/static_cast<double>(Duration-1000);
   int characters = strlen(str);
   
@@ -163,7 +171,7 @@ void
 TTextEffects::characterJumpingAnim(Uint32 currenttime)
 {
 
-  if (!surface || !str || !font)
+  if (!surface || !str || !TextRender)
     return;
 
   if (!no_erase) {
@@ -182,8 +190,10 @@ TTextEffects::characterJumpingAnim(Uint32 currenttime)
   if ( (currenttime - begin_time) > Duration-500)
     return;
 
-  int fontwidth = DT_FontWidth(*font);
-  int fontheight = DT_FontHeight(*font);
+  int fontwidth = // DT_FontWidth(*font);
+    TextRender->GetGlyphWidth();
+  int fontheight = // DT_FontHeight(*font);
+    TextRender->GetGlyphHeight();
   int characters = strlen(str);
   double timepct = static_cast<double>(currenttime-begin_time)/static_cast<double>(Duration-1000);
   int _i = static_cast<int>(timepct * static_cast<double>(characters));
@@ -219,7 +229,7 @@ void
 TTextEffects::characterSwirlingAnim(Uint32 currenttime)
 {
 
-  if (!surface || !str || !font)
+  if (!surface || !str || !TextRender)
     return;
 
   // now blit back the backgrounds for each charaters
@@ -248,7 +258,8 @@ TTextEffects::characterSwirlingAnim(Uint32 currenttime)
   count = 0;
   for (std::vector<TPoint>::iterator i = char_points.begin();
        i != char_points.end() ; i++) {
-    int scale = (count - characters/2) * DT_FontWidth(*font);
+    int scale = (count - characters/2) * //DT_FontWidth(*font);
+      TextRender->GetGlyphWidth();
     i->setX( static_cast<double>(surface->w/2) + 
 	     static_cast<double>(scale) * cos(timepct * 2.0 * M_PI) ); 
     i->setY( static_cast<double>(surface->w/2) + 
@@ -262,7 +273,8 @@ TTextEffects::characterSwirlingAnim(Uint32 currenttime)
 
 void TTextEffects::blitChars() 
 {
-
+  
+#ifdef WHY_ARE_JONAS_DOING_THIS
   SDL_Rect SourceRect, DestRect;
   BitFont *CurrentFont;
   CurrentFont = DT_FontPointer(*font);
@@ -288,15 +300,28 @@ void TTextEffects::blitChars()
     /* draw the characters */
     SDL_BlitSurface(CurrentFont->FontSurface, &SourceRect, surface, &DestRect);
   }
-
+#endif
+  /* If I am not mistaken, the old code is the same as: */
+  int count = 0;
+  // Print the character to the right place on the screen
+  for (std::vector<TPoint>::iterator i = char_points.begin();
+       i != char_points.end() ; i++) {
+    TextRender->Print(surface,
+		      static_cast<int>(i->x()),
+		      static_cast<int>(i->y()), 
+		      str[count]);
+    count++;
+  }
 }
 
 void TTextEffects::saveCharsBackground()
 {
   SDL_Rect SourceRect, DestRect;
   int count = 0;
-  int font_width = DT_FontWidth(*font);
-  int font_height = DT_FontHeight(*font);
+  int font_width = // DT_FontWidth(*font);
+    TextRender->GetGlyphWidth();
+  int font_height = // DT_FontHeight(*font);
+    TextRender->GetGlyphHeight();
 
   for (std::vector<TPoint>::iterator i = char_points.begin();
        i != char_points.end() ; i++) {
@@ -322,8 +347,10 @@ void TTextEffects::blitCharsBackground()
 {
   SDL_Rect SourceRect, DestRect;
   int count = 0;
-  int font_width = DT_FontWidth(*font);
-  int font_height = DT_FontHeight(*font);
+  int font_width = // DT_FontWidth(*font);
+    TextRender->GetGlyphWidth();
+  int font_height = // DT_FontHeight(*font);
+    TextRender->GetGlyphHeight();
 
   // now blit back the backgrounds for each charaters
   for (std::vector<TPoint>::iterator i = char_points.begin();

@@ -26,7 +26,9 @@
 #include "globals.hh"
 
 /* The TDisplay class renders stuff */
+class TText;
 class TDisplay {
+  TText * TextRender;
   string powerup_pix;
   SDL_Surface * powerup_surf;
   SDL_Rect powerup_src;

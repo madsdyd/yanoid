@@ -32,7 +32,7 @@
 #include "game.hh"
 #include "highscore.hh"
 #include "console.hh"
-#include "ConsoleSource/DT_drawtext.h"
+#include "text.hh"
 #include "surfacemanager.hh"
 #include "statistics.hh"
 #include "console.hh"
@@ -50,12 +50,14 @@ TDisplay::TDisplay() {
   powerup_pix = "";
   powerup_surf = NULL;
   powerup_src.x = 0; powerup_src.y = 0;
+  TextRender = new TText("graphics/fonts/largefont2.png");
 }
 
 TDisplay::~TDisplay() {
   if (powerup_surf) {
     SurfaceManager->ReleaseRessource(powerup_surf);
   }
+  delete TextRender;
 }
 
 /* **********************************************************************
@@ -90,18 +92,20 @@ void TDisplay::Render(SDL_Surface * surface) {
 
   // Draw score
   sprintf(buf, "Score %i", GameState->score);
-  DT_DrawText(buf, surface, 0, 1, drawy);
-  
+  // DT_DrawText(buf, surface, 0, 1, drawy);
+  TextRender->Print(surface, 1, drawy, buf);
   // Draw lives
   sprintf(buf, "Lives %i", GameState->lives);
-  DT_DrawText(buf, surface, 0, 400-7*10, drawy);
+  // DT_DrawText(buf, surface, 0, 400-7*10, drawy);
+  TextRender->Print(surface, 400-7*10, drawy, buf);
 
   // Draw time
   int minutes = GameState->gametime/60000;
   int seconds = (GameState->gametime%60000)/1000;
   sprintf(buf, "Time % 2i:%02i", minutes, seconds);
-  DT_DrawText(buf, surface, 0, 800-9*20, drawy);
-  
+  // DT_DrawText(buf, surface, 0, 800-9*20, drawy);
+  TextRender->Print(surface, 800-9*20, drawy, buf);
+
   // At the center bottom, draw the current powerup, if applicable
   if (GameState->shot_time_left > 0) {
     /* Load the pixmap if we do not already have it */
@@ -127,9 +131,12 @@ void TDisplay::Render(SDL_Surface * surface) {
     /* Draw the time left for this powerup - add a second to avoid 0*/
     seconds = (GameState->shot_time_left%60000)/1000 + 1;
     sprintf(buf, "%i", seconds);
-    DT_DrawText(buf, surface, 0, 
+    /* DT_DrawText(buf, surface, 0, 
 		powerup_dest.x + powerup_dest.w + 10, 
-		surface->h - (40 + DT_FontHeight(1) ) /2);
+		surface->h - (40 + DT_FontHeight(1) ) /2); */
+    TextRender->Print(surface, powerup_dest.x + powerup_dest.w + 10, 
+		      surface->h - (40 + TextRender->GetGlyphHeight() ) /2, 
+		      buf);
   }
   
   /* The rest is drawn at the bottom of the screen, and only for debug
@@ -137,14 +144,16 @@ void TDisplay::Render(SDL_Surface * surface) {
 #ifdef DEBUG
   // Draw num_bricks
   sprintf(buf, "Bricks %i", GameState->MapState->num_bricks);
-  DT_DrawText(buf, surface, 0, 800-9*20, surface->h-40);
+  // DT_DrawText(buf, surface, 0, 800-9*20, surface->h-40);
+  TextRender->Print(surface, 800-9*20, surface->h-40, buf);
 
   // Draw framerate
   int oldticks = ticks;
   ticks = SDL_GetTicks();
   if (ticks != oldticks) {
     sprintf(buf, "%.2f", 1000.0 / (ticks - oldticks));
-    DT_DrawText(buf, surface, 0, 1, surface->h-40);
+    // DT_DrawText(buf, surface, 0, 1, surface->h-40);
+    TextRender->Print(surface, 1, surface->h-40, buf);
   }
   // Register frametime, Draw stat
   Stat.RegisterFrameTime(ticks - oldticks);

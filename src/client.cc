@@ -33,7 +33,7 @@
 
 #include "motion.hh"
 #include "texteffects.hh"
-#include "ConsoleSource/DT_drawtext.h"
+#include "text.hh"
 #include "soundmanager.hh"
 #include "surfacemanager.hh"
 
@@ -167,9 +167,8 @@ bool TClient::NextMap() {
   if (!Game) {
     return false;
   }
-  fonthandle_t * font 
-    = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
-  if (!font) {
+  TText * TextRender = new TText("graphics/fonts/largefont2.png");
+  if (!TextRender) {
     return false;
   }
   
@@ -187,11 +186,12 @@ bool TClient::NextMap() {
       PauseGame();
       Render();
       TTextEffects tfx(Game->GetState()->MapState->mapname.c_str(), 
-		       Screen, font, 
+		       Screen, TextRender, 
 		       TTextEffects::CHARACTER_SPACED_ANIM);
       tfx.setLocation(TPoint((Screen->w -  
 			      Game->GetState()->MapState->mapname.size()
-			      * DT_FontWidth(*font))/2, 
+			      // * DT_FontWidth(*font))/2, 
+			      * TextRender->GetGlyphWidth())/2, 
 			     Screen->h / 2));
       tfx.setDuration(1500);
       tfx.start();
@@ -204,10 +204,10 @@ bool TClient::NextMap() {
     
     
     Game->GetState()->status = TGameState::PLAYING;
-    FontManager->ReleaseRessource(font);
+    delete TextRender;
     return true;
   } else {
-    FontManager->ReleaseRessource(font);
+    delete TextRender;
     return false;
   }
 }
@@ -227,11 +227,10 @@ void TClient::Run() {
   TPreGameMenu * MyPre = new TPreGameMenu();
   bool QuitClient = !MyPre->Run();
 
-  /* This font is used for the text effects */
-  fonthandle_t * font 
-    = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
-  if (!font) {
-    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
+  /* This TextRender is used for the text effects */
+  TText * TextRender = new TText("graphics/fonts/largefont2.png");
+  if (!TextRender) {
+    LogFatal("Unable to create TextRender");
     exit(-1);
   }
   
@@ -291,8 +290,12 @@ void TClient::Run() {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
 	const char* str = "Game Over";
-	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_JUMPING_ANIM);
-	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
+	TTextEffects tfx(str, Screen, TextRender, 
+			 TTextEffects::CHARACTER_JUMPING_ANIM);
+	tfx.setLocation(TPoint((Screen->w - strlen(str) 
+				// * DT_FontWidth(*font))/2, 
+				* TextRender->GetGlyphWidth())/2, 
+			       Screen->h / 2));
 	tfx.setDuration(1500);
 	tfx.start();
 	while(!tfx.isStopped()) {
@@ -320,8 +323,12 @@ void TClient::Run() {
 	//	RoundOverMenu->Run();
 	//	delete RoundOverMenu;
 	const char* str = "You lost the ball..";
-	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_SWIRLING_ANIM);
-	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
+	TTextEffects tfx(str, Screen, TextRender, 
+			 TTextEffects::CHARACTER_SWIRLING_ANIM);
+	tfx.setLocation(TPoint((Screen->w - strlen(str) 
+				// * DT_FontWidth(*font))/2,
+				* TextRender->GetGlyphWidth())/2,
+			       Screen->h / 2));
 	tfx.setDuration(1500);
 	tfx.start();
 	while(!tfx.isStopped()) {
@@ -359,10 +366,11 @@ void TClient::Run() {
 	 * Do a text effect that says the level is complete.
 	 * *********************************************************************/
 	const char* str = "Level complete!";
-	TTextEffects tfx(str, Screen, font, 
+	TTextEffects tfx(str, Screen, TextRender, 
 			 TTextEffects::CHARACTER_SPACED_ANIM);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) 
-				* DT_FontWidth(*font))/2, 
+				// * DT_FontWidth(*font))/2, 
+				* TextRender->GetGlyphWidth())/2, 
 			       Screen->h / 2 - 40));
 	tfx.setDuration(1500);
 	tfx.start();
@@ -384,10 +392,11 @@ void TClient::Run() {
 	  /* No bonus */
 	  sprintf(msg, "No time bonus");
 	}
-	TTextEffects tfx2(msg, Screen, font, 
+	TTextEffects tfx2(msg, Screen, TextRender, 
 			  TTextEffects::CHARACTER_SPACED_ANIM);
 	tfx2.setLocation(TPoint((Screen->w - strlen(msg) 
-				* DT_FontWidth(*font))/2, 
+				 // * DT_FontWidth(*font))/2, 
+				 * TextRender->GetGlyphWidth())/2, 
 				Screen->h / 2 + 40));
 	tfx2.setDuration(1500);
 	tfx2.start();
@@ -416,7 +425,7 @@ void TClient::Run() {
   } /* While !QuitCurrentClient */
 
   /* Delete the font */
-  FontManager->ReleaseRessource(font);
+  delete TextRender;
   
   /* Delete the pre menu */
   delete MyPre;

@@ -23,9 +23,10 @@
 #ifndef __TEXTEFFECTS__
 #define __TEXTEFFECTS__
 
+#include <vector>
 #include <SDL/SDL.h>
 #include "point.hh"
-#include "fontmanager.hh"
+
 
 class TEffect {
 protected:
@@ -50,6 +51,7 @@ public:
   void update(Uint32 currenttime) { };
 };
 
+class TText;
 class TTextEffects : public TEffect {
 public:
   typedef enum EffectType { SIMPLE_DISPLAY, 
@@ -62,9 +64,10 @@ protected:
   EffectType type;
   SDL_Surface * surface;
   const char* str;
-  fonthandle_t * font;
+  TText * TextRender;
 public:
-  TTextEffects(const char *str, SDL_Surface *surface, fonthandle_t * Font, EffectType et);
+  TTextEffects(const char *str, SDL_Surface *surface, TText * _TextRender,
+	       EffectType et);
   ~TTextEffects();
   void update(Uint32 currenttime);
 

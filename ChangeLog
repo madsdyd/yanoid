@@ -1,5 +1,8 @@
 2001-12-18  Mads Bondo Dydensborg  <madsdyd@ripley>
 
+	* Version
+	Bumped the version number to 0.3.2.
+
 	* Console
 	Removed the old console code. Still uses the DT_DrawText stuff,
 	but not for long. 7 files added. Console is not as functional as

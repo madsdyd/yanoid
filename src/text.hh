@@ -43,6 +43,7 @@ public:
      Note, the surface is not updated ...
    */
   void Print(SDL_Surface * surface, int x, int y, string text);
+  void Print(SDL_Surface * surface, int x, int y, const char ch);
 };
 
 #endif

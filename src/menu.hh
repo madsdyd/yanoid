@@ -25,11 +25,12 @@
 
 #include <SDL/SDL.h>
 #include <vector>
-#include "fontmanager.hh"
+#include <string>
 
+class TText;
 class TMenu {
 protected:
-  fonthandle_t * font;
+  TText * TextRender;
   /* Used for animating */
   Uint32 start_time;
   /* Wheter or not we capture the background */

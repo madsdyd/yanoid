@@ -24,10 +24,10 @@
 #include "menu.hh"
 #include "screen.hh"
 #include "client.hh"
-#include "fontmanager.hh"
 #include "soundmanager.hh"
+#include "text.hh"
 #include "highscore.hh"
-#include "ConsoleSource/DT_drawtext.h"
+#include "text.hh"
 
 /* **********************************************************************
  * The Base TMenu class
@@ -38,11 +38,7 @@
  * *********************************************************************/
 
 TMenu::TMenu(bool capture_background, bool display_splash) {
-  font = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
-  if (!font) {
-    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
-    exit(-1);
-  }
+  TextRender = new TText("graphics/fonts/largefont2.png");
   cap_back   = capture_background;
   background = NULL;
   dis_splash = display_splash;
@@ -52,7 +48,7 @@ TMenu::TMenu(bool capture_background, bool display_splash) {
 }
 
 TMenu::~TMenu() {
-  if (font) FontManager->ReleaseRessource(font);
+  delete TextRender;
 }
 
 /* **********************************************************************
@@ -158,7 +154,7 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
      20 is the height spacing of the font, 16 is the width */
   int h = yhigh - ylow;
   int w = xhigh - xlow;
-  int drawy = (h - items.size()*20) / 2 + ylow;
+  int drawy = (h - items.size()*TextRender->GetGlyphHeight()) / 2 + ylow;
   unsigned int count = 0;
   int drawx;
   string tmp;
@@ -187,10 +183,12 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
       // tmp[offset] = 0x1F;
       // tmp[tmp.size()-1-offset] = 0x1E;
     }
-    drawx = (w - tmp.size()*16) / 2 + xlow;
-    DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
+    drawx = (w - tmp.size()*TextRender->GetGlyphWidth()) / 2 + xlow;
+    
+    TextRender->Print(Screen, drawx, drawy, tmp);
+    // DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
     count++;
-    drawy += 20;
+    drawy += TextRender->GetGlyphHeight();
   }
 }
 /* **********************************************************************
@@ -308,17 +306,18 @@ void TDialogMenu::RenderLines(int xlow, int ylow, int xhigh, int yhigh) {
      20 is the height spacing of the font, 16 is the width */
   int h = yhigh - ylow;
   int w = xhigh - xlow;
-  int drawy = (h - lines.size()*20) / 2 + ylow;
+  int drawy = (h - lines.size()*TextRender->GetGlyphHeight()) / 2 + ylow;
   unsigned int count = 0;
   int drawx;
   string tmp;
   TItemsIterator End = lines.end();
   for (TItemsIterator i = lines.begin(); i != End; i++) {
     tmp = *i;
-    drawx = (w - tmp.size()*16) / 2 + xlow;
-    DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
+    drawx = (w - tmp.size()*TextRender->GetGlyphWidth()) / 2 + xlow;
+    TextRender->Print(Screen, drawx, drawy, tmp);
+    // DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
     count++;
-    drawy += 20;
+    drawy += TextRender->GetGlyphHeight();
   }
 }
 

@@ -26,7 +26,7 @@
 #include "ressourcemanager.hh"
 #include "soundmanager.hh"
 #include "fontmanager.hh"
-#include "ConsoleSource/DT_drawtext.h"
+#include "text.hh"
 #include "screen.hh"
 #include <iomanip.h>
 
@@ -44,6 +44,7 @@ THighscore::THighscore(int x_, int y_):
   TEntity(x_,y_), DisplayMode(NONE), NumRankings(10),
   close(false), cursorpos_x(0), cursorpos_y(0)
 {
+  TextRender = new TText("graphics/fonts/largefont2.png");
   LogLine(LOG_TODO, "Clean up THighscore contructor");
   Rankings.push_back(make_pair(string("MBD"),7785)); 
   Rankings.push_back(make_pair(string("BS"),3940)); 
@@ -71,6 +72,7 @@ THighscore::THighscore(int x_, int y_):
 THighscore::~THighscore()
 {
   FontManager->ReleaseRessource(fontHandle);
+  delete TextRender;
   LogLine(LOG_TODO, "Clean up THighscore destructor");
 }
 
@@ -311,7 +313,8 @@ void THighscore::Render(SDL_Surface * surface)
       score[29] = 0x00;
       sprintf(score,"%-8s %12i",i->first.c_str(),i->second);
       //      Rankline += score;
-      DT_DrawText(score, surface, *fontHandle, drawx, drawy);
+      // DT_DrawText(score, surface, *fontHandle, drawx, drawy);
+      TextRender->Print(surface, drawx, drawy, score);
       drawy += 20;
     }
 #ifdef OLD
@@ -342,8 +345,9 @@ void THighscore::Render(SDL_Surface * surface)
     // tmp[offset] = 0x1F;
       // tmp[tmp.size()-1-offset] = 0x1E;
     
-    DT_DrawText(tmp.c_str(), surface, *fontHandle, 
-		400-9 * DT_FontWidth(*fontHandle), 450);
+    // DT_DrawText(tmp.c_str(), surface, *fontHandle, 
+    // 400-9 * DT_FontWidth(*fontHandle), 450);
+    TextRender->Print(surface, 400-9 * TextRender->GetGlyphWidth(), 450, tmp);
   }
   break;
   case INPUT: {
@@ -357,31 +361,40 @@ void THighscore::Render(SDL_Surface * surface)
     // take special care of Del and End
     if (cursorpos_y == 2) {
       if (cursorpos_x == 6 || cursorpos_x == 7) {
-	dest.x = drawx + DT_FontWidth(*fontHandle) * 13 ;
+	dest.x = drawx + //DT_FontWidth(*fontHandle) * 13 ;
+	  TextRender->GetGlyphWidth() * 13;
       }else if (cursorpos_x == 8 || cursorpos_x == 9) {
-	dest.x = drawx + DT_FontWidth(*fontHandle) * 17 ;
+	dest.x = drawx + // DT_FontWidth(*fontHandle) * 17 ;
+	  TextRender->GetGlyphWidth() * 17;
       } else {
-	dest.x = drawx + DT_FontWidth(*fontHandle) * 2 * cursorpos_x;
+	dest.x = drawx + // DT_FontWidth(*fontHandle) 
+	  TextRender->GetGlyphWidth() * 2 * cursorpos_x;
       }
     } else {
-      dest.x = drawx + DT_FontWidth(*fontHandle) * 2 * cursorpos_x;
+      dest.x = drawx + // DT_FontWidth(*fontHandle)
+	TextRender->GetGlyphWidth() * 2 * cursorpos_x;
     }
     dest.y = drawy + 40 * cursorpos_y + 20;
     char pointer[2] = { static_cast<int>('y') + 6, 0 };
-    DT_DrawText(" ", surface, *fontHandle, oldcursorpixpos_x, oldcursorpixpos_y);    
+    // DT_DrawText(" ", surface, *fontHandle, oldcursorpixpos_x, oldcursorpixpos_y);    
+    TextRender->Print(surface, oldcursorpixpos_x, oldcursorpixpos_y, " ");
     oldcursorpixpos_x = dest.x;
     oldcursorpixpos_y = dest.y;
-    DT_DrawText(pointer, surface, *fontHandle, dest.x, dest.y);    
-    DT_DrawText(s1, surface, *fontHandle, drawx, drawy);    
+    // DT_DrawText(pointer, surface, *fontHandle, dest.x, dest.y);    
+    TextRender->Print(surface, dest.x, dest.y, pointer);
+    // DT_DrawText(s1, surface, *fontHandle, drawx, drawy);    
+    TextRender->Print(surface, drawx, drawy, s1);
     drawy += 40;
-    DT_DrawText(s2, surface, *fontHandle, drawx, drawy);    
+    // DT_DrawText(s2, surface, *fontHandle, drawx, drawy);    
+    TextRender->Print(surface, drawx, drawy, s2);
     drawy += 40;
-    DT_DrawText(s3, surface, *fontHandle, drawx, drawy);    
+    // DT_DrawText(s3, surface, *fontHandle, drawx, drawy);    
+    TextRender->Print(surface, drawx, drawy, s3);    
     drawy += 40;
     name[3] = 0x00;
-    DT_DrawText(name, surface, *fontHandle, 
-		drawx + 7 * DT_FontWidth(*fontHandle), drawy);    
-
+    // DT_DrawText(name, surface, *fontHandle, 
+    // drawx + 7 * DT_FontWidth(*fontHandle), drawy);    
+    TextRender->Print(surface, drawx + 7 * TextRender->GetGlyphWidth(), drawy, name);
     //    LogLine(LOG_VERBOSE, "Displaying highscore input");
   }
   break;
