@@ -11,6 +11,7 @@ dnl Make sure the flags are blank
 CPPFLAGS=""
 CFLAGS=""
 CXXFLAGS=""
+LIBS=""
 
 dnl ------------------------------------------------------------
 dnl Check system type
@@ -70,12 +71,11 @@ if test "x$have_SDL_image" = "xno" ; then
     AC_MSG_ERROR([
 *** Unable to find SDL_image library
 *** This is required for yanoid to work.
-*** Most distributions include at least SDL_image 1.1 - never
+*** Most Linux distributions include at least SDL_image 1.1 - never
 *** versions may be found from http://www.libsdl.org
 ])
 fi
 YANOID_LIBS="$YANOID_LIBS -lSDL_image"
-
 LIBS="$saved_LIBS"
 
 
@@ -87,14 +87,27 @@ AC_CHECK_HEADERS(sys/time.h unistd.h)
 
 dnl ------------------------------------------------------------
 dnl Check for Python. (Hard)
-KDE_CHECK_PYTHON
+saved_LIBS="$LIBS"
+LIBS="$saved_LIBS $YANOID_LIBS"
+
+KDE_CHECK_PYTHON()
+if test "x$kde_python_link_found" = "xno" ; then
+    AC_MSG_ERROR([
+*** Unable to find Python library (checked version 1.5 and 2.0)
+*** This is required for yanoid to work.
+*** Please run ./configure --help
+*** Python may be obtained from http://www.python.org
+*** Most Linux distributions include at least version 1.5
+])
+fi
+
 AC_MSG_RESULT([$PACKAGE is using the following for compiling and linking against Python:
 PYTHONDIR: $PYTHONDIR
 PYTHONINC: $PYTHONINC
 LIBPYTHON: $LIBPYTHON
 PYTHONLIB: $PYTHONLIB])
-
 YANOID_LIBS="$YANOID_LIBS $PYTHONLIB $LIBPYTHON"
+LIBS="$saved_LIBS"
 YANOID_CPPFLAGS="$YANOID_CPPFLAGS $PYTHONINC"
 
 dnl ------------------------------------------------------------
@@ -165,9 +178,9 @@ dnl                      YANOID_CPPFLAGS="$YANOID_CPPFLAGS -DDATA_DIR=\\\"$withv
 
 dnl Set the final compiler and linker flags
 
-CPPFLAGS="$CPPFLAGS $YANOID_CPPFLAGS"
-CFLAGS="$CFLAGS $YANOID_CFLAGS"
-CXXFLAGS="$CXXFLAGS $YANOID_CXXFLAGS"
-LIBS="$LIBS $YANOID_LIBS"
+CPPFLAGS="$YANOID_CPPFLAGS"
+CFLAGS="$YANOID_CFLAGS"
+CXXFLAGS="$YANOID_CXXFLAGS"
+LIBS="$YANOID_LIBS"
 
-AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile data/music/Makefile Makefile)
+AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile data/music/Makefile data/scripts/Makefile Makefile)

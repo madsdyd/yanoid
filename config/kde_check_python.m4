@@ -52,6 +52,8 @@ fi
 
 ])
 
+dnl This macro is called from the configure script.
+
 AC_DEFUN(KDE_CHECK_PYTHON,
 [
 
@@ -75,11 +77,7 @@ AC_ARG_WITH(pythondir,
 
 AC_MSG_RESULT($ac_python_dir)
 
-if test -z "$1"; then
-  version="2.0"
-else
-  version="$1"
-fi
+version="2.0"
 
 AC_MSG_CHECKING([for Python$version])
 
@@ -95,8 +93,8 @@ fi
 
 PYTHONINC=-I$python_incdir
 
-python_libdirs="$ac_python_dir/lib /usr/lib /usr/local /usr/lib $kde_extra_libs
-"
+python_libdirs="$ac_python_dir/lib /usr/lib /usr/local /usr/lib $kde_extra_libs"
+
 AC_FIND_FILE(libpython$version.a, $python_libdirs, python_libdir)
 if test ! -r $python_libdir/libpython$version.a; then
   AC_FIND_FILE(python$version/config/libpython$version.a, $python_libdirs, python_libdir)
@@ -116,15 +114,14 @@ AC_MSG_RESULT(header $python_incdir library $python_libdir)
 dnl Note: this test is very weak
 kde_python_link_found=no
 KDE_TRY_LINK_PYTHON(normal)
-KDE_TRY_LINK_PYTHON(m, -lm)
-KDE_TRY_LINK_PYTHON(pthread, $LIBPTHREAD)
-KDE_TRY_LINK_PYTHON(tcl, -ltcl)
-KDE_TRY_LINK_PYTHON(mads, -lnsl -ldl -lreadline -ltermcap -lieee -lpthread -lutil)
-KDE_TRY_LINK_PYTHON(m_and_thread, [$LIBPTHREAD -lm], [],
-        [AC_MSG_WARN([it seems, Python depends on another library.
-    Pleae use \"make LIBPTYHON='-lpython$version -lotherlib'\" to fix this
-    and contact the authors to let them know about this problem])
-        ])
+dnl KDE_TRY_LINK_PYTHON(m, $text_version, -lm)
+dnl KDE_TRY_LINK_PYTHON(pthread, $text_version, $LIBPTHREAD)
+dnl KDE_TRY_LINK_PYTHON(tcl, $text_version, -ltcl)
+KDE_TRY_LINK_PYTHON(alot, -lnsl -ldl -lreadline -ltermcap -lpthread -lutil)
+dnl KDE_TRY_LINK_PYTHON(m_and_thread, $version, [$LIBPTHREAD -lm], [],
+dnl        [AC_MSG_WARN([it seems, Python depends on a library we were not able to anticipate
+dnl	Please contact the authors of yanoid to let them know about this problem])
+dnl        ])
 
 LIBPYTHON="$LIBPYTHON $LIBDL $LIBSOCKET"
 AC_SUBST(PYTHONINC)
