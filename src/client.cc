@@ -36,6 +36,10 @@
 #include "ConsoleSource/DT_drawtext.h"
 #include "soundmanager.hh"
 
+#include "entity.hh"
+#include "pixmap_entity.hh"
+#include "more_entities.hh"
+
 /* **********************************************************************
  * A method to play a sound from scripts
  * *********************************************************************/
@@ -405,6 +409,23 @@ void TClient::HandleEvents() {
 	  //	  paddle->getMotion()->setVelocity( 0.5 );
 	  //	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
 	  break;
+	  // Testing shots
+	case SDLK_SPACE: {
+	  if (!paddle) break;
+	  TEntity * shot = new TShot(static_cast<int>(paddle->x()),
+				     static_cast<int>(paddle->y()), 
+				     "graphics/balls/red.png", 
+				     "", "REMOVEALL");
+	  Game->GetState()->MapState->Entities.push_back(shot);
+	  break;}
+	case SDLK_m: {
+	  if (!paddle) break;
+	  TEntity * shot = new TShot(static_cast<int>(paddle->x())+20,
+				     static_cast<int>(paddle->y()), 
+				     "graphics/balls/red.png", 
+				     "", "");
+	  Game->GetState()->MapState->Entities.push_back(shot);
+	  break; }
 	}
 	break;
       case SDL_KEYUP:

@@ -31,7 +31,7 @@ StandardPlayField()
 for x in range (401, 750, 79):
     for y in range (500, 320, -29):
         if (x == 401 or y == 500):
-            AddBrick("brick-stay", x, y, "basic_brick_hit()",
+            AddBrick("brick-stay", x, y, "stay_brick_hit()",
                      "graphics/bricks/gray_stay_75.png")
         else:
             row = y % 3

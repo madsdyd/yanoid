@@ -4,8 +4,6 @@ yanoid before the game can be considered ready for the contest.
 **********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
-- Sometimes the game crashes when it wants to display the in game 
-  menu. Related to the text effects? (MBD, JCD?) <-- fixed?
 - More maps (BS,MBD...)
 - Make fonts png and use colorkey (MBD) 
 	[update: LargeFont.bmp is now colorkeyed (JCD)]
@@ -14,6 +12,10 @@ yanoid before the game can be considered ready for the contest.
 - precache sounds (MBD)
 - No points for bricks that stay (MBD)
 - Remove point for highscore? (JCD)
+
+Stuff that seems to be fixed:
+- Sometimes the game crashes when it wants to display the in game 
+  menu. Related to the text effects? (MBD, JCD?) <-- fixed?
 
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)

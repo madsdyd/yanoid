@@ -85,6 +85,42 @@ void TPowerUp::OnCollision(TEntity& other, Uint32 currenttime=0) {
   }
 }
 /* **********************************************************************
+ * Shot
+ * *********************************************************************/
+/* **********************************************************************
+ * Constructor, very similar to PowerUp
+ * *********************************************************************/
+TShot::TShot(int x, int y, string pixmap, string hitfunction,
+	     string type)
+  : TPixmapEntity(x, y, 0, pixmap, "SHOT", MOVING, PIXEL), 
+  shot_type(type) {
+  SetScriptHitCall(hitfunction);
+  setMotion(new TFreeMotion);
+  dynamic_cast<TFreeMotion*>(getMotion())->setDir(0.5 * M_PI);
+  dynamic_cast<TFreeMotion*>(getMotion())->setVelocity(0.2);
+  dynamic_cast<TFreeMotion*>(getMotion())->setAccel(0.2);
+}
+  
+/* **********************************************************************
+ * Collision - also very similar to bricks, except that we only remove
+ * if hit by a paddle or shot.
+ * *********************************************************************/
+void TShot::OnCollision(TEntity& other, Uint32 currenttime=0) {
+  /* Make sure our hitfunction is called */
+  if ("BRICK" == other.getEntityType()) {
+    TPixmapEntity::OnCollision(other, currenttime);
+    if (shot_type == "REMOVEALL") {
+      other.MarkDying();
+    } else {
+      removable = true;
+    }
+  }
+  if ("STATIC" == other.getEntityType()) {
+    TPixmapEntity::OnCollision(other, currenttime);
+    removable = true;
+  }
+}
+/* **********************************************************************
  * THole constructor
  * *********************************************************************/
 THole::THole(double x_, double y_, int w_, int h_) : 

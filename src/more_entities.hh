@@ -47,7 +47,25 @@ public:
  * *********************************************************************/
 class TPowerUp : public TPixmapEntity {
 public:
+  virtual ~TPowerUp() {};
   TPowerUp(int x, int y, string pixmap, string hitfunction);
+  virtual void OnCollision(TEntity& other, Uint32 currenttime = 0);
+};
+
+/* **********************************************************************
+ * A shot can kill bricks to various degrees
+ * The type is not determined yet, but
+ * "" - does nothing special
+ * "REMOVEALL" - never dies, passes through and removes everything
+ * 
+ * *********************************************************************/
+class TShot : public TPixmapEntity {
+protected:
+  string shot_type;
+public:
+  virtual ~TShot() {};
+  TShot(int x, int y, string pixmap, string hitfunction, 
+	string type);
   virtual void OnCollision(TEntity& other, Uint32 currenttime = 0);
 };
 
