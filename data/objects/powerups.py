@@ -89,29 +89,28 @@ def RandomlySpawnBonusPowerup():
                 break
 
 ######################################################################
-# And, here we preload the pictures used for powerups.
-surfaces = [ "graphics/powerups/lightblue_-1000.png",
-             "graphics/powerups/lightblue_-500.png",
-             "graphics/powerups/lightblue_-100.png",
-             "graphics/powerups/lightblue_100.png",
-             "graphics/powerups/lightblue_500.png",
-             "graphics/powerups/lightblue_1000.png",
-             "graphics/powerups/red_b.png",
-             "graphics/balls/red.png",
-             "graphics/powerups/blue_1UP.png",
-             "graphics/powerups/yellow_steallife.png",
-             "graphics/powerups/green_s.png",
-             "graphics/shots/greenball.png",
-             "graphics/powerups/purple_ss.png",
-             "graphics/shots/penetrating.png",
-             "graphics/powerups/powerup_normal.png",
-             "graphics/powerups/powerup_larger.png",
-             "graphics/powerups/powerup_smaller.png"]
- 
-for surface in surfaces:
-    put_console("Caching surface " + yanoid.resolve(surface))
-    LoadSurface(surface)
-                
+# And, here we preload the ressources used for powerups.
+PreloadAddSurfaceList([ "graphics/powerups/lightblue_-1000.png",
+                        "graphics/powerups/lightblue_-500.png",
+                        "graphics/powerups/lightblue_-100.png",
+                        "graphics/powerups/lightblue_100.png",
+                        "graphics/powerups/lightblue_500.png",
+                        "graphics/powerups/lightblue_1000.png",
+                        "graphics/powerups/red_b.png",
+                        "graphics/balls/red.png",
+                        "graphics/powerups/blue_1UP.png",
+                        "graphics/powerups/yellow_steallife.png",
+                        "graphics/powerups/green_s.png",
+                        "graphics/shots/greenball.png",
+                        "graphics/powerups/purple_ss.png",
+                        "graphics/shots/penetrating.png",
+                        "graphics/powerups/powerup_normal.png",
+                        "graphics/powerups/powerup_larger.png",
+                        "graphics/powerups/powerup_smaller.png"])
+
+PreloadAddSoundList([ "sounds/powerup_collect.wav",
+                      "sounds/powerup_bad.wav" ])
+
 # Here comes the actual functions - this could be done smarter, I guess
 # but for now, it will have to do...
 
