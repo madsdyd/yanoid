@@ -63,6 +63,10 @@ void SignalHandler(int signal) {
   exit(-1);
 }
 
+/* **********************************************************************
+ * Various commands for the console
+ * *********************************************************************/
+
 /* Calls the python interprenter */
 void Python(char * String) {
   Assert(String != NULL, "Python - NULL string");
@@ -71,7 +75,9 @@ void Python(char * String) {
 
 /* Load a map */
 void LoadMap(char * map) {
-  if (!Client || !(Client->GetGame())) { return; };
+  if (!Client || !(Client->GetGame())) { 
+    CON_ConOut("Hmm - no client, or no game...");
+  };
   if (Client->GetGame()->LoadMap(map)) {
     CON_ConOut("Map %s succesfully loaded", map);
   } else {
@@ -85,18 +91,31 @@ void PrintMe(char *String)
   CON_ConOut("%s", String);
 }
 
-/* lets the user change the alpha level */
+/* Lets the user change the alpha level */
 void AlphaChange(char *alpha)
 {
-  CON_ConsoleAlpha(atoi(alpha));
-  CON_ConOut("Alpha set to %s.", alpha);
+  if (strlen(alpha) > 0) {
+    CON_ConsoleAlpha(atoi(alpha));
+    CON_ConOut("Alpha set to %s.", alpha);
+  } else {
+    CON_ConOut("Usage: alpha <value> - where 0 <= value < 255");
+  }
 }
 
+/* Dup to console or not */
+void DupLogToConsole(char * arg) {
+  duptoconsole = !duptoconsole;
+  if (duptoconsole) {
+    CON_ConOut("Logging information dupped to console");
+  } else {
+    CON_ConOut("Logging information not dupped to console");
+  }
+}
 
-/* show/hide highscore */
+/* Show/hide highscore */
 void DisplayHighscore(char *arg)
 {
-  string _arg(arg);
+string _arg(arg);
   if (_arg == "show")
     Highscore->displayRankings();
   else
@@ -104,6 +123,11 @@ void DisplayHighscore(char *arg)
 
   CON_ConOut("Highscore %s",arg);
 }
+
+
+/* **********************************************************************
+ * The main program. Yuhu.
+ * *********************************************************************/
 
 int main(int argc, char ** argv) {
   /* **********************************************************************
@@ -113,6 +137,7 @@ int main(int argc, char ** argv) {
   Log = new TLog();
   Assert(Log != NULL, "Unable to create Log object");
   LogLine(LOG_VERBOSE, "Log object created");
+  LogLineExt(LOG_INFO, ("Created object %i", 34));
 #endif
 
   /* **********************************************************************
@@ -138,10 +163,6 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize the ressource management system
    * *********************************************************************/
-
-  SDL_WM_SetCaption("-- Yanoid --", 0);
-
-
   PathManager = new TPathManager();
   Assert(PathManager != NULL, "Unable to create pathmanager");
   LogLine(LOG_VERBOSE, "PathManager created");
@@ -152,20 +173,11 @@ int main(int argc, char ** argv) {
   
   /* **********************************************************************
    * Initialize the interprenter (uses the pathmanager)
+   * Note, the default scripts and other related stuff, is not
+   * run, until we have initialized the console
    * *********************************************************************/
   Interprenter = new TInterprenter();
   LogLine(LOG_VERBOSE, "Interprenter created");
-
-
-  /* A small test */
-  /*
-    LogLine(LOG_INFO, "Makefile == " + PathManager->Resolve("Makefile"));
-    LogLine(LOG_INFO, "foobar == " + PathManager->Resolve("foobar"));
-    LogLine(LOG_INFO, "/graphics/foobar == " 
-    + PathManager->Resolve("/graphics/foobar"));
-    LogLine(LOG_INFO, "graphics/foobar == " 
-    + PathManager->Resolve("graphics/foobar"));
-  */
 
   /* **********************************************************************
    * Initialize SDL
@@ -182,6 +194,8 @@ int main(int argc, char ** argv) {
   Assert(0 == atexit(SDL_Quit), 
 	 "Unable to register SDL_Quit with atexit");
   LogLine(LOG_VERBOSE, "SDL initialized");
+  /* Set a caption */
+  SDL_WM_SetCaption("-- Yanoid --", 0);
 
   /* **********************************************************************
    * Setup the screen. Resolution is fixed at the moment.
@@ -192,20 +206,20 @@ int main(int argc, char ** argv) {
 			    );
   // | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
-  LogLine(LOG_VERBOSE, "Videomode set (800x600, fullscreen)");
 
 #ifdef DEBUG
-  cout << "Flags : ";
+  string tmp = "";
   if (SDL_HWSURFACE & (Screen->flags)) {
-    cout << "SDL_HWSURFACE ";
+    tmp += "SDL_HWSURFACE ";
   }
   if (SDL_DOUBLEBUF & Screen->flags) {
-    cout << "SDL_DOUBLEBUF ";
+    tmp += "SDL_DOUBLEBUF ";
   }
   if (SDL_FULLSCREEN & Screen->flags) {
-    cout << "SDL_FULLSCREEN ";
+    tmp += "SDL_FULLSCREEN ";
   }
-  cout << endl;
+  LogLineExt(LOG_VERBOSE, ("Videomode set (%ix%i - %s)", 
+			   Screen->w, Screen->h, tmp.c_str()));
 #endif
 
   /* **********************************************************************
@@ -228,7 +242,7 @@ int main(int argc, char ** argv) {
   Assert(PathManager != NULL, "Unable to create SurfaceManager");
   LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
 
-  /* A small test */
+  /* Load the splash surface - also a kind of test */
   SDL_Surface * mysurf 
     = SurfaceManager->RequireRessource("graphics/yanoid.png");
   Assert(NULL != mysurf, "Error getting SDL_Surface *");
@@ -266,17 +280,24 @@ int main(int argc, char ** argv) {
 	 "Unable to initialize console");
   
   /* Add some commands to the console */
-  CON_AddCommand(&PrintMe, "printme");
-  CON_AddCommand(&AlphaChange, "alpha");
+  CON_AddCommand(&AlphaChange,      "alpha");
+  CON_AddCommand(&DupLogToConsole,  "duplogtoconsole");
   CON_AddCommand(&DisplayHighscore, "highscore");
-  CON_AddCommand(&Python, "i");
-  CON_AddCommand(&LoadMap, "loadmap");
+  CON_AddCommand(&Python,           "i");
+  CON_AddCommand(&LoadMap,          "loadmap");
+  CON_AddCommand(&PrintMe,          "printme");
   
   CON_ListCommands();
   
   CON_ConsoleAlpha(190);
 
-  /* Dump the Interprenter help*/
+  /* **********************************************************************
+   * Add default modules, run default script
+   * *********************************************************************/
+
+  TMap::AddModule();
+  Interprenter->LoadDefaultScripts();
+  /* Dump the Interprenter help to the console */
   Interprenter->RunSimpleString("help()");
   
   /* **********************************************************************
@@ -289,7 +310,6 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Display a splash screen.
    * *********************************************************************/
-  /* More testing */
   SDL_Rect src, dest;
   src.x = 0; src.y = 0; src.w = mysurf->w; src.h = mysurf->h;
   dest.x = (Screen->w-src.w)/2; dest.y = (Screen->h-src.h)/2;

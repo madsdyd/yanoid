@@ -139,9 +139,9 @@ void TGame::handleCollisions()
       }
 
       // If necessary make pixel perfect detection..
-      if (i1coll == TEntity::PIXEL || (*i2)->getCollisionType() == TEntity::PIXEL) 
-	cout << "Making pixel perfect detection" << endl;
-
+      if (i1coll == TEntity::PIXEL || (*i2)->getCollisionType() == TEntity::PIXEL) {
+	// cout << "Making pixel perfect detection" << endl;
+      }
     }
   }
 }

@@ -1,3 +1,7 @@
+CVS
+cvs add data/objects/default.py
+
+
 The following is a list of stuff that needs to be implemented in yanoid, as 
 well as the ressources (graphics, sounds) that will be needed before we have
 a game that can be considered ready for the SDL contest.

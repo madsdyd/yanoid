@@ -21,7 +21,13 @@
 #include "log.hh"
 #ifdef DEBUG
 #include <iostream>
+#include <strstream>
 #include <iomanip.h>
+
+#include <SDL/SDL.h>
+#include "ConsoleSource/CON_console.h"
+
+bool duptoconsole = false;
 
 /* These MUST match the declarations in log.hh */
 static char * loglevel_to_name [] =
@@ -60,10 +66,15 @@ void TLog::SetLevel(int nlevel) {
  * *********************************************************************/
 void TLog::AddLine(int level_, char * filename, int lineno, string line) {
   if (level_ <= level) {
-    cout << "LOG: " << loglevel_to_name[level_] << " in "
-	 << setw(20) << filename << ":"
-	 << setw(4)  << setiosflags(ios::left) << lineno
-	 << " - \"" << line << "\"" << endl;
+    ostrstream tmp;
+    tmp << "LOG: " << loglevel_to_name[level_] << " in "
+	<< setw(20) << filename << ":"
+	<< setw(4)  << setiosflags(ios::left) << lineno
+	<< " - \"" << line << "\"" << ends;
+    cout << tmp.str() << endl;
+    if (duptoconsole) {
+      CON_ConOut(tmp.str());
+    }
   }
 }
 

@@ -42,12 +42,13 @@ TMap * CurrentMap = NULL;
  * *********************************************************************/
 static PyObject * AddObject(PyObject * self, PyObject * args) {
   int x; int y; int w; int h; 
-  char * type; char * pixmap;
-  if (!CurrentMap || !PyArg_ParseTuple(args, "siiiis", 
-				       &type, &x, &y, &w, &h, &pixmap)) {
+  char * type; char * hitfunction; char * pixmap;
+  if (!CurrentMap || !PyArg_ParseTuple(args, "ssiiiis", 
+				       &type, &hitfunction,
+				       &x, &y, &w, &h, &pixmap)) {
     return NULL;
   }
-  if (CurrentMap->AddEntity(type, x, y, w, h, pixmap)) {
+  if (CurrentMap->AddEntity(type, hitfunction, x, y, w, h, pixmap)) {
     return Py_BuildValue("");
   } else {
     return NULL;
@@ -77,12 +78,11 @@ static PyObject * SetPaddle(PyObject * self, PyObject * args) {
 }
 
 static PyMethodDef map_methods[] = {
-  {"AddObject", AddObject, 6},
-  {"SetPaddle", SetPaddle, 6},
+  {"AddObject", AddObject, METH_VARARGS},
+  {"SetPaddle", SetPaddle, METH_VARARGS},
   {NULL, NULL}
 };
 
-static bool ConnectedToInterprenter = false;
 
 /* **********************************************************************
  * TMapState stuff
@@ -104,6 +104,7 @@ TMapState::~TMapState() {
     delete(*i);
   }  
 }
+
 
 /* **********************************************************************
  * Get the paddle
@@ -130,25 +131,10 @@ void TMapState::load(const std::string& path)
  * Currently builds a simple map.
  * *********************************************************************/
 TMap::TMap() {
-
   /* Create a TMapState */
   MapState = new TMapState();
   if (!MapState) {
     LogFatal("TMap::TMap - unable to create mapstate");
-  }
-
-  /* This is a stupid way to do it - but at least we make
-     sure that we have connected the map handling commands to the 
-     interprenter */
-  if (!ConnectedToInterprenter) {
-    if (Interprenter->AddModule("yanoid_map", map_methods)) {
-      ConnectedToInterprenter = true;
-      CurrentMap = this;
-    }
-  }
-  /* TESTING: Load the basic_brick.py script */
-  if (!Interprenter->RunSimpleFile(PathManager->Resolve("objects/basic_brick.py"))) {
-    LogLine(LOG_ERROR, "Unable to run objects/basic_brick.py");
   }
 }
 /* **********************************************************************
@@ -161,6 +147,19 @@ TMap::TMap() {
  * *********************************************************************/
 TMap::~TMap() {
   delete MapState;
+}
+/* **********************************************************************
+ * Add the modules
+ * *********************************************************************/
+bool TMap::ModuleAdded = false;
+
+bool TMap::AddModule() {
+  if (!ModuleAdded) {
+    if (Interprenter->AddModule("yanoid_map", map_methods)) {
+      ModuleAdded = true;
+    }
+  }    
+  return ModuleAdded;
 }
 
 /* **********************************************************************
@@ -176,7 +175,7 @@ bool TMap::Load(string mapname) {
     LogFatal("TMap::Load - unable to create mapstate");
   }
   CurrentMap = this;
-  bool result = Interprenter->RunSimpleFile(PathManager->Resolve(mapname));
+  bool result = Interprenter->RunSimpleFile(mapname);
   /* Eventually we may want to unset the current map - currently we just 
      keep it, such that we can do our stuff from the console */
   // CurrentMap = NULL;
@@ -187,18 +186,21 @@ bool TMap::Load(string mapname) {
  * AddEntity
  * This will need to be refined to allow for different types, etc.
  * *********************************************************************/
-bool TMap::AddEntity(string type, int x, int y, int w, int h, 
+bool TMap::AddEntity(string type, string hitfunction, 
+		     int x, int y, int w, int h, 
 		     string pixmap) {
   /* Do different things, according to type */
   if ("brick" == type ) {
     /* This is a pixmapentity */
     TPixmapEntity * e = new TPixmapEntity(x, y, 0, pixmap);
-    e->SetScriptHitCall("basic_brick_hit()");
+    e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */
-    MapState->Entities.push_back(new TEntity(x, y, w, h));
+    TEntity * e = new TEntity(x, y, w, h);
+    e->SetScriptHitCall(hitfunction);
+    MapState->Entities.push_back(e);
     return true;
   } else if ("default-ball" == type) {
     if (!MapState->paddle) {
@@ -214,6 +216,7 @@ bool TMap::AddEntity(string type, int x, int y, int w, int h,
 				    TEntity::MOVING);*/
     TEntity * e = new TPixmapEntity(250, 250, 0, pixmap, 
 				    TEntity::PIXEL, TEntity::MOVING);
+    e->SetScriptHitCall(hitfunction);
     // TODO, error handling.. 
     e->setMotion(new TFreeMotion);
     dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(0);

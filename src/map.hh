@@ -43,15 +43,20 @@ protected:
   TMapState * MapState;
   bool relocateHighEntities(TEntitiesIterator& i);
   bool relocateLowEntities(TEntitiesIterator& i);
+  /* Keep track of wheter or not the modules have been loaded */
+  static bool ModuleAdded;
   /* Clear the mapstate */
   void Clear();
 public:
   TMap();
   ~TMap();
+  /* A static funtion to add the map modules */
+  static bool AddModule();
+    
   /* Add an entity, mostly bricks, walls, etc.
      , initialize with parameters (will probably change). 
      returns true on succes */
-  bool AddEntity(string type, int x, int y, int w, int h, string pixmap);
+  bool AddEntity(string type, string hitfunction, int x, int y, int w, int h, string pixmap);
   /* Set the paddle for the map */
   bool SetPaddle(int x, int y, string pathtype, double velocity,
 		 double angle, string pixmap);

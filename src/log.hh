@@ -30,6 +30,8 @@
    debug directive, expect for FATAL, which is always there
  */
 #include <iostream>
+#include <strstream>
+
 #define LOG_FATAL   0
 #define LogFatal(_line) \
   cerr << "FATAL ERROR : " << __FILE__ << ":" << __LINE__ \
@@ -37,6 +39,9 @@
 
 #ifdef DEBUG 
 #include <string>
+
+/* Variable to control putting stuff onto the console instead */
+extern bool duptoconsole;
 
 /* If you any levels below, remember to update the
    names (in log.cc) also */
@@ -50,6 +55,11 @@
 #define LOG_MAX     (1+LOG_VER_2)
 
 /* Log line is the usual interface to the log */
+#define LogLineExt( _level, _line ) \
+  { ostrstream loglinetmp; \
+    loglinetmp.form _line << ends; \
+    Log->AddLine( _level, __FILE__, __LINE__, loglinetmp.str()); }
+
 #define LogLine( _level, _line ) \
   Log->AddLine( _level, __FILE__, __LINE__, _line )
 

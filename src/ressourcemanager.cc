@@ -28,9 +28,10 @@
 #include <unistd.h>
 #include <dirent.h>
 
-//#define DEBUG_RES_MAN
+#define DEBUG_RES_MAN
 #ifndef DEBUG_RES_MAN
 #define LogLine(a, b)
+#define LogLineExt(a, b)
 #endif
 
 
@@ -50,8 +51,6 @@ TPathManager::~TPathManager() {};
  * Add a mapping
  * *********************************************************************/
 void TPathManager::AddMapping(string name, string absolute) {
-  LogLine(LOG_VERBOSE, "mapping \"" + name + "\" to \"" + absolute 
-	  + "\"");
   pathmap[name] = absolute;
 }
 /* **********************************************************************
@@ -61,7 +60,6 @@ void TPathManager::AddMapping(string name, string absolute) {
 
 void TPathManager::AddPath(string path) {
   char absolute_path[_POSIX_PATH_MAX];
-  LogLine(LOG_VERBOSE, "AddPath(" + path + ")");
   if (NULL == realpath(path.c_str(), absolute_path)) {
     LogLine(LOG_WARNING, "Unable to get absolute path for " + path);
     return;
@@ -97,22 +95,18 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
   char absolute_path[_POSIX_PATH_MAX];
   if (NULL == realpath(path.c_str(), absolute_path)) {
     LogLine(LOG_WARNING, "Unable to get absolute path for " + path);
-    LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
     return;
   };
-  LogLine(LOG_VER_2, absolute_path);
 
   /* Save cwd, move to the dir we are investigating */
   char cwd[_POSIX_PATH_MAX];
   if (NULL == getcwd(cwd, _POSIX_PATH_MAX)) {
     LogLine(LOG_WARNING, "Unable to get current working directory");
-    LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
     return;
   };
   LogLine(LOG_VER_2, cwd);
   if (0 != chdir(absolute_path)) {
     LogLine(LOG_WARNING, "Unable to change to " + path);
-    LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
     return;
   }
 
@@ -131,7 +125,6 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
   }
   
   if (0 == numfiles) {
-    LogLine(LOG_VERBOSE, "No files found in " + path);
     goto exit;
   }
 
@@ -143,8 +136,6 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
   char * filename;
   while(numfiles--) {
     dirent * ent = files[numfiles];
-    LogLine(LOG_VER_2, "Current dirent points to");
-    LogLine(LOG_VER_2, ent->d_name);
     /* Get the realpath */
     if (NULL != realpath(ent->d_name, absolute_filename)) {
       /* Check the type of the d_entry. Files get registered, 
@@ -157,7 +148,6 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
 	Assert(strlen(absolute_filename) > base_size,
 	       "Problem with base_size and absolute_filename size");
 	filename = &absolute_filename[base_size];
-	//LogLine(LOG_VERBOSE, filename);
 	AddMapping(filename, absolute_filename);
       } else {
 	if (S_ISDIR(tmpstat.st_mode)) {
@@ -167,8 +157,8 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
       }
       
     } else {
-      LogLine(LOG_WARNING, "Could not get real path for");
-      LogLine(LOG_WARNING, ent->d_name);
+      LogLineExt(LOG_WARNING, ("Could not get real path for %s", 
+			    ent->d_name));
     }
     free(files[numfiles]);
   }
@@ -179,7 +169,6 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
   if (0 != chdir(cwd)) {
     LogLine(LOG_ERROR, "Unable to return to previously current directory");
   }
-  LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
 };
 
 /* **********************************************************************
@@ -188,6 +177,14 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
  * *********************************************************************/
 
 string TPathManager::Resolve(string name) {
+#ifdef DEBUG
+  string tmp = pathmap[name];
+  if ("" == tmp) {
+    LogLine(LOG_WARNING, "Pathmanager could not resolve " + name);
+  }
+  return tmp;
+#else
   return pathmap[name];
+#endif
 };
 

@@ -34,7 +34,7 @@ TInterprenter * Interprenter;
 /* Declare a function from main */
 extern void PrintMe(char *String);
 
-/* Declare a Python extension function */
+/* Function to put a string onto the console */
 static PyObject * put_console(PyObject * self, PyObject *args) {
   char * command;
   if (!PyArg_ParseTuple(args, "s", &command))
@@ -43,6 +43,7 @@ static PyObject * put_console(PyObject * self, PyObject *args) {
   return Py_BuildValue("");
 };
 
+/* Function to force reloading the "basic" script */
 static PyObject * reload(PyObject * self, PyObject *args) {
   /* Load the yanoid wrapper function */
   char * tmp = strdup(PathManager->Resolve("scripts/yanoid.py").c_str());
@@ -53,9 +54,19 @@ static PyObject * reload(PyObject * self, PyObject *args) {
   return Py_BuildValue("");
 };
 
+/* Function to resolve pathnames */
+static PyObject * resolve(PyObject* self, PyObject *args) {
+  char * path;
+  if (!PyArg_ParseTuple(args, "s", &path))
+    return NULL;
+  return Py_BuildValue("s", PathManager->Resolve(path).c_str());
+};
+
+/* List of default functions */
 static PyMethodDef yanoid_methods[] = {
-  {"puts_console",  put_console,      1},
-  {"yreload",  reload,      0},
+  {"puts_console",  put_console,      METH_VARARGS},
+  {"yreload",  reload,      METH_VARARGS},
+  {"resolve",  resolve,      METH_VARARGS},
   {NULL,          NULL}           /* sentinel */
 };
 
@@ -69,27 +80,16 @@ TInterprenter::TInterprenter() {
   Py_Initialize();
   if (Py_IsInitialized()) {
     LogLine(LOG_INFO, "Python interprenter initialized");
-    LogLine(LOG_TODO, "The code in here must go");
-    // LogLine(LOG_INFO, "Version is " << Py_GetVersion());
-    PyImport_AddModule("yanoid");
-    Py_InitModule("yanoid", yanoid_methods);
-    PyRun_SimpleString("import yanoid");
-    /* Load the yanoid wrapper functions for testing the console */
-    if (!RunSimpleFile(PathManager->Resolve("scripts/yanoid.py"))) {
-      LogLine(LOG_ERROR, "Unable to load scripts/yanoid.py");
+    if (!AddModule("yanoid", yanoid_methods)) {
+      LogFatal("Unable to load the yanoid script module");
+      exit(-1);
+    } else {
+      LogLine(LOG_INFO, "Yanoid script module loaded");
     }
-    /* Load the map interface */
-    if (!RunSimpleFile(PathManager->Resolve("scripts/map_interface.py"))) {
-      LogLine(LOG_ERROR, "Unable to load scripts/map_interface.py");
-    }
-
-#ifdef NOCLUE
-    char * tmp = strdup(PathManager->Resolve("scripts/yanoid.py").c_str());
-    FILE * tmpf = fopen(tmp, "r");
-    PyRun_SimpleFile(tmpf, tmp);
-    free(tmp);
-#endif
+    /* Loading the yanoid warpper functions is deferred to 
+     the LoadDefault method */
   } else {
+    /* Ups, could not initialize. "Bad thing, bad" */ 
     LogFatal("Unable to initialize Python interprenter");
     exit(-1);
   }
@@ -105,18 +105,26 @@ TInterprenter::~TInterprenter() {
 /* **********************************************************************
  * Add a module
  * *********************************************************************/
-bool TInterprenter::AddModule(string module, PyMethodDef * methods) {
-  char * tmp = strdup(module.c_str());
-  if (PyImport_AddModule(tmp)) {
-    Py_InitModule(tmp, methods);
-    free(tmp);
-    return RunSimpleString("import " + module);
+bool TInterprenter::AddModule(char * module, PyMethodDef * methods) {
+  if (PyImport_AddModule(module)) {
+    Py_InitModule(module, methods);
+    string tmp(module);
+    return RunSimpleString("import " + tmp);
   } else {
-    free(tmp);
     return false;
   }
 }
 
+bool TInterprenter::AddModule(string module, PyMethodDef * methods) {
+  return AddModule(module.c_str(), methods);
+}
+
+/* **********************************************************************
+ * Load the default script - yanoid.py - loads all others
+ * *********************************************************************/
+bool TInterprenter::LoadDefaultScripts() {
+  return RunSimpleFile("scripts/yanoid.py");
+}
 
 /* **********************************************************************
  * Run a simple string
@@ -135,13 +143,15 @@ bool TInterprenter::RunSimpleString(string script) {
  * Run a simple file
  * *********************************************************************/
 bool TInterprenter::RunSimpleFile(string script) {
-  char * tmp = strdup(script.c_str());
+  char * tmp = strdup(PathManager->Resolve(script).c_str());
   FILE * tmpf = fopen(tmp, "r");
   bool result;
   if (tmpf) {
+    LogLineExt(LOG_VER_2, ("Got file %s", tmp));
     result = (0 == PyRun_SimpleFile(tmpf, tmp));
     fclose(tmpf);
   } else {
+    LogLineExt(LOG_WARNING, ("Could not open file %s", tmp));
     result = false;
   }
   free(tmp);

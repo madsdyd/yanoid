@@ -21,19 +21,31 @@
 */
 
 /* This module is the link between the interprenter (Python) and 
-   the rest of the game */
+   the rest of the aplication */
 #include <Python.h>
 #include <string>
 
 class TInterprenter {
 public:
+  /* The constructor initializes the python engine
+     and loads the default module - 
+     The application must
+     a) Load all modules neccesary for callbacks
+     b) Call LoadDefault()
+     c) Start using the interprenter
+  */
   TInterprenter();
+  /* Clean up the python interprenter */
   ~TInterprenter();
   /* Add a module */
+  bool AddModule(char * module, PyMethodDef * methods);
   bool AddModule(string module, PyMethodDef * methods);
+  /* Load the default scripts */
+  bool LoadDefaultScripts();
   /* Run scripts - return true for no fault, false otherwise */
   bool RunSimpleString(char * script);
   bool RunSimpleString(string script);
+  /* Note, file is a script within the PathManager path. */
   bool RunSimpleFile(string script);
 };
 
