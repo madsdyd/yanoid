@@ -1,4 +1,4 @@
-SUBDIRS = fonts objects bricks paddles balls powerups
+SUBDIRS = fonts objects bricks paddles balls powerups shots
 
 pkgdatadir = $(datadir)/games/@PACKAGE@/graphics/
 
