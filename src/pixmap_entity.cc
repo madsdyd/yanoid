@@ -27,16 +27,28 @@
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
-TPixmapEntity::TPixmapEntity(int x_, int y_, const std::string& path,
+TPixmapEntity::TPixmapEntity(int x_, int y_, Angle a_, 
+			     const std::string& path,
+			     CollisionType c, EntityType e) :
+  TEntity(x_,y_,a_,c,e)
+{
+  init(path,*this);
+}
+
+TPixmapEntity::TPixmapEntity(const TOrientedPoint& p, 
+			     const std::string& path,
 			     CollisionType c, EntityType e): 
-  TEntity(x_, y_, c, e) {
+  TEntity(p, c, e) {
+  init(path,*this);
+}
 
-  currentsurface
+void TPixmapEntity::init(const std::string& path, 
+			 TPixmapEntity& e) {
+  e.currentsurface
     = SurfaceManager->RequireRessource(path);
-  Assert(NULL != currentsurface, "Error loading graphics for entity");
-  _h = currentsurface->h;
-  _w = currentsurface->w;
-
+  Assert(NULL != e.currentsurface, "Error loading graphics for entity");
+  e._h = e.currentsurface->h;
+  e._w = e.currentsurface->w;
 }
 
 /* **********************************************************************
@@ -51,14 +63,14 @@ TPixmapEntity::~TPixmapEntity() {
  * SetPixmap changes the pixmap of the entity
  * *********************************************************************/
 void TPixmapEntity::setPixmap(const std::string& path) {
-  SurfaceManager->ReleaseRessource(currentsurface);
+  if (currentsurface)
+    SurfaceManager->ReleaseRessource(currentsurface);
 
   currentsurface
     = SurfaceManager->RequireRessource(path);
   Assert(NULL != currentsurface, "Error loading graphics for entity");
   _h = currentsurface->h;
   _w = currentsurface->w;
-  
 }
 
 /* **********************************************************************

@@ -104,15 +104,22 @@ void TGame::handleCollisions()
 	  || (! (*i1)->boundingBoxCollision(*(*i2))))
 	continue;
       
+      /*
       LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
 	      " and " + (*i2)->getName());
-      
+      */
       // this section is for debugging only
       {
 
 	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
-	(*i1)->getMotion()->reverseDirection();
-	(*i2)->getMotion()->reverseDirection();
+	if ((*i1)->getMotion()) {
+	  (*i1)->getMotion()->reverseDirection();
+	  (*i1)->getMotion()->rewind();
+	}
+	if ((*i2)->getMotion()) {
+	  (*i2)->getMotion()->reverseDirection();
+	  (*i2)->getMotion()->rewind();
+	}
 	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
 
       }

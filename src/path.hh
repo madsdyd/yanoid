@@ -20,6 +20,13 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* **********************************************************************
+ * A path is used to constrain an entity to certain positions and a
+ * and/or angles. It is typically used for the paddle to describe 
+ * where it can be on the screen. It may also be used to describe 
+ * a predetermined behaviour of an enemy.
+ * *********************************************************************/
+
 #ifndef __PATH_HH__
 #define __PATH_HH__
 
@@ -34,23 +41,29 @@ protected:
 public:
   TPath() : _max(0.0) {}
   virtual ~TPath() {}
-  inline virtual TOrientedPoint getPoint(TPathPos i) const { 
-    return getPoint(static_cast<int>(_max/i)); }
+  inline TOrientedPoint getPoint(TPathPos i) const;
   virtual TOrientedPoint getPoint(int i) const = 0;
   virtual inline TPathPos getMax() const { return _max; }
 };
 
-/* A simple path that follows a line */
-class TLinePath : public TPath {
+/* 
+   A simple path that follows a line, and also 
+   constrains the orientation by interpolation between 
+   the orientation of the begin and en points.
+*/
+class TOrientedLinePath : public TPath {
 protected:
   TOrientedPoint _begin;
   TOrientedPoint _end;
   int _w, _h;
 public:
-  TLinePath(const TOrientedPoint& begin, const TOrientedPoint& end);
-  virtual ~TLinePath() {}
+  TOrientedLinePath(const TOrientedPoint& begin, const TOrientedPoint& end);
+  virtual ~TOrientedLinePath() {}
   virtual TOrientedPoint getPoint(int i) const;
 };
 
+class TOrientedCirkelPath : public TPath {
+  
+};
 
 #endif

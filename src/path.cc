@@ -23,16 +23,27 @@
 #include "path.hh"
 #include <math.h>
 
-
 /* **********************************************************************
  * getPoint returns the point and angle on the path.
  * the argument i, must be a number in the interval [0:1]
  * *********************************************************************/
-TLinePath::TLinePath(const TOrientedPoint& begin, 
+TOrientedPoint TPath::getPoint(TPathPos i) const
+{
+  return getPoint(static_cast<int>(_max/i));
+}
+
+/* **********************************************************************
+ * TOrientedPath constructor
+ * *********************************************************************/
+TOrientedLinePath::TOrientedLinePath(const TOrientedPoint& begin, 
 		     const TOrientedPoint& end) : _begin(begin), _end(end) 
 {
+  /*
   _w = (begin.x() < end.x()) ? end.x() - begin.x() : begin.x() - end.x();
   _h = (begin.y() < end.y()) ? end.y() - begin.y() : begin.y() - end.y();
+  */
+  _w = end.x() - begin.x();
+  _h = end.y() - begin.y();
   _max = sqrt(_w*_w + _h*_h);
 }
 
@@ -41,13 +52,13 @@ TLinePath::TLinePath(const TOrientedPoint& begin,
  * the argument i, must be a number in the interval [0:max]
  * where max is found by using the getMax funtion;
  * *********************************************************************/
-TOrientedPoint TLinePath::getPoint(int i) const {
+TOrientedPoint TOrientedLinePath::getPoint(int i) const {
   /* XXX: a fast hack */
   double pct = _max/static_cast<double>(i);
-  double d_angle = _begin.angle() < _end.angle() ? 
-    _end.angle() - _begin.angle() : _begin.angle() - _end.angle();
+  double d_angle = _begin.getAngle() < _end.getAngle() ? 
+    _end.getAngle() - _begin.getAngle() : _begin.getAngle() - _end.getAngle();
   return TOrientedPoint(static_cast<int>(static_cast<double>(_w) / pct + _begin.x()),
-		       static_cast<int>(static_cast<double>(_h) / pct + _begin.y()),
-		       static_cast<double>(d_angle) / pct + _begin.angle());
+			static_cast<int>(static_cast<double>(_h) / pct + _begin.y()),
+			static_cast<double>(d_angle) / pct + _begin.getAngle());
 }
 

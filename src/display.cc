@@ -25,6 +25,7 @@
 #include "ConsoleSource/CON_console.h"
 #include "ConsoleSource/DT_drawtext.h"
 #include "motion.hh"
+#include <math.h> // defines PI
 
 /* **********************************************************************
  * The global display
@@ -37,6 +38,7 @@ TDisplay * Display;
  * *********************************************************************/
 void TDisplay::Render(SDL_Surface * surface) {
   static int ticks = 0;
+
   TGameState * GameState = Game->GetState();
   TEntitiesIterator End = GameState->MapState->Entities.end();
   TEntitiesIterator i;
@@ -49,21 +51,21 @@ void TDisplay::Render(SDL_Surface * surface) {
     switch (event.type) {
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
-      case SDLK_LEFT: {
-	TNullMotion * m = dynamic_cast<TNullMotion *>(paddle->getMotion());
-	m->setX(static_cast<int>(m->x() - m->getVelocity()));
-      }
+      case SDLK_LEFT:
+	paddle->getMotion()->setVelocity( -0.5 );
+	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
       break;
-      case SDLK_RIGHT: {
-	TNullMotion * m = dynamic_cast<TNullMotion *>(paddle->getMotion());
-	m->setX(static_cast<int>(m->x() + m->getVelocity()));
-      }
+      case SDLK_RIGHT:
+	paddle->getMotion()->setVelocity( 0.5 );
+	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
       break;
       case SDLK_UP:
-	paddle->getMotion()->setVelocity(paddle->getMotion()->getVelocity() + 2.0 );
+	paddle->getMotion()->setVelocity( 0.5 );
+	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( M_PI_2 );	
 	break;
       case SDLK_DOWN:
-	paddle->getMotion()->setVelocity(paddle->getMotion()->getVelocity() - 2.0 );
+	paddle->getMotion()->setVelocity( 0.5 );
+	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
 	break;
       case SDLK_ESCAPE:	
 	QuitGame = true;
@@ -71,7 +73,7 @@ void TDisplay::Render(SDL_Surface * surface) {
       case SDLK_BACKQUOTE:
       case SDLK_F1:
       case SDLK_F3:
-	 if (!ConsoleDown){
+	if (!ConsoleDown){
 	  ConsoleDown = true;
 	  SDL_EnableUNICODE(1);
 	} else {
@@ -83,6 +85,21 @@ void TDisplay::Render(SDL_Surface * surface) {
 	break;
       }
       break;
+    case SDL_KEYUP:
+      switch (event.key.keysym.sym) {
+      case SDLK_LEFT:
+	paddle->getMotion()->setVelocity( 0.0 );
+	break;
+      case SDLK_RIGHT:
+	paddle->getMotion()->setVelocity( 0.0 );
+	break;
+      case SDLK_UP:
+	paddle->getMotion()->setVelocity( 0.0 );
+	break;
+      case SDLK_DOWN:
+	paddle->getMotion()->setVelocity( 0.0 );
+	break;
+      }
     default:
       break;
     }

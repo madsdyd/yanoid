@@ -27,6 +27,7 @@ class TMapState {
 public:
   TEntities Entities;
   ~TMapState();
+  void load(const std::string& path);
 };
 
 /* This is a map clas. It can load a map, and contains the state of a map

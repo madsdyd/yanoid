@@ -20,6 +20,11 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/*
+  PLEASE IGNORE THIS CLASS FOR NOW. It was a too hasty 
+  decision to add this file, but i won't remove it right now.
+ */
+
 #ifndef __VELOCITY_HH__
 #define __VELOCITY_HH__
 

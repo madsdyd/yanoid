@@ -38,15 +38,25 @@ public:
 protected:
   // TODO: Some sort of fancy vector class? 
   int _w, _h; /* The bounding box size */
+
+  /* The remainding translation after the the motion has translated
+     this entity. Both numbers should be < 1.0 since it is the 
+     remainder of the velocity after adding it to this entity's
+     position. Does it make sense?
+  */
+  double remainder_x, remainder_y;
   TOrientedPoint position;
   std::string name;
   CollisionType collision_type;
   EntityType entity_type;
   TMotion * motion;
 public:
-  TEntity(int x_, int y_, CollisionType c = BOX, EntityType e = MOVING);
+  TEntity(int x_, int y_, Angle a_ = 0, CollisionType c = BOX, EntityType e = MOVING);
+  TEntity(const TOrientedPoint& p, CollisionType c = BOX, EntityType e = MOVING);
   virtual ~TEntity();
-  
+
+  virtual void load(const std::string& path);
+
   virtual void Update(Uint32 deltatime);
 
   virtual void Render(SDL_Surface * surface);
@@ -60,19 +70,26 @@ public:
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
 
+  /*
+    Geometry functions of the entity
+  */
   inline int x() const { return position.x(); };
   inline int y() const { return position.y(); };
-  inline double angle() const { return position.angle(); }
+  inline void setX(int _x) { position.setX(_x); }
+  inline void setY(int _y) { position.setY(_y); }
+  inline Angle getAngle() const { return position.getAngle(); }
+  inline void setAngle(Angle a) { position.setAngle(a); }
   inline int w() const { return _w; };
   inline int h() const { return _h; };
-
+  inline void setW(int w_) { _w = w_; }
+  inline void setH(int h_) { _h = h_; }
   inline bool boundingBoxCollision(const TEntity& obj) {
     return ! ((obj.position.y()+obj._h) < position.y() || (position.y()+_h) < obj.position.y() || 
 	      (obj.position.x()+obj._w) < position.x() || (position.x()+_w) < obj.position.x());
   }
   virtual bool pixelCollision(const TEntity& obj);
   friend class TMotion;
-  friend class TNullMotion;
+  friend class TFreeMotion;
   friend class TPathMotion;
 };
 

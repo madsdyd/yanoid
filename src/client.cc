@@ -34,9 +34,15 @@ void TClient::Run() {
   Uint32 start = ticks;
   int count = 0;
   while(!QuitGame) {
+    Uint32 s = SDL_GetTicks();
+
     Game->Update(ticks-start);
+
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+
     Display->Render(Screen);
+    Uint32 e = SDL_GetTicks();
+    //    cerr << "Loop ticks: " << e-s << endl;
     // SDL_UpdateRect(Screen, 0, 0, 0, 0);
     SDL_Flip(Screen);
     ticks = SDL_GetTicks();

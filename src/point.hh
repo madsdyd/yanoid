@@ -20,9 +20,14 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* Points defines a point in the 2D space. */
+
 #ifndef __POINT_HH__
 #define __POINT_HH__
 
+typedef double Angle;
+
+/* Simple 2D point */
 class TPoint {
 protected:
   int _x, _y;
@@ -35,14 +40,16 @@ public:
   inline void setY(int y_) { _y = y_; }
 };
 
+/* As the TPoint, but with an orientation */
 class TOrientedPoint : public TPoint {
 protected:
-  double _angle;
+  Angle _angle;
 public:
-  TOrientedPoint(int x_, int y_, double angle_ = 0.0) : 
+  TOrientedPoint(int x_ = 0 , int y_ = 0, double angle_ = 0.0) : 
     TPoint(x_, y_), _angle(angle_) {}
   virtual ~TOrientedPoint() {}
-  inline double angle() const { return _angle; }
+  inline double getAngle() const { return _angle; }
+  inline void setAngle(double a) { _angle = a; }
 };
 
 #endif

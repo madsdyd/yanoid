@@ -27,9 +27,16 @@
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
-TEntity::TEntity(int x_, int y_, CollisionType c, EntityType e): 
-  _w(24), _h(16), position(x_,y_,0.0), name("unknown"), 
-  collision_type(c), entity_type(e), motion(new TNullMotion(x_,y_)) {
+TEntity::TEntity(int x_, int y_, Angle a, CollisionType c, EntityType e):
+  _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), name("unknown"), 
+  collision_type(c), entity_type(e), motion(0) 
+{
+
+}
+
+TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
+  _w(24), _h(16), position(p), name("unknown"), 
+  collision_type(c), entity_type(e), motion(0) {
 
 }
 
@@ -40,7 +47,13 @@ TEntity::~TEntity() {
 
 }
 
-
+/* **********************************************************************
+ * load - loads a entity from path
+ * *********************************************************************/
+void TEntity::load(const std::string& path) 
+{
+  string abspath = PathManager->Resolve(path);
+}
 
 /* **********************************************************************
  * setmotion set the motion of the entity
@@ -57,7 +70,8 @@ void TEntity::setMotion(TMotion* m)
  * *********************************************************************/
 void TEntity::Update(Uint32 deltatime) 
 {
-  motion->Update(deltatime,*this);
+  if (motion)
+    motion->Update(deltatime,*this);
   /*
   position.setX((x() + static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.x())/10.0)) % 800);
   position.setY((y() + static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.y())/10.0)) % 600);
