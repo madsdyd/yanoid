@@ -104,7 +104,8 @@ void TPixmapEntity::Render(SDL_Surface * surface) {
   src.x = 0; src.y = 0; 
   src.w = currentsurface->w; src.h = currentsurface->h;
 
-  dest.x = x(); dest.y = y();
+  dest.x = static_cast<int>(x()); 
+  dest.y = static_cast<int>(y());
   dest.w = src.w; dest.h = src.h;
   
   SDL_BlitSurface(currentsurface, &src, surface, &dest);
@@ -152,15 +153,15 @@ void TPixmapEntity::MakeMask()
  * of obj collides with this TEntity using pixel perfection. 
  * Much of this code is taken from sgelib
  * *********************************************************************/
-bool TPixmapEntity::pixelCollision(const TEntity& o) {
+bool TPixmapEntity::pixelCollision(TEntity& o) {
   LogLine(LOG_TODO,"check o for NULL pointer also");
   if (!mask | !o.mask)
     return boundingBoxCollision(o);
 
-  int x1 = position.x();
-  int y1 = position.y();
-  int x2 = o.position.x();
-  int y2 = o.position.y();
+  int x1 = static_cast<int>(position.x());
+  int y1 = static_cast<int>(position.y());
+  int x2 = static_cast<int>(o.position.x());
+  int y2 = static_cast<int>(o.position.y());
 
   int w1=_w;
   int h1=_h;
@@ -174,8 +175,8 @@ bool TPixmapEntity::pixelCollision(const TEntity& o) {
   
   unsigned char *map1 = mask;
   unsigned char *map2 = o.mask;
-  int col_x = collidepoint.x();
-  int col_y = collidepoint.y();
+  int col_x = static_cast<int>(collidepoint.x());
+  int col_y = static_cast<int>(collidepoint.y());
 
   //Calculate correct starting point
   if(col_x==x2 && col_y==y2){

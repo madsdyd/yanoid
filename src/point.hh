@@ -30,14 +30,14 @@ typedef double Angle;
 /* Simple 2D point */
 class TPoint {
 protected:
-  int _x, _y;
+  double _x, _y;
 public:
-  TPoint(int x_, int y_) : _x(x_), _y(y_) {}
+  TPoint(double x_, double y_) : _x(x_), _y(y_) {}
   virtual ~TPoint() {}
-  inline int x() const { return _x; }
-  inline int y() const { return _y; }
-  inline void setX(int x_) { _x = x_; }
-  inline void setY(int y_) { _y = y_; }
+  inline double x() const { return _x; }
+  inline double y() const { return _y; }
+  inline void setX(double x_) { _x = x_; }
+  inline void setY(double y_) { _y = y_; }
 };
 
 /* As the TPoint, but with an orientation */
@@ -45,7 +45,7 @@ class TOrientedPoint : public TPoint {
 protected:
   Angle _angle;
 public:
-  TOrientedPoint(int x_ = 0 , int y_ = 0, double angle_ = 0.0) : 
+  TOrientedPoint(double x_ = 0 , double y_ = 0, double angle_ = 0.0) : 
     TPoint(x_, y_), _angle(angle_) {}
   virtual ~TOrientedPoint() {}
   inline double getAngle() const { return _angle; }

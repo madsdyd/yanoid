@@ -21,11 +21,11 @@ AddStatic(1, 0, 799, 1, "static_hit()")
 AddStatic(0, 550, 799, 50, "static_hit()")
 
 # Add a paddle
-SetPaddle(300, 300, "graphics/objects/paddle.png")
+SetPaddle(300, 300, "graphics/objects/basic_brick.png")
 
 # define a round start function
 def RoundStart():
-    AddBallDefault("graphics/objects/ball.png")
+    AddBallDefault("graphics/objects/basic_brick.png")
 
 # And, call it - probably will go
 RoundStart();

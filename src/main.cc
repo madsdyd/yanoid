@@ -203,7 +203,8 @@ int main(int argc, char ** argv) {
    * Colourdepth is 0 == use current
    * *********************************************************************/
   Screen = SDL_SetVideoMode(800, 600, 0, 
-			    SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN
+			    SDL_HWSURFACE | SDL_DOUBLEBUF
+			    // SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN
 			    // SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN
 			    );
   // | SDL_FULLSCREEN);
@@ -328,8 +329,10 @@ int main(int argc, char ** argv) {
   dest.w = src.w; dest.h = src.h;
   SDL_BlitSurface(Splash, &src, Screen, &dest);
   SDL_UpdateRect(Screen, 0, 0, 0, 0);
+
   /* Let the impression sink in... ;-) */
   SDL_Delay(2000);
+
 
 #ifndef NO_MUSIC_THREAD
   // Test the MOD music

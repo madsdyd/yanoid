@@ -27,8 +27,19 @@
 /* **********************************************************************
  * Rewind, taken a step back in time for in the motion
  * *********************************************************************/
-void TMotion::rewind() {
+void TMotion::rewind(TEntity& e) {
   _current_time = _last_time;
+}
+
+
+/* **********************************************************************
+ * Rewind, taken a step back in time for in the motion
+ * *********************************************************************/
+void TFreeMotion::rewind(TEntity& e) {
+  double subx = _last_time * cos(motion_dir) * _vel; 
+  double suby = _last_time * sin(-motion_dir) * _vel; 
+  e.setX(e.x() - subx);
+  e.setY(e.y() - suby);
 }
 
 /* **********************************************************************
@@ -36,13 +47,20 @@ void TMotion::rewind() {
  * *********************************************************************/
 void TFreeMotion::Update(Uint32 deltatime, TEntity& e)
 {
+  //  cerr << "Updateting " << e.getName() << " " << e.x() << ", " << e.y();
+  _last_time = deltatime;
   /* hmm. maybe this is too slow. we'll see */
-  double addx = e.remainder_x + deltatime * cos(motion_dir) * _vel; 
-  double addy = e.remainder_y + deltatime * sin(-motion_dir) * _vel; 
-  e.setX(static_cast<int>(addx + e.x()));
-  e.setY(static_cast<int>(addy + e.y()));
-  e.remainder_x = addx - floor(addx);
-  e.remainder_y = addy - floor(addy);
+  double addx = deltatime * cos(motion_dir) * _vel; 
+  double addy = deltatime * sin(-motion_dir) * _vel; 
+  double oldx = e.x();
+  double oldy = e.y();
+  e.setX(addx + e.x());
+  e.setY(addy + e.y());
+
+  if (e.x() != oldx || e.y() != oldy)
+    e.changed = true;
+
+  //  cerr << " " << e.x() << ", " << e.y() << endl;
 }
 
 /* **********************************************************************
@@ -90,6 +108,8 @@ void TPathMotion::Update(Uint32 deltatime, TEntity& e)
   // That's why it's so poorly commented...!
   if (! _paths.size() )
     return;
+
+  e.changed = true;
 
   _last_time = _current_time;
 

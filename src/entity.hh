@@ -35,7 +35,7 @@ class TPixmapEntity;
 class TEntity {
 public:
   typedef enum CollisionType { BOX, PIXEL, NONE } CollisionType;
-  typedef enum EntityType { MOVING, STATIONARY } EntityType;
+  typedef enum EntityType { MOVING, STATIONARY, PATH, BALL, PADDLE } EntityType;
 protected:
   // TODO: Some sort of fancy vector class? 
   int _w, _h; /* The bounding box size */
@@ -45,7 +45,6 @@ protected:
      remainder of the velocity after adding it to this entity's
      position. Does it make sense?
   */
-  double remainder_x, remainder_y;
   TOrientedPoint position;
   TPoint collidepoint;
   std::string name;
@@ -55,11 +54,12 @@ protected:
   unsigned char* mask;
   /* Script stuff */
   string ScriptHitCall;
-
+  bool changed;
+  int collidecorner;
 public:
-  TEntity(int x_, int y_, Angle a_ = 0, 
+  TEntity(double x_, double y_, Angle a_ = 0, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);
-  TEntity(int x_, int y_, int w_, int h_, Angle a_ = 0, 
+  TEntity(double x_, double y_, int w_, int h_, Angle a_ = 0, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);
   TEntity(const TOrientedPoint& p, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);
@@ -78,7 +78,7 @@ public:
   void setMotion(TMotion* m);
 
   /* Called when this entity collidies with another */
-  void OnCollision(const TEntity& other);
+  void OnCollision(TEntity& other);
 
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
@@ -90,17 +90,17 @@ public:
   /*
     Geometry functions of the entity
   */
-  inline int x() const { return position.x(); };
-  inline int y() const { return position.y(); };
-  inline void setX(int _x) { position.setX(_x); }
-  inline void setY(int _y) { position.setY(_y); }
+  inline double x() const { return position.x(); };
+  inline double y() const { return position.y(); };
+  inline void setX(double _x) { position.setX(_x); }
+  inline void setY(double _y) { position.setY(_y); }
   inline Angle getAngle() const { return position.getAngle(); }
   inline void setAngle(Angle a) { position.setAngle(a); }
   inline int w() const { return _w; };
   inline int h() const { return _h; };
   inline void setW(int w_) { _w = w_; }
   inline void setH(int h_) { _h = h_; }
-  inline bool boundingBoxCollision(const TEntity& obj);
+  inline bool boundingBoxCollision(TEntity& obj);
   /*
     return ! ((obj.position.y()+obj._h) < position.y() || 
 	      (position.y()+_h) < obj.position.y() || 
@@ -108,7 +108,7 @@ public:
 	      (position.x()+_w) < obj.position.x());
   }
   */
-  virtual bool pixelCollision(const TEntity& obj);
+  virtual bool pixelCollision(TEntity& obj);
   friend class TMotion;
   friend class TFreeMotion;
   friend class TPathMotion;

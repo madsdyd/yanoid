@@ -40,7 +40,7 @@ public:
   virtual void setPixmap(const std::string& pixmap_path);
   void MakeMask();
   virtual void Render(SDL_Surface * surface);
-  virtual bool pixelCollision(const TEntity&);
+  virtual bool pixelCollision(TEntity&);
 private:
   int memand(unsigned char *s1, unsigned char *s2, 
 	     int shift1, int shift2, int N);

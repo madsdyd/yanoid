@@ -42,8 +42,8 @@ TOrientedLinePath::TOrientedLinePath(const TOrientedPoint& begin,
   _w = (begin.x() < end.x()) ? end.x() - begin.x() : begin.x() - end.x();
   _h = (begin.y() < end.y()) ? end.y() - begin.y() : begin.y() - end.y();
   */
-  _w = end.x() - begin.x();
-  _h = end.y() - begin.y();
+  _w = static_cast<int>(end.x() - begin.x());
+  _h = static_cast<int>(end.y() - begin.y());
   _max = sqrt(_w*_w + _h*_h);
 }
 

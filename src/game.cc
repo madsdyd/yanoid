@@ -87,13 +87,14 @@ void TGame::handleCollisions()
       continue;
     }
     // LogLine(LOG_VER_2, "Checking " + (*i1)->getName());
-    int maxy = (*i1)->y() + (*i1)->h();
+    double maxy = (*i1)->y() + static_cast<double>((*i1)->h());
     /*cout << "max y " << maxy << ", y() " << (*i1)->y() 
       << ", h() " << (*i1)->h() << endl; */
     TEntity::CollisionType i1coll = (*i1)->getCollisionType();
-    // TEntitiesIterator i2 = i1;
+    // TEntitiesIterator i2 = i1;xb
     // i2++;
     TEntitiesIterator i2 = themap->Entities.begin();
+
     for ( ; *i2 != *i1 && i2 != end ; ++i2) {
       if (i1 == i2) {
 	continue;
@@ -107,6 +108,22 @@ void TGame::handleCollisions()
 	break;
       }
       
+      //
+      // To make sure we doesn't check two objects against eachother 2 times
+      // we only check if i1->y > i2-> or if they are equal i1->x > i2->x
+      //
+      if ((*i1)->y() <= (*i2)->y()) {
+	if ((*i1)->y() == (*i2)->y()) {
+	  if ((*i1)->x() < (*i2)->x()) {
+	    continue;
+	  }else{
+	    //proceed
+	  }
+	}else{
+	  continue;
+	}  
+      }
+
       /* If there are no collision between the current two entities, 
 	 continue */
       if (! (*i1)->boundingBoxCollision(*(*i2)))
@@ -124,6 +141,7 @@ void TGame::handleCollisions()
       {
 	
 	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
+	/*
 	if ((*i1)->getMotion()) {
 	  (*i1)->getMotion()->reverseDirection();
 	  (*i1)->getMotion()->rewind();
@@ -132,6 +150,8 @@ void TGame::handleCollisions()
 	  (*i2)->getMotion()->reverseDirection();
 	  (*i2)->getMotion()->rewind();
 	}
+	*/
+
 	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
 
       }

@@ -50,7 +50,7 @@ public:
   void setDirection(bool forward) { _vel = (forward) ? fabs(_vel): -fabs(_vel); }
   bool getDirection() const { return (_vel >= 0.0); }
   void reverseDirection() { _vel = - _vel; }
-  void rewind();
+  virtual void rewind(TEntity&);
 };
 
 /* 
@@ -67,6 +67,7 @@ public:
   virtual void Update(Uint32 deltatime, TEntity& e);
   inline void setDir(const Angle a) { motion_dir = a; }
   Angle getDir() const { return motion_dir; }
+  virtual void rewind(TEntity&);
 };
 
 /*
