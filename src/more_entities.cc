@@ -25,6 +25,7 @@
 #include "pixmap_entity.hh"
 #include "more_entities.hh"
 #include "soundmanager.hh"
+#include "surfacemanager.hh"
 
 /* **********************************************************************
  * The hole bounces variable
@@ -171,5 +172,80 @@ void THole::OnCollision(TEntity& other,Uint32 t) {
   }
 }
 
+/* **********************************************************************
+ * The paddle constructor
+ * *********************************************************************/
+TPaddle::TPaddle(int x_, int y_, 
+		  const std::string normal_pixmap_path,
+		  const std::string wide_pixmap_path,
+		  const std::string narrow_pixmap_path) : 
+  TPixmapEntity(x_, y_, 0, normal_pixmap_path, "PADDLE", MOVING, PIXEL),
+  minx(900.0), maxx(-1.0), milli_seconds_to_normal(0), 
+  widesurface(NULL), narrowsurface(NULL) {
+  /* Pixmap has loaded normal into current. Store it */
+  normalsurface = SurfaceManager->DuplicateRessource(currentsurface);
+  /* Require the other surfaces */
+  widesurface = SurfaceManager->RequireRessource(wide_pixmap_path);
+  narrowsurface = SurfaceManager->RequireRessource(narrow_pixmap_path);
+  Assert(widesurface != NULL && narrowsurface != NULL, "Error loading"
+	 " graphics for TPaddle");
+}
+
+TPaddle::~TPaddle() {
+  /* Release all the surfaces */
+  SurfaceManager->ReleaseRessource(normalsurface);
+  SurfaceManager->ReleaseRessource(widesurface);
+  SurfaceManager->ReleaseRessource(narrowsurface);
+}
+
+/* **********************************************************************
+ * Update to track our max x and y position. Yes, this will only
+ * work for horizontal paddles, but that is what we have now.
+ * *********************************************************************/
+void TPaddle::Update(Uint32 deltatime) {
+  TPixmapEntity::Update(deltatime);
+  /* Track x changes */
+  if ((x() + w()) > maxx) { maxx = x() + w(); };
+if (x() < minx) { minx = x(); };
+  /* Track if we need to go to normal surface */
+  if (milli_seconds_to_normal > 0) {
+    milli_seconds_to_normal -= deltatime;
+    if (milli_seconds_to_normal <= 0) {
+      GoNormal();
+    }
+  }
+}
 
 
+/* **********************************************************************
+ * Narrow and wide, simple
+ * *********************************************************************/
+void TPaddle::GoNormal() {
+  /* we may not fit */
+  int curw = w();
+  setPixmap(normalsurface);
+  setX(x() + (curw - w())/2.0);
+  milli_seconds_to_normal = 0;
+  if ((x()+w()) > maxx) { setX(maxx - w()); }; 
+  if (x() < minx) { setX(minx); };
+  /* Note, this may not work, but its the best I can do currently */
+}
+
+void TPaddle::GoNarrow(int seconds) {
+  /* Simple, since we _always_ fit */
+  int curw = w();
+  setPixmap(narrowsurface);
+  setX(x() + (curw - w())/2.0);
+  milli_seconds_to_normal = seconds * 1000;
+}
+
+void TPaddle::GoWide(int seconds) {
+  /* we may not fit */
+  int curw = w();
+  setPixmap(widesurface);
+  setX(x() + (curw - w())/2.0);
+  milli_seconds_to_normal = seconds * 1000;
+  if ((x()+w()) > maxx) { setX(maxx - w()); }; 
+  if (x() < minx) { setX(minx); };
+  /* Note, this may not work, but its the best I can do currently */
+}

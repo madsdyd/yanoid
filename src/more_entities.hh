@@ -42,6 +42,30 @@ public:
 };
 
 /* **********************************************************************
+ * The paddle is the paddle
+ * *********************************************************************/
+class TPaddle : public TPixmapEntity {
+protected:
+  /* The hacks, the hacks */
+  double minx, maxx;
+  int milli_seconds_to_normal;
+  SDL_Surface * normalsurface;
+  SDL_Surface * widesurface;
+  SDL_Surface * narrowsurface;
+public:
+  TPaddle(int x_, int y_, 
+	  const std::string normal_pixmap_path,
+	  const std::string wide_pixmap_path,
+	  const std::string narrow_pixmap_path);
+  virtual ~TPaddle();
+  void Update(Uint32 deltatime);
+  void GoNormal();
+  void GoNarrow(int seconds);
+  void GoWide(int seconds);
+};
+
+
+/* **********************************************************************
  * A powerup is a special kind of brick, that move slowly toward 
  * the bottom of the screen. It only reacts to collisions with
  * the paddle and possibly shots.

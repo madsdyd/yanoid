@@ -24,8 +24,9 @@
 #include "entity.hh"
 
 class TMap;
+class TPaddle;
 class TMapState {
-  TEntity * paddle;
+  TPaddle * paddle;
   friend TMap;
 public:
   int num_balls; /* Number of balls in play. 

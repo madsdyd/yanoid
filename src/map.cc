@@ -331,9 +331,14 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
   } 
 
   /* First, try and make things work */
-  TEntity * paddle = 
-    new TPixmapEntity(x, y, 0, pixmap, "PADDLE", 
-		      TEntity::MOVING, TEntity::PIXEL);
+  TPaddle * paddle 
+    = new TPaddle(x, y, pixmap, 
+		  "graphics/paddles/square2_100.png",
+		  "graphics/paddles/square2_50.png");
+  
+
+    /*    new TPixmapEntity(x, y, 0, pixmap, "PADDLE", 
+	  TEntity::MOVING, TEntity::PIXEL); */
   paddle->setName("Paddle");
   paddle->SetScriptHitCall("paddle_hit()");
   if ("FreeMotion" == pathtype) {
@@ -413,11 +418,25 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
   } /* "spawn-ball" */ 
 
   /* **********************************************************************
-   * enable-shot
+   * size-paddle
    * *********************************************************************/
-  else if ("enable-shot" == action) {
-    /* arg1 == pixmap, arg2 == type */
-    LogLine(LOG_TODO, "Implement enable-shot");
+  else if ("size-paddle" == action) {
+    /* arg1 == size (normal, narrow, wide), arg2 == seconds */
+    if ("normal" == arg1) {
+      MapState->paddle->GoNormal();
+    } 
+    else if ("wide" == arg1 || "narrow" == arg1) {
+      /* Arg 2 is seconds, ignore errors */
+      int seconds = atoi(arg2.c_str());
+      if ("wide" == arg1) {
+	MapState->paddle->GoWide(seconds);
+      } else {
+	MapState->paddle->GoNarrow(seconds);
+      }
+    } else {
+      LogLine(LOG_ERROR, "powerup size-paddle with wrong size");
+      return false;
+    }
     return true;
   }
 

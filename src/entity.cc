@@ -418,7 +418,8 @@ void TEntity::ExecuteScriptHitCall() {
   if ("" != ScriptHitCall) {
     current_script_entity = this;
     if(!Interprenter->RunSimpleString(ScriptHitCall)) {
-      LogLine(LOG_WARNING, "TEntity::ExecuteScriptHitCall error");
+      LogLine(LOG_ERROR, "TEntity::ExecuteScriptHitCall error");
+      LogLineExt(LOG_ERROR, ("Script is >>>%s<<<", ScriptHitCall.c_str()));
     }
   } else {
 

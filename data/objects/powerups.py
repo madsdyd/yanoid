@@ -8,7 +8,7 @@
 # cases, a powerup is spawned
 # NOTE: There are currently no way to reset this value. 
 
-powerup_spawn_probability = 20;
+powerup_spawn_probability = 50;
 
 # Do I need to import math, before importing random?
 from math import *
@@ -19,7 +19,10 @@ from random import randrange
 powerups = [ [10, "powerup_spawn_ball()"],
              [2, "powerup_spawn_life()"],
              [6, "powerup_spawn_shot()"],
-             [3, "powerup_spawn_super_shot()"] ]
+             [3, "powerup_spawn_super_shot()"],
+             [2, "powerup_spawn_normal_paddle()"],
+             [4, "powerup_spawn_wide_paddle()"],
+             [3, "powerup_spawn_narrow_paddle()"] ]
 
 # Calculate the total weights, when loaded
 totalweights = 0
@@ -83,3 +86,20 @@ def powerup_super_shot_hit():
     EnableShot("REMOVEALL", "graphics/shots/penetrating.png",
                "", 12, 3)
 
+# Normal, wide and narrow paddle
+def powerup_spawn_normal_paddle():
+    yanoid_map.PowerUp("powerup", "graphics/powerups/powerup_normal.png",
+                       "powerup_size_paddle_hit('normal', 0)")
+
+def powerup_spawn_wide_paddle():
+    yanoid_map.PowerUp("powerup", "graphics/powerups/powerup_larger.png",
+                       "powerup_size_paddle_hit('wide', 10)")
+
+def powerup_spawn_narrow_paddle():
+    yanoid_map.PowerUp("powerup", "graphics/powerups/powerup_smaller.png",
+                       "powerup_size_paddle_hit('narrow', 10)")
+
+def powerup_size_paddle_hit(size, seconds):
+    PlaySound("sounds/powerup_collect.wav")
+    yanoid_map.PowerUp("size-paddle", size, str(seconds))
+    

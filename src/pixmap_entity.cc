@@ -99,6 +99,19 @@ void TPixmapEntity::setPixmap(const std::string& path) {
 }
 
 /* **********************************************************************
+ * Change the pixmap, if different
+ * *********************************************************************/
+void TPixmapEntity::setPixmap(SDL_Surface * pixmap) {
+  if (currentsurface != pixmap) {
+    SurfaceManager->ReleaseRessource(currentsurface);
+    currentsurface = SurfaceManager->DuplicateRessource(pixmap);
+    _h = currentsurface->h;
+    _w = currentsurface->w;
+    MakeMask();
+  }
+}
+
+/* **********************************************************************
  * The render method simply blit the entity to the surface provided
  * (This will probably change)
  * *********************************************************************/

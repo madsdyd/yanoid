@@ -44,6 +44,8 @@ public:
   virtual ~TPixmapEntity();
   
   virtual void setPixmap(const std::string& pixmap_path);
+  /* This is assumes to be a ressource, and it is duplicated */
+  virtual void setPixmap(SDL_Surface * pixmap);
   void MakeMask();
   virtual void Render(SDL_Surface * surface);
   virtual bool pixelCollision(TEntity&);
