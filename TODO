@@ -17,7 +17,7 @@ yanoid before the game can be considered ready for the contest.
 ** SHOWSTOPPERS - MUST BE FIXED
 
 - More maps (BS,MBD...)
-- Make fonts png (MBD) 
+- Make fonts png (MBD) (may not be needed) 
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
 - no points for stay bricks (fix in maps) (MBD)
