@@ -195,9 +195,17 @@ THandle TRessourceManager <res_t>::RequireHandle(string name) {
 
 template <typename res_t>
 res_t * TRessourceManager <res_t>::RequireRessource(THandle handle) {
-  LogLine(LOG_TODO, "Check the handle");
-  return HandleToRessourceMap[handle]->TakeRessource();
+  if (0 == handle) {
+    LogLine(LOG_ERROR, "RequireRessource with invalid handle");
+    return NULL;
+  }
+  storage_t * tmp = HandleToRessourceMap[handle];
+  if (tmp) {
+    return tmp->TakeRessource();
+  } else {
+    LogLine(LOG_ERROR, "Handle != 0, no storage_t in map");
+    return NULL;
+  }
 }
-
 
 #endif

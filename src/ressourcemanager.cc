@@ -63,6 +63,7 @@ void TPathManager::AddMapping(string name, string absolute) {
 
 void TPathManager::AddPath(string path) {
   char absolute_path[_POSIX_PATH_MAX];
+  LogLine(LOG_VERBOSE, "AddPath(" + path + ")");
   if (NULL == realpath(path.c_str(), absolute_path)) {
     LogLine(LOG_WARNING, "Unable to get absolute path for " + path);
     return;
@@ -80,12 +81,12 @@ int SelectFile(const struct dirent * ent) {
   /* We do not want ".", ".." or things that we can not read */
   if (0 == strcmp(ent->d_name, ".")
       || 0 == strcmp(ent->d_name, "..")) {
-    //LogLine(LOG_VER_2, "NOT OK for ");
-    //LogLine(LOG_VER_2, ent->d_name);
+    LogLine(LOG_VER_2, "NOT OK for ");
+    LogLine(LOG_VER_2, ent->d_name);
     return 0;
   } else {
-    //LogLine(LOG_VER_2, "OK for ");
-    //LogLine(LOG_VER_2, ent->d_name);
+    LogLine(LOG_VER_2, "OK for ");
+    LogLine(LOG_VER_2, ent->d_name);
     return 1;
   };
 }
@@ -116,6 +117,8 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
     LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
     return;
   }
+
+  /* We have changed paths. Must change back on any return */
   
   /* Data structures for scandir */
   int numfiles;
@@ -126,14 +129,12 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
     /* Some error occured */
     //LogLine(LOG_ERROR, "Error running scandir on " + path);
     LogLine(LOG_WARNING, "Ignoring " + path);
-    LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
-    return;
+    goto exit;
   }
   
   if (0 == numfiles) {
     LogLine(LOG_VERBOSE, "No files found in " + path);
-    LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
-    return;
+    goto exit;
   }
 
   /* Free the stuff that was allocated, while moving the 
@@ -144,8 +145,8 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
   char * filename;
   while(numfiles--) {
     dirent * ent = files[numfiles];
-    // LogLine(LOG_VER_2, files[numfiles]->d_name);
-    // LogLine(LOG_VER_2, ent->d_name);
+    LogLine(LOG_VER_2, "Current dirent points to");
+    LogLine(LOG_VER_2, ent->d_name);
     /* Get the realpath */
     if (NULL != realpath(ent->d_name, absolute_filename)) {
       /* Check the type of the d_entry. Files get registered, 
@@ -167,18 +168,19 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
 	}
       }
       
+    } else {
+      LogLine(LOG_WARNING, "Could not get real path for");
+      LogLine(LOG_WARNING, ent->d_name);
     }
-
-
     free(files[numfiles]);
   }
   free(files);
 
+ exit:
   /* Move to the old cwd */
   if (0 != chdir(cwd)) {
     LogLine(LOG_ERROR, "Unable to return to previously current directory");
   }
-
   LogLine(LOG_TRACE, "Leaving AddPathRecursivly for " + path);
 };
 
