@@ -23,6 +23,7 @@
 
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h> 
+#include <stdlib.h>
 #endif
 
 #include <iostream>
@@ -41,6 +42,7 @@ void BackTrace() {
   for (i = 0; i < size; i++) {
     cerr << "In " << tString[i] << endl;;
   }
+  free(tString);
 #else
   cerr << "No stacktrace available" << endl;
 #endif
