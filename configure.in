@@ -28,13 +28,13 @@ LIBS=""
 
 
 dnl ------------------------------------------------------------
-dnl Check system type (Currently unused)
+dnl Check system type 
 dnl ------------------------------------------------------------
 dnl AC_CANONICAL_HOST
 
 
 dnl ------------------------------------------------------------
-dnl Checks for programs. (Currently unused)
+dnl Checks for programs. 
 dnl ------------------------------------------------------------
 AC_PROG_AWK
 AC_PROG_CC
@@ -43,21 +43,6 @@ AC_PROG_LN_S
 AC_PROG_CXX
 AC_PROG_CPP
 AM_PROG_LIBTOOL
-
-
-MBD_CHECK_PYTHON
-AC_MSG_RESULT([$PACKAGE uses
-PYTHON          : $PYTHON
-PYTHON_VERSION  : $PYTHON_VERSION
-PYTHON_INCLUDES : $PYTHON_INCLUDES
-PYTHON_LIBS     : $PYTHON_LIBS
-PYTHON_SYSLIBS  : $PYTHON_SYSLIBS
-PYTHON_LINK     : $PYTHON_LINK
-])
-if test "x$mbd_check_python_failure" != "xno"; then
-  AC_MSG_ERROR(Python check failed)
-fi
-
 
 
 dnl ------------------------------------------------------------
@@ -106,22 +91,21 @@ AC_CHECK_HEADERS(sys/time.h unistd.h)
 
 
 dnl ------------------------------------------------------------
-dnl Check for Python. (Hard)
+dnl Check for Python. 
 dnl ------------------------------------------------------------
-saved_LIBS="$LIBS"
-LIBS="$saved_LIBS $YANOID_LIBS"
 
-KDE_CHECK_PYTHON()
+MBD_CHECK_PYTHON
+AC_MSG_RESULT([$PACKAGE uses
+PYTHON          : $PYTHON
+PYTHON_VERSION  : $PYTHON_VERSION
+PYTHON_INCLUDES : $PYTHON_INCLUDES
+PYTHON_LIBS     : $PYTHON_LIBS
+PYTHON_LDFLAGS  : $PYTHON_LDFLAGS
+PYTHON_LIBRARY  : $PYTHON_LIBRARY
+])
 
-AC_MSG_RESULT([$PACKAGE is using the following for compiling and linking against Python:
-PYTHONDIR: $PYTHONDIR
-PYTHONINC: $PYTHONINC
-LIBPYTHON: $LIBPYTHON
-PYTHONLIB: $PYTHONLIB])
-
-dnl YANOID_LIBS="$YANOID_LIBS $PYTHONLIB $LIBPYTHON"
-LIBS="$saved_LIBS"
-YANOID_CPPFLAGS="$YANOID_CPPFLAGS $PYTHONINC"
+YANOID_CPPFLAGS="$YANOID_CPPFLAGS $PYTHON_INCLUDES"
+YANOID_LIBS="$YANOID_LIBS $PYTHON_LDFLAGS $PYTHON_LIBS $PYTHON_LIBRARY"
 
 
 dnl ------------------------------------------------------------
@@ -145,8 +129,8 @@ dnl ------------------------------------------------------------
 WFLAGS="-Wall -Wtraditional -Wpointer-arith -Wconversion -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Woverloaded-virtual"
 OFLAGS="-O2 -fomit-frame-pointer -ffast-math -fexpensive-optimizations"
 
-YANOID_CFLAGS=$WFLAGS
-YANOID_CXXFLAGS=$WFLAGS
+YANOID_CFLAGS="$YANOID_CFLAGS $WFLAGS"
+YANOID_CXXFLAGS="$YANOID_CXXFLAGS $WFLAGS"
 YANOID_OP_CFLAGS=$OFLAGS
 YANOID_OP_CXXFLAGS=$OFLAGS
 
@@ -234,13 +218,17 @@ if test "x$have_SDL_mixer" = "xno" ; then
 ])
 fi
 
-if test "x$kde_python_link_found" = "xno" ; then
+if test "x$mbd_check_python_failure" != "xno"; then
     have_trouble=yes
     AC_MSG_WARN([
 *** PROBLEM:
-*** Unable to link a testprogram with the Python library
-*** This is required for yanoid to work.
-*** Please run ./configure --help if you have Python installed
+*** There was a problem with your Python installation:
+*** ${mbd_check_python_msg}
+*** Please check that you have a reasonable up-to-date Python
+*** installation and that you have the program "python" somewhere 
+*** in your path. If you use a package based system, you may need to
+*** install a "python-devel" package or similar.
+*** Fixing this problem is required for yanoid to work.
 *** Most Linux distributions include at least Python 1.5 - never
 *** version may be found at http://www.python.org
 ])
