@@ -53,6 +53,7 @@ void TDisplay::Render(SDL_Surface * surface) {
 	break;
       case SDLK_BACKQUOTE:
       case SDLK_F1:
+      case SDLK_F3:
 	 if (!ConsoleDown){
 	  ConsoleDown = true;
 	  SDL_EnableUNICODE(1);

@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 
@@ -18,30 +19,19 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include "client.hh"
 
-#include "log.hh"
-#include "screen.hh"
-#include "game.hh"
-#include "display.hh"
+/* This module is the link between the interprenter (Python) and 
+   the rest of the game */
+#include <Python.h>
+#include <string>
 
-/* **********************************************************************
- * The Run method - basically a wrapper around calls to Display
- * and Game. I Suppose.
- * *********************************************************************/
-void TClient::Run() {
-  Uint32 ticks = SDL_GetTicks();
-  Uint32 start = ticks;
-  int count = 0;
-  while(!QuitGame) {
-    Game->Update(ticks-start);
-    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-    Display->Render(Screen);
-    // SDL_UpdateRect(Screen, 0, 0, 0, 0);
-    SDL_Flip(Screen);
-    ticks = SDL_GetTicks();
-    count++;
-  }
-  cout << "Info ; " << count << " frames in " << (ticks - start) << " ms "
-       << (count/((ticks-start)/1000.0)) << " fps" << endl;
-}
+class TInterprenter {
+public:
+  TInterprenter();
+  ~TInterprenter();
+  /* Run a simple string - return true for no fault, false otherwise */
+  bool RunSimpleString(char * script);
+  bool RunSimpleString(string script);
+};
+
+extern TInterprenter * Interprenter;

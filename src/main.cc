@@ -50,6 +50,7 @@
 #include "display.hh"
 #include "client.hh"
 #include "highscore.hh"
+#include "interprenter.hh"
 
 /* **********************************************************************
  * A handler for segmentation errors 
@@ -58,6 +59,11 @@ void SignalHandler(int signal) {
   cerr << "Received signal " << signal << endl; 
   BackTrace();
   exit(-1);
+}
+
+/* Calls the python interprenter */
+void Python(char * String) {
+  Interprenter->RunSimpleString(String);
 }
 
 /* Prints the string you pass it into the console */
@@ -101,6 +107,7 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
   signal(SIGSEGV, SignalHandler);
 
+
   /* **********************************************************************
    * Print our version, and so on.
    * *********************************************************************/
@@ -125,6 +132,13 @@ int main(int argc, char ** argv) {
   PathManager->AddPath(YANOID_DATADIR);
   PathManager->AddPath("data");
   
+  /* **********************************************************************
+   * Initialize the interprenter (uses the pathmanager)
+   * *********************************************************************/
+  Interprenter = new TInterprenter();
+  LogLine(LOG_VERBOSE, "Interprenter created");
+
+
   /* A small test */
   /*
     LogLine(LOG_INFO, "Makefile == " + PathManager->Resolve("Makefile"));
@@ -151,9 +165,10 @@ int main(int argc, char ** argv) {
    * Setup the screen. Resolution is fixed at the moment.
    * Colourdepth is 0 == use current
    * *********************************************************************/
-  Screen = SDL_SetVideoMode(800, 600, 0, 
+  Screen = SDL_SetVideoMode(640, 480, 0, 
 			    SDL_HWSURFACE | SDL_DOUBLEBUF 
-			    | SDL_FULLSCREEN);
+			    );
+  // | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
   LogLine(LOG_VERBOSE, "Videomode set (800x600, fullscreen)");
 
@@ -230,10 +245,14 @@ int main(int argc, char ** argv) {
   CON_AddCommand(&PrintMe, "printme");
   CON_AddCommand(&AlphaChange, "alpha");
   CON_AddCommand(&DisplayHighscore, "highscore");
+  CON_AddCommand(&Python, "i");
   
   CON_ListCommands();
   
   CON_ConsoleAlpha(190);
+
+  /* Dump the Interprenter help*/
+  Interprenter->RunSimpleString("help()");
   
   /* **********************************************************************
    * TEST - initialize game, display and client.
@@ -286,6 +305,7 @@ int main(int argc, char ** argv) {
   delete(SurfaceManager);
   LogLine(LOG_VERBOSE, "Deleting PathManager");
   delete(PathManager);
+  LogLine(LOG_VERBOSE, "Deleting Interprenter");
 #ifdef DEBUG
   LogLine(LOG_VERBOSE, "Deleting Log object - Exiting gracefully");
   delete(Log);
