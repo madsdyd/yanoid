@@ -176,6 +176,11 @@ void TClient::Run() {
   bool QuitClient = !MyPre->Run();
   
   while(!QuitClient) {
+    /* Make sure the console is not down and the game is not paused */
+    ConsoleDown = false;
+    SDL_EnableUNICODE(0);
+    paused = 0;
+
     /* A new game was started */
     Game = new TGame();
     Assert(Game != NULL, "Could not create a default game");
