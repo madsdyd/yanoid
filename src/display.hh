@@ -27,8 +27,13 @@
 
 /* The TDisplay class renders stuff */
 class TDisplay {
+  string powerup_pix;
+  SDL_Surface * powerup_surf;
+  SDL_Rect powerup_src;
+  SDL_Rect powerup_dest;
 public:
-  TDisplay() {};
+  TDisplay();
+  ~TDisplay();
   void Render(SDL_Surface * surface);
 };
 

@@ -143,6 +143,9 @@ bool TClient::NextMap() {
   game_lastupdate = 0;
   LogLine(LOG_VERBOSE, "Game->Update(0)");
   Game->Update(0);
+  /* No more shooting */
+  Game->GetState()->shot_time_left = 0;
+  Game->GetState()->current_shot_time_left = 0;
   if (Game->LoadNextMap()) {
     {
       PauseGame();
@@ -165,9 +168,6 @@ bool TClient::NextMap() {
     
     
     Game->GetState()->status = TGameState::PLAYING;
-    /* No more shooting */
-    Game->GetState()->shot_time_left = 0;
-    Game->GetState()->current_shot_time_left = 0;
     FontManager->ReleaseRessource(font);
     return true;
   } else {
