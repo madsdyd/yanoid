@@ -77,7 +77,7 @@ AC_ARG_WITH(pythondir,
 
 AC_MSG_RESULT($ac_python_dir)
 
-version="2.1"
+version="2.0"
 
 AC_MSG_CHECKING([for Python$version])
 
@@ -112,7 +112,9 @@ fi
 AC_MSG_RESULT(header $python_incdir library $python_libdir)
 
 dnl Note: this test is very weak
-kde_python_link_found=no
+if test "x$kde_python_link_found" = "x" ; then 
+  kde_python_link_found=no
+fi
 KDE_TRY_LINK_PYTHON(normal)
 dnl KDE_TRY_LINK_PYTHON(m, $text_version, -lm)
 dnl KDE_TRY_LINK_PYTHON(pthread, $text_version, $LIBPTHREAD)
