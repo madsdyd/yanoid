@@ -39,6 +39,13 @@ Mix_Music * TMusicManager::LoadRessource(string filename) {
   return tmp1;
 }
 
+void TRessourceManager<Mix_Music>::UnloadRessource(Mix_Music * music) {
+  if (music)
+    Mix_FreeMusic(music);
+  else
+    LogLine(LOG_ERROR, "Error. Tried to Unload NULL music");
+}
+
 void TMusicManager::UnloadRessource(Mix_Music * music) {
   if (music)
     Mix_FreeMusic(music);

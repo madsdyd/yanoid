@@ -35,6 +35,10 @@
 #define mymax(a,b) (((a)>(b))?(a):(b))
 #define mymax3(a,b,c) (mymax((a),mymax((b),(c))))
 
+#if !defined(rint)
+#define rint(x) floor((x) + .5)
+#endif
+
 /* **********************************************************************
  * The global console
  * *********************************************************************/

@@ -62,7 +62,7 @@ static PyObject * LoadSound(PyObject * self, PyObject * args) {
   if (!PyArg_ParseTuple(args, "s", &soundname)) {
     return NULL;
   }
-  if (SoundManager->PreloadRessource(soundname)) {
+  if (!SoundManager->initialized || SoundManager->PreloadRessource(soundname)) {
     return Py_BuildValue("");
   } else {
     return NULL;

@@ -33,6 +33,77 @@
 #define LogLine(a, b)
 #define LogLineExt(a, b)
 #endif
+#ifdef WIN32
+#include <stdio.h>
+#include <errno.h>
+#include <windows.h>
+#include <stdlib.h>
+#  define _POSIX_PATH_MAX MAX_PATH
+#ifdef __cplusplus
+extern "C"{
+#endif
+char *realpath(const char *path,char *outputPath)
+{
+  char *ret;
+  ret = _fullpath(outputPath, path, _POSIX_PATH_MAX);
+  if(ret != NULL)
+  {
+    if ((_access(outputPath, F_OK))==-1)
+    {
+      ret = NULL;
+      errno = ENOFILE;
+    }
+  }
+  return ret;
+}
+
+int alphasort (struct dirent **a, struct dirent **b) {
+  return strcmp ((*a)->d_name, (*b)->d_name);
+}
+
+int scandir(const char *dirname, struct dirent ***namelist,
+    int (*select)(struct dirent *),
+    int (*compar)(struct dirent **, struct dirent **)) {
+
+  int nDir = 0;
+  int i;
+  struct dirent **dir, **tmpdir;
+  struct dirent *dir2;
+  DIR *openedDir;
+
+  dir = tmpdir = NULL;
+  
+  openedDir = opendir(dirname); 
+  while ((dir2 = readdir(openedDir)))
+  {
+    if(!select || select(dir2))
+    {
+      
+      if((tmpdir = (struct dirent **)realloc(dir, (sizeof(struct dirent) * (nDir+1)))) != NULL){ 
+	dir = tmpdir;
+	*(dir + nDir) = (struct dirent *)malloc(sizeof(struct dirent));
+	memcpy(dir[nDir], (const void*)dir2, sizeof(struct dirent));
+	dir[nDir]->d_name = (char *)malloc(sizeof(char)*(dir2->d_namlen+1));
+	memcpy(dir[nDir]->d_name, (const void*)(dir2->d_name), (sizeof(char) * (dir2->d_namlen + 1)));
+
+	nDir++;
+      }
+    }
+  }
+  free(dir2);
+  closedir(openedDir);
+
+  if (compar) qsort (dir, nDir, sizeof(*dir),
+		     (int(*)(const void*, const void*))compar);
+
+  *namelist = dir;
+  return nDir;
+}
+#ifdef __cplusplus
+}
+#endif
+
+#endif
 
 
 /* **********************************************************************
@@ -55,6 +126,27 @@ void TPathManager::AddMapping(string name, string absolute) {
   if (PathCompleter) {
     PathCompleter->Insert(name);
   }
+#ifdef WIN32
+  int i = 0;
+  int replace = 0;
+  while(i != -1)
+  {
+    i = name.find("\\",i);
+    if(i!= -1)
+    {
+      name.replace(i,1,"/");
+      replace = 1;
+    }
+  }
+  if(replace)
+  {
+    pathmap[name] = absolute;
+    if (PathCompleter) {
+      PathCompleter->Insert(name);
+    }
+  }
+  
+#endif
 }
 /* **********************************************************************
  * Adding a path should insert all filenames found into the map, with
