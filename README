@@ -81,11 +81,10 @@ Email address     : mads@dydensborg.dk
 Web site          : http://www.sf.net/projects/yanoid/
 Tools and libs    : Please see the section "REQUIREMENTS"
 License           : GPL, please see the section "LICENSE"
-Time to compile   : Ppro 232: 157.19user 11.32system 3:28.01elapsed 
-                    Cel 550 :  77.20user  5.82system 1:24.85elapsed
+Time to compile   : Cel 550 :  96.19user 5.78system 1:43.09elapsed
                     We are aware that Yanoid may break the 1 minute
                     barrier but hope the judges will have mercy on 
-                    yanoid.
+                    us/yanoid.
 Size              : Yanoid should stay well within the 1MB limit
                     (When a dynamic Python library is used, please
                     see above).

@@ -383,7 +383,7 @@ public:
     AddLines("     ");
     AddLines("Visit the project homepage at");
     AddLines("     ");
-    AddLines("http://www.sf.net/projects/yanoid/");
+    AddLines(">>>>> http://www.sf.net/projects/yanoid/ <<<<<");
     AddLines("     ");
     AddLines("for updates to Yanoid, or if you want to join "
 	     "in the development.");
