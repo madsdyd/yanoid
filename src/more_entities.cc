@@ -33,13 +33,13 @@ TBrick::TBrick(int x_, int y_, string pixmap, string hitfunction,
   SetScriptHitCall(hitfunction);
   // HitSound = NULL;
   /* This _must_ go */
-  HitSound = SoundManager->RequireRessource("sounds/pop.wav");
+  // HitSound = SoundManager->RequireRessource("sounds/pop.wav");
 };
 /* **********************************************************************
  * ~TBrick
  * *********************************************************************/
 TBrick::~TBrick() {
-  SoundManager->ReleaseRessource(HitSound);
+  // SoundManager->ReleaseRessource(HitSound);
 };
 
 /* **********************************************************************
@@ -47,9 +47,7 @@ TBrick::~TBrick() {
  * *********************************************************************/
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
   TPixmapEntity::OnCollision(other, currenttime);
-  if (HitSound) {
-    Mix_PlayChannel(-1, HitSound, 0);
-  }
+  SoundManager->PlaySound("sounds/pop.wav");
   if (hitnum > 0 && --hitnum == 0) {
     removable = true;
   }

@@ -45,3 +45,14 @@ void TSoundManager::UnloadRessource(Mix_Chunk * sound) {
   else
     LogLine(LOG_ERROR, "Error. Tried to Unload NULL sound");
 }
+
+/* **********************************************************************
+ * Play Sound - a convenience function
+ * *********************************************************************/
+void TSoundManager::PlaySound(string name) {
+  Mix_Chunk * tmp = RequireRessource(name);
+  if (tmp) {
+    Mix_PlayChannel(-1, tmp, 0);
+    ReleaseRessource(tmp);
+  }
+}

@@ -392,8 +392,9 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 	
       }
       motion->setDir(newangle);
-    } /* If ball in collision */
-  }
+    } 
+    
+  } /* If ball in collision */
   
   /* Execute the script associated with this entity */
   ExecuteScriptHitCall();

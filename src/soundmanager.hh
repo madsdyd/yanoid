@@ -33,6 +33,7 @@ protected:
   void UnloadRessource(Mix_Chunk * sound);
 public:
   TSoundManager() : TRessourceManager<Mix_Chunk>() {};
+  void PlaySound(string name);
 };
 
 extern TSoundManager * SoundManager;

@@ -177,7 +177,7 @@ res_t * TRessourceManager <res_t>::RequireRessource(string name) {
   /* Check if name is already mapped, return that */
   storage_t * storage = NameToStorageMap[name];
   if (storage) {
-    LogLine(LOG_VER_2, "Reusing " + name);
+    // LogLine(LOG_VER_2, "Reusing " + name);
     return storage->TakeRessource();
   };
   
@@ -202,7 +202,7 @@ res_t * TRessourceManager <res_t>::RequireRessource(string name) {
     return 0;
   };
   /* Should be OK now - save the stuff in the maps */
-  LogLine(LOG_VER_2, "Inserting storage for " + name);
+  // LogLine(LOG_VER_2, "Inserting storage for " + name);
   NameToStorageMap[name] = storage ;
   RessourceToStorageMap[ressource] = storage;
   return storage->TakeRessource();
@@ -224,7 +224,7 @@ void TRessourceManager <res_t>::ReleaseRessource(res_t * ressource) {
     LogLine(LOG_ERROR, "ReleaseRessource on unmapped ressource");
     return;
   }
-  LogLine(LOG_VER_2, "Releasing ressource " + tmp->GetName());
+  // LogLine(LOG_VER_2, "Releasing ressource " + tmp->GetName());
   tmp->ReleaseRessource();
 }
 
@@ -243,7 +243,7 @@ res_t * TRessourceManager <res_t>::DuplicateRessource(res_t * ressource) {
     LogLine(LOG_ERROR, "DuplicateRessource on unmapped ressource");
     return NULL;
   }
-  LogLine(LOG_VER_2, "Duplicating ressource " + tmp->GetName());
+  // LogLine(LOG_VER_2, "Duplicating ressource " + tmp->GetName());
   return tmp->TakeRessource();
 }
 
