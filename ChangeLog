@@ -1,3 +1,8 @@
+2001-10-07  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* Map loading
+	Map loading now includes static objects and the paddle.
+
 2001-10-05  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* Paddle

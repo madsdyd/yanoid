@@ -4,6 +4,8 @@ a game that can be considered ready for the SDL contest.
 
 For more specific "TODO" items, look in the bottom.
 
+FATAL: Python has calling problem with more than 145 calls. Why?
+
 * Autotool
 - Fix Python autoconf
   - version checking

@@ -39,7 +39,7 @@ public:
 class TGame {
 protected:
   Uint32 lastupdate;
-  TMap Map;
+  TMap * Map;
   TGameState GameState;
   void handleCollisions();
 public:

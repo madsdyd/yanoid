@@ -131,18 +131,25 @@ void TMapState::load(const std::string& path)
  * *********************************************************************/
 TMap::TMap() {
 
+  /* Create a TMapState */
+  MapState = new TMapState();
+  if (!MapState) {
+    LogFatal("TMap::TMap - unable to create mapstate");
+  }
+
+#ifdef CODE_SOON_TO_GO
   TEntity* e = new TPixmapEntity(100, 100, 0, "graphics/objects/red_oval_brick.png");
   TOrientedPoint p1(350,100), p2(500,370);
   e->setMotion(new TPathMotion(new TOrientedLinePath(p1,p2), 1.0));
   dynamic_cast<TPathMotion*>(e->getMotion())->setVelocity(8.0);
-  MapState.Entities.push_back(e);
+  MapState->Entities.push_back(e);
   e->setName("Entity 1");
 
   e = new TPixmapEntity(100, 100, 0, "graphics/objects/red_oval_brick.png");
   TOrientedPoint p1b(250,100), p2b(20,370);
   e->setMotion(new TPathMotion(new TOrientedLinePath(p1b,p2b), 1.0));
   dynamic_cast<TPathMotion*>(e->getMotion())->setVelocity(8.0);
-  MapState.Entities.push_back(e);
+  MapState->Entities.push_back(e);
   e->setName("Entity 1");
 
   /*
@@ -150,7 +157,7 @@ TMap::TMap() {
   TOrientedPoint bp1(400,100), bp2(0,50);
   e->setMotion(new TPathMotion(new TOrientedLinePath(bp1,bp2), -1.0));
   e->setName("Entity 2");
-  MapState.Entities.push_back(e);
+  MapState->Entities.push_back(e);
   */
 #ifdef NO_ANY_MORE
   TEntity * paddle = 
@@ -159,23 +166,24 @@ TMap::TMap() {
   paddle->getMotion()->setVelocity(0.0);
   dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir(0);
   paddle->setName("Paddle");
-  MapState.Entities.push_back(paddle);
+  MapState->Entities.push_back(paddle);
 #endif
 
   e = new TPixmapEntity(240, 50, 0, "graphics/objects/red_oval_brick.png");
   e->setMotion(new TFreeMotion);
   e->getMotion()->setVelocity(0.0);
   dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(20.0);
-  MapState.Entities.push_back(e);
+  MapState->Entities.push_back(e);
   e->setName("Floater 1");
 
   /*
   for (int x = 0; x < 760; x += 60) {
     for (int y = 0; y < 200; y += 20) {
-      MapState.Entities.push_back(new TEntity(x, y));
+      MapState->Entities.push_back(new TEntity(x, y));
     }
   }
   */
+#endif
   
   /* This is probably a stupid way to do it - but at least we make
      sure that we have connected the map handling commands to the 
@@ -187,12 +195,16 @@ TMap::TMap() {
     }
   }
 }
+/* **********************************************************************
+ * Clear the map
+ * *********************************************************************/
+
 
 /* **********************************************************************
  * Destructor
  * *********************************************************************/
 TMap::~TMap() {
-  LogLine(LOG_TODO, "Clean up TMap?");
+  delete MapState;
 }
 
 /* **********************************************************************
@@ -201,6 +213,12 @@ TMap::~TMap() {
  * *********************************************************************/
 
 bool TMap::Load(string mapname) {
+  /* Make sure we have a fresh mapstate */
+  delete MapState;
+  MapState = new TMapState();
+  if (!MapState) {
+    LogFatal("TMap::Load - unable to create mapstate");
+  }
   CurrentMap = this;
   bool result = Interprenter->RunSimpleFile(PathManager->Resolve(mapname));
   /* Eventually we may want to unset the current map - currently we just 
@@ -218,11 +236,11 @@ bool TMap::AddEntity(string type, int x, int y, int w, int h,
   /* Do different things, according to type */
   if ("brick" == type ) {
     /* This is a pixmapentity */
-    MapState.Entities.push_back(new TPixmapEntity(x, y, 0, pixmap));
+    MapState->Entities.push_back(new TPixmapEntity(x, y, 0, pixmap));
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */
-    MapState.Entities.push_back(new TEntity(x, y, w, h));
+    MapState->Entities.push_back(new TEntity(x, y, w, h));
     return true;
   } else {
     LogLine(LOG_WARNING, "TMap::AddEntity - unknown type " + type);
@@ -240,7 +258,7 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
 		     double angle, string pixmap) {
   /* Check if the mapstate already have a paddle
      we can not handle that */
-  if (MapState.paddle) {
+  if (MapState->paddle) {
     LogLine(LOG_WARNING, "TMap::SetPaddle - paddle already set");
     return false;
   } 
@@ -261,8 +279,8 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
   /* Set standard parameters */
   paddle->getMotion()->setVelocity(velocity);
   paddle->setName("Paddle");
-  MapState.Entities.push_back(paddle);
-  MapState.paddle = paddle;
+  MapState->Entities.push_back(paddle);
+  MapState->paddle = paddle;
   return true;
 }
 
@@ -271,7 +289,7 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
  * *********************************************************************/
 void TMap::Update(Uint32 deltatime) {
   TEntitiesIterator i;
-  for (i = MapState.Entities.begin(); i != MapState.Entities.end(); i++) {
+  for (i = MapState->Entities.begin(); i != MapState->Entities.end(); i++) {
     (*i)->Update(deltatime);
 
     // Now in order to ensure that the entity list is ordered by
@@ -279,11 +297,11 @@ void TMap::Update(Uint32 deltatime) {
     // to another pos. in the list. We want to order by y axis 
     // because it speeds up the collision detection.
     TEntitiesIterator candi = i;
-    if (i != MapState.Entities.begin())
+    if (i != MapState->Entities.begin())
       --candi;
 
-    if (i != MapState.Entities.end()) {
-      if (i != MapState.Entities.begin() ){
+    if (i != MapState->Entities.end()) {
+      if (i != MapState->Entities.begin() ){
 	if (relocateHighEntities(i) || relocateLowEntities(i))
 	  i = candi;
       }else {
@@ -308,14 +326,14 @@ bool TMap::relocateHighEntities(TEntitiesIterator& i)
   TEntitiesIterator newi = i;
   TEntitiesIterator nexti = i;
   ++nexti;
-  TEntitiesIterator End = MapState.Entities.end();
+  TEntitiesIterator End = MapState->Entities.end();
   while(++newi != End) {
     if ((*newi)->y() >= (*i)->y()) {
       if (*newi != *nexti) {
 	TEntity* tmp = *i;
-	i = MapState.Entities.erase(i);
+	i = MapState->Entities.erase(i);
 	--i;
-	MapState.Entities.insert(newi,1,tmp);
+	MapState->Entities.insert(newi,1,tmp);
 	return true;
       }else{
 	return false;
@@ -336,14 +354,14 @@ bool TMap::relocateLowEntities(TEntitiesIterator& i)
   TEntitiesIterator newi = i;
   TEntitiesIterator previ = i;
   --previ;
-  TEntitiesIterator Begin = MapState.Entities.begin();
+  TEntitiesIterator Begin = MapState->Entities.begin();
   while(--newi != Begin) {
     if ((*newi)->y() <= (*i)->y()) {
       if (*newi != *previ) {
 	TEntity* tmp = *i;
-	i = MapState.Entities.erase(i);
+	i = MapState->Entities.erase(i);
 	--i;
-	MapState.Entities.insert(++newi,1,tmp);
+	MapState->Entities.insert(++newi,1,tmp);
 	return true;
       }else{
 	return false;

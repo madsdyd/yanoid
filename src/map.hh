@@ -40,9 +40,11 @@ public:
 
 class TMap {
 protected:
-  TMapState MapState;
+  TMapState * MapState;
   bool relocateHighEntities(TEntitiesIterator& i);
   bool relocateLowEntities(TEntitiesIterator& i);
+  /* Clear the mapstate */
+  void Clear();
 public:
   TMap();
   ~TMap();
@@ -55,6 +57,6 @@ public:
 		 double angle, string pixmap);
   /* Loading function - may be temporary*/
   bool Load(string mapname);
-  inline TMapState * GetState() { return &MapState; }
+  inline TMapState * GetState() { return MapState; }
   void Update(Uint32 deltatime);
 };

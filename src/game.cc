@@ -34,15 +34,22 @@ TGame * Game;
  * *********************************************************************/
 TGame::TGame() {
   lastupdate = 0; // TODO: Fix
+
+  /* Get a map */
+  Map = new TMap();
+  if (!Map) {
+    LogFatal("TGame::TGame - unable to create Map");
+  }
   
   /* Set up the gamestate "pointer class" */
-  GameState.MapState = Map.GetState();
+  GameState.MapState = Map->GetState();
 }
 
 /* **********************************************************************
  * Destructor, clean up... 
  * *********************************************************************/
 TGame::~TGame() {
+  delete Map;
   LogLine(LOG_TODO, "Clean up TGame destructor and GameState");
 }
 
@@ -53,7 +60,7 @@ TGame::~TGame() {
 void TGame::Update(Uint32 currenttime) {
   Uint32 deltatime = currenttime - lastupdate;
   /* Update all objects in game */
-  Map.Update(deltatime);
+  Map->Update(deltatime);
   handleCollisions();
   lastupdate = currenttime;
 }
@@ -64,6 +71,7 @@ void TGame::Update(Uint32 currenttime) {
  * *********************************************************************/
 
 TGameState * TGame::GetState() {
+  GameState.MapState = Map->GetState();
   return &GameState;
 }
 
@@ -136,7 +144,7 @@ void TGame::handleCollisions()
  * Load a map - TMap handles it
  * *********************************************************************/
 bool TGame::LoadMap(string mapname) {
-  return Map.Load(mapname);
+  return Map->Load(mapname);
 }
 
 

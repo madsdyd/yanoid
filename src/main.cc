@@ -30,6 +30,8 @@
 4) Perform the main menu/game loop
 5) Shutdown (Delete ressources) */
 
+#define NO_MUSIC_THREAD 1
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -63,6 +65,7 @@ void SignalHandler(int signal) {
 
 /* Calls the python interprenter */
 void Python(char * String) {
+  Assert(String != NULL, "Python - NULL string");
   Interprenter->RunSimpleString(String);
 }
 
@@ -166,7 +169,11 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
+#ifdef NO_MUSIC_THREAD
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+#else 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+#endif
     LogFatal("Unable to initialize SDL: " << SDL_GetError());
     return -1;
   }
@@ -205,11 +212,12 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
 
   // open 11025 Hz, 8-bit, 1 channel, 512 chunksize
+#ifndef NO_MUSIC_THREAD
   Assert( Mix_OpenAudio(11025, AUDIO_U8, 1, 512) >= 0 , 
 	  "Unable to set audio mode");
   LogLine(LOG_VERBOSE, 
 	  "Audiomode set (11025 Hz, 8-bit, 1 ch, 512 byte chunks)");
-  
+#endif
   /* **********************************************************************
    * Initialize the surface manager (requires SDL to be initialized and 
    * the video mode to be set!)
@@ -229,6 +237,7 @@ int main(int argc, char ** argv) {
    * the audio mode to be set!)
    * *********************************************************************/
 
+#ifndef NO_MUSIC_THREAD
   MusicManager = new TMusicManager();
   Assert(PathManager != NULL, "Unable to create MusicManager");
   LogLine(LOG_VERBOSE, "MusicManager Initialized");
@@ -242,7 +251,7 @@ int main(int argc, char ** argv) {
   Mix_Music * oggmusic
     = MusicManager->RequireRessource("sounds/yanoid.ogg");
   Assert(NULL != oggmusic, "Error getting Mix_Music *");
-
+#endif
   /* **********************************************************************
    * Initialize the console (requires SDL to be initialized )
    * *********************************************************************/
@@ -291,15 +300,17 @@ int main(int argc, char ** argv) {
   SDL_UpdateRect(Screen, 0, 0, 0, 0);
   SDL_Delay(2000);
 
+#ifndef NO_MUSIC_THREAD
   // Test the MOD music
   if ( ! Mix_PlayingMusic() ) {
-        Mix_PlayMusic(modmusic, 0);
+    // Mix_PlayMusic(modmusic, 0);
   }
 
   // Test the ogg vorbis music
   if ( ! Mix_PlayingMusic() ) {
     //    Mix_PlayMusic(oggmusic, 0);
   }
+#endif 
 
   // Test the client
   Client->Run();

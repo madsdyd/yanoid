@@ -1,7 +1,7 @@
 def put_console(a):
     "Wrapper to convert values to printable strings for the yanoid console"
     yanoid.puts_console(str(a))
-
+    
 def fak(n):
     "The classic..."
     if (n > 0):
@@ -13,6 +13,7 @@ def fak(n):
 def rules(n):
     "Simple bragging function, dont run with more than 100 as argument"
     if (n > 0):
+        print n
         put_console("yanoid rules")
         rules(n-1)
 
