@@ -27,13 +27,19 @@
 #endif
 
 /* The log is only present, if we have compiled with the 
-   debug directive */
+   debug directive, expect for FATAL, which is always there
+ */
+#include <iostream>
+#define LOG_FATAL   0
+#define LogFatal(_line) \
+  cerr << "FATAL ERROR : " << __FILE__ << ":" << __LINE__ \
+   << " - \"" << _line << "\"" << endl; exit(-1)
+
 #ifdef DEBUG 
 #include <string>
 
 /* If you any levels below, remember to update the
    names (in log.cc) also */
-#define LOG_FATAL   0
 #define LOG_ERROR   (1+LOG_FATAL)
 #define LOG_WARNING (1+LOG_ERROR)
 #define LOG_TODO    (1+LOG_WARNING)
@@ -43,8 +49,7 @@
 #define LOG_VER_2   (1+LOG_VERBOSE)
 #define LOG_MAX     (1+LOG_VER_2)
 
-
-
+/* Log line is the usual interface to the log */
 #define LogLine( _level, _line ) \
   Log->AddLine( _level, __FILE__, __LINE__, _line )
 

@@ -100,12 +100,11 @@ int main(int argc, char ** argv) {
     = SurfaceManager->RequireRessource("graphics/yanoid.png");
   Assert(NULL != mysurf, "Error getting SDL_Surface *");
   
-
   /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    LogLine(LOG_FATAL, "Unable to initialize SDL");
+    LogFatal("Unable to initialize SDL");
     return -1;
   }
   /* Make sure it is shutdown, when we exit */

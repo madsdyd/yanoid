@@ -4,7 +4,7 @@
 	First shot at a ressourcemanager. Loads SDL_Surfaces.
 	The stuff about THandle may be a big mistake.
 	Removed it.
-
+b
 2001-09-22  Mads Bondo Dydensborg  <mads@dydensborg.dk>
 
 	* (Everything)

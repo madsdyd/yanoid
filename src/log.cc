@@ -21,6 +21,7 @@
 #include "log.hh"
 #ifdef DEBUG
 #include <iostream>
+#include <iomanip.h>
 
 /* These MUST match the declarations in log.hh */
 static char * loglevel_to_name [] =
@@ -59,8 +60,10 @@ void TLog::SetLevel(int nlevel) {
  * *********************************************************************/
 void TLog::AddLine(int level_, char * filename, int lineno, string line) {
   if (level_ <= level) {
-    cout << "LOG: " << loglevel_to_name[level_] << " in " << filename
-	 << ":" << lineno << " - \"" << line << "\"" << endl;
+    cout << "LOG: " << loglevel_to_name[level_] << " in "
+	 << setw(20) << filename << ":"
+	 << setw(4)  << setiosflags(ios::left) << lineno
+	 << " - \"" << line << "\"" << endl;
   }
 }
 
