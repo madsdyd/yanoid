@@ -31,7 +31,7 @@
 
 const unsigned int MAX_RANKINGS = 100;
 
-typedef unsigned int Score;
+typedef int Score;
 
 class THighscore : public TEntity {
 protected:
