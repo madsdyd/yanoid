@@ -5,14 +5,14 @@ yanoid before the game can be considered ready for the contest.
 ** SHOWSTOPPERS - MUST BE FIXED
 
 - Collision code is flaky (JCD, is on the way) <-- fixed?
-- Paddle should not leave the map (JCD?)
-- More maps (BS,MBD...)?
+- Paddle should not leave the map (JCD?) <-- fixed?
 - Game over should not autoremove (player should be allowed to view his 
-  score)
+  score) (JCD)
 - Ball should never go horizontal or vertical (interval around) (JCD)
-- Make fonts png and use colorkey (MBD)
 - Sometimes the game crashes when it wants to display the in game 
   menu. Related to the text effects? (MBD, JCD?)
+- More maps (BS,MBD...)?
+- Make fonts png and use colorkey (MBD)
 
 
 **********************************************************************

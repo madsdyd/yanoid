@@ -16,8 +16,8 @@ for x in range(6, 750, 79):
                          "graphics/objects/3hit_brick75.png")
             else:
                 AddBrick("brick", x, y,
-#                         "power_up_add_ball_hit()",
-                         "basic_brick_hit()",
+                         "power_up_add_ball_hit()",
+#                         "basic_brick_hit()",
                          "graphics/objects/powerup.png")
                 
             
