@@ -104,7 +104,7 @@ PYTHONINC: $PYTHONINC
 LIBPYTHON: $LIBPYTHON
 PYTHONLIB: $PYTHONLIB])
 
-YANOID_LIBS="$YANOID_LIBS $PYTHONLIB $LIBPYTHON"
+dnl YANOID_LIBS="$YANOID_LIBS $PYTHONLIB $LIBPYTHON"
 LIBS="$saved_LIBS"
 YANOID_CPPFLAGS="$YANOID_CPPFLAGS $PYTHONINC"
 
@@ -210,7 +210,7 @@ fi
 if test "x$have_SDL_mixer" = "xno" ; then 
     AC_MSG_WARN([
 *** PROBLEM:
-*** Unable to find SDL_mixer library
+*** Unable to find SDL_mixer library (optional)
 *** This is required for music support in yanoid
 *** Most Linux distributions include at least SDL_mixer 1.1 - never
 *** versions may be found at http://www.libsdl.org
@@ -223,7 +223,7 @@ if test "x$kde_python_link_found" = "xno" ; then
     have_trouble=yes
     AC_MSG_WARN([
 *** PROBLEM:
-*** Unable to find Python library
+*** Unable to link a testprogram with the Python library
 *** This is required for yanoid to work.
 *** Please run ./configure --help if you have Python installed
 *** Most Linux distributions include at least Python 1.5 - never
