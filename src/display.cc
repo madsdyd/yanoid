@@ -60,7 +60,9 @@ TDisplay::~TDisplay() {
  * Render, gets the gamestate, render it.
  * *********************************************************************/
 void TDisplay::Render(SDL_Surface * surface) {
+#ifdef DEBUG
   static int ticks = 0;
+#endif
 
   TGameState * GameState = Client->GetGame()->GetState();
   TEntitiesIterator End = GameState->MapState->Entities.end();
