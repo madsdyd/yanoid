@@ -22,15 +22,27 @@
 #ifndef __MORE_ENTITIES_HH__
 #define __MORE_ENTITIES_HH__
 
+#include <string>
+
+class TEntity;
+class TPixmapEntity;
+
+/* This is a brick... */
+class TBrick : public TPixmapEntity {
+public:
+  TBrick(int x_, int y_, string pixmap, string hitfunction);
+  virtual ~TBrick();
+  virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
+};
+
 
 /* A THole is an entity that kills balls.
    It is not visible. */
-class TEntity;
 class THole : public TEntity {
 public:
   THole(double x_, double y_, int w_, int h_);
   virtual ~THole();
-  virtual void OnCollision(TEntity& other,Uint32 currenttime=0);
+  virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
   void Render(SDL_Surface * surface) {};
 };
 

@@ -377,8 +377,6 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
     } /* If ball in collision */
   }
   
-  /* OK, This is for stuff that are not balls.. */
-
   /* Execute the script associated with this entity */
   ExecuteScriptHitCall();
 }

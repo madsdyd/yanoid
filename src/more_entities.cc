@@ -21,7 +21,29 @@
 */
 #include "log.hh"
 #include "entity.hh"
+#include "pixmap_entity.hh"
 #include "more_entities.hh"
+/* **********************************************************************
+ * TBrick
+ * *********************************************************************/
+TBrick::TBrick(int x_, int y_, string pixmap, string hitfunction)
+  : TPixmapEntity(x_, y_, 0, pixmap) {
+  SetScriptHitCall(hitfunction);
+};
+/* **********************************************************************
+ * ~TBrick
+ * *********************************************************************/
+TBrick::~TBrick() {
+};
+
+/* **********************************************************************
+ * OnCollision - most bricks simply die, when they are part of a collision
+ * *********************************************************************/
+void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
+  removable = true;
+}
+
+
 /* **********************************************************************
  * THole constructor
  * *********************************************************************/

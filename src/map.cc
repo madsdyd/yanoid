@@ -197,9 +197,7 @@ bool TMap::AddEntity(string type, string hitfunction,
   /* Do different things, according to type */
   if ("brick" == type ) {
     /* This is a pixmapentity */
-    TPixmapEntity * e = new TPixmapEntity(x, y, 0, pixmap);
-    e->SetScriptHitCall(hitfunction);
-    MapState->Entities.push_back(e);
+    MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction));
     MapState->num_bricks++;
     return true;
   } else if ("static" == type) {
@@ -323,6 +321,7 @@ void TMap::Update(Uint32 deltatime) {
 	LogLine(LOG_VERBOSE, "Ball removed");
 	Assert(MapState->num_balls >= 0, "Cant have a negative number of balls");
       }
+      /* The only stationary entities that are removed are bricks */
       MapState->Entities.erase(candi);
       delete tmp;
     }
