@@ -33,21 +33,15 @@ TSurfaceManager * SurfaceManager;
  * *********************************************************************/
 SDL_Surface * TSurfaceManager::LoadRessource(string filename) {
   SDL_Surface * tmp1 = IMG_Load(filename.c_str()); 
-#ifndef NEVER
-  return tmp1;
-#else
-  // TODO: This requires some more experiments, does not work 
-  // well as of yet.... 
   if (!tmp1) {
-    LogLine(LOG_ERROR, "Error loading ressource");
+    LogLineExt(LOG_ERROR, ("Error loading ressource %s", filename.c_str()));
     return NULL;
   } else {
-    LogLine(LOG_VERBOSE, "Converting display format");
+    // LogLine(LOG_VERBOSE, "Converting display format");
     SDL_Surface * res = SDL_DisplayFormat(tmp1);
     SDL_FreeSurface(tmp1);
     return res;
   }
-#endif
 }
 
 void TSurfaceManager::UnloadRessource(SDL_Surface * surface) {
