@@ -500,18 +500,6 @@ bool TClient::HandleGlobalKeys(SDL_Event * event) {
     case SDLK_F3:
       ToggleConsole();
       return true;
-    case SDLK_F4:
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      Console->AddLine("Yet another line is added");
-      return true;
       /* Display Stat toggles on F10 */
     case SDLK_F10:
       DisplayStat = !DisplayStat;
