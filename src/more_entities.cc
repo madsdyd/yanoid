@@ -169,7 +169,7 @@ THole::~THole() {
  * Collision
  * *********************************************************************/
 void THole::OnCollision(TEntity& other) {
-  // LogLine(LOG_VERBOSE, "THole::OnCollision called");
+  // LogLineExt(LOG_VERBOSE, ("THole::OnCollision(%s)", other.getEntityType().c_str()));
   if ("BALL" == other.getEntityType()) {
     /* Ah, hit by a ball */
     if (!hole_bounces) {
@@ -179,7 +179,7 @@ void THole::OnCollision(TEntity& other) {
 	 have to swap the order... */
       // TEntity::OnCollision(other);
       // I dare not touch this......
-      other.OnCollision(*this);
+      // other.OnCollision(*this);
     }
   } 
   else if ("POWERUP" == other.getEntityType()) {
