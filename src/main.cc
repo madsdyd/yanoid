@@ -30,7 +30,7 @@
 4) Perform the main menu/game loop
 5) Shutdown (Delete ressources) */
 
-#define NO_MUSIC_THREAD 1
+#undef NO_MUSIC_THREAD
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -269,9 +269,11 @@ int main(int argc, char ** argv) {
   Assert(NULL != modmusic, "Error getting Mix_Music *");
 
   /* A small ogg vorbis test */
+  /*
   Mix_Music * oggmusic
     = MusicManager->RequireRessource("sounds/yanoid.ogg");
   Assert(NULL != oggmusic, "Error getting Mix_Music *");
+  */
 #endif
   /* **********************************************************************
    * Initialize the FontManager
@@ -364,7 +366,7 @@ int main(int argc, char ** argv) {
 #ifndef NO_MUSIC_THREAD
   // Test the MOD music
   if ( ! Mix_PlayingMusic() ) {
-    // Mix_PlayMusic(modmusic, 0);
+    Mix_PlayMusic(modmusic, 0);
   }
 
   // Test the ogg vorbis music
@@ -383,7 +385,7 @@ int main(int argc, char ** argv) {
   
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(Splash);
-  LogLine(LOG_TODO, "Seems music is not released");
+  MusicManager->ReleaseRessource(modmusic);
   /* **********************************************************************
    * Exit gracefully
    * *********************************************************************/

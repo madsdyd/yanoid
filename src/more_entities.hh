@@ -23,12 +23,15 @@
 #define __MORE_ENTITIES_HH__
 
 #include <string>
+#include <SDL/SDL_mixer.h>
 
 class TEntity;
 class TPixmapEntity;
 
 /* This is a brick... */
 class TBrick : public TPixmapEntity {
+protected:
+  Mix_Music * HitSound;
 public:
   TBrick(int x_, int y_, string pixmap, string hitfunction);
   virtual ~TBrick();

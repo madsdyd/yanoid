@@ -33,7 +33,6 @@ TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
   collidecorner(0), removable(false), AngleModifier(0.05)
 {
-
 }
 
 TEntity::TEntity(double x_, double y_, int w_, int h_, 
@@ -50,14 +49,12 @@ TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e):
   collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
   collidecorner(0), removable(false), AngleModifier(0.05)
 {
-
 }
 
 /* **********************************************************************
  * The destructor just clears the surface
  * *********************************************************************/
 TEntity::~TEntity() {
-
 }
 
 /* **********************************************************************

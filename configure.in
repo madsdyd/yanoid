@@ -68,17 +68,16 @@ AC_CHECK_LIB( SDL_mixer, Mix_OpenAudio,
 	      have_SDL_mixer=yes, have_SDL_mixer=no )
 
 if test "x$have_SDL_mixer" = "xyes" ; then 
-    AC_DEFINE(HAVE_SDL_MIXER, 1, We can use SDL Mixer for audio)
     YANOID_LIBS="$YANOID_LIBS -lSDL_mixer"
-else
-    echo "*** SDL_mixer not found.  Configuring without audio support."
 fi
 
 dnl SDL_image
 AC_CHECK_LIB( SDL_image, IMG_Load, 
 	      have_SDL_image=yes, have_SDL_image=no )
+if test "x$have_SDL_image" = "xyes" ; then
+    YANOID_LIBS="$YANOID_LIBS -lSDL_image"
+fi
 
-YANOID_LIBS="$YANOID_LIBS -lSDL_image"
 LIBS="$saved_LIBS"
 
 
@@ -212,14 +211,14 @@ if test "x$have_SDL_image" = "xno" ; then
 fi
 
 if test "x$have_SDL_mixer" = "xno" ; then 
+    have_trouble=yes
     AC_MSG_WARN([
 *** PROBLEM:
 *** Unable to find SDL_mixer library (optional)
-*** This is required for music support in yanoid
+*** This is required for music and sound support in yanoid
+*** and is required for yanoid to work.
 *** Most Linux distributions include at least SDL_mixer 1.1 - never
 *** versions may be found at http://www.libsdl.org
-*** If you choose to make yanoid without this library, you will have 
-*** no music support.
 ])
 fi
 
