@@ -44,6 +44,7 @@
 #include "screen.hh"
 #include "ressourcemanager.hh"
 #include "surfacemanager.hh"
+#include "musicmanager.hh"
 
 #include "game.hh"
 #include "display.hh"
@@ -111,8 +112,8 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    LogFatal("Unable to initialize SDL");
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+    LogFatal("Unable to initialize SDL: " << SDL_GetError());
     return -1;
   }
   /* Make sure it is shutdown, when we exit */
@@ -129,6 +130,7 @@ int main(int argc, char ** argv) {
 			    | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
   LogLine(LOG_VERBOSE, "Videomode set (800x600, fullscreen)");
+
 #ifdef DEBUG
   cout << "Flags : ";
   if (SDL_HWSURFACE & (Screen->flags)) {
@@ -143,8 +145,16 @@ int main(int argc, char ** argv) {
   cout << endl;
 #endif
 
+  /* **********************************************************************
+   * Setup the audio. wave configuration is fixed at the moment.
+   * *********************************************************************/
 
-
+  // open 11025 Hz, 8-bit, 1 channel, 512 chunksize
+  Assert( Mix_OpenAudio(11025, AUDIO_U8, 1, 512) >= 0 , 
+	  "Unable to set audio mode");
+  LogLine(LOG_VERBOSE, 
+	  "Audiomode set (11025 Hz, 8-bit, 1 ch, 512 byte chunks)");
+  
   /* **********************************************************************
    * Initialize the surface manager (requires SDL to be initialized and 
    * the video mode to be set!)
@@ -159,6 +169,25 @@ int main(int argc, char ** argv) {
     = SurfaceManager->RequireRessource("graphics/yanoid.png");
   Assert(NULL != mysurf, "Error getting SDL_Surface *");
   
+  /* **********************************************************************
+   * Initialize the music manager (requires SDL to be initialized and 
+   * the audio mode to be set!)
+   * *********************************************************************/
+
+  MusicManager = new TMusicManager();
+  Assert(PathManager != NULL, "Unable to create MusicManager");
+  LogLine(LOG_VERBOSE, "MusicManager Initialized");
+
+  /* A small MOD test */
+  Mix_Music * modmusic
+    = MusicManager->RequireRessource("music/yanoid.mod");
+  Assert(NULL != modmusic, "Error getting Mix_Music *");
+
+  /* A small ogg vorbis test */
+  Mix_Music * oggmusic
+    = MusicManager->RequireRessource("sounds/yanoid.ogg");
+  Assert(NULL != oggmusic, "Error getting Mix_Music *");
+
   /* **********************************************************************
    * TEST - initialize game, display and client.
    * *********************************************************************/
@@ -182,6 +211,16 @@ int main(int argc, char ** argv) {
   SDL_UpdateRect(Screen, 0, 0, 0, 0);
   SDL_Delay(2000);
 
+  // Test the MOD music
+  if ( ! Mix_PlayingMusic() ) {
+    Mix_PlayMusic(modmusic, 0);
+  }
+
+  // Test the ogg vorbis music
+  if ( ! Mix_PlayingMusic() ) {
+    //    Mix_PlayMusic(oggmusic, 0);
+  }
+
   // Test the client
   Client->Run();
 
@@ -191,6 +230,7 @@ int main(int argc, char ** argv) {
   delete (Game);
   
   // TODO: Freeing surface, etc.
+  SurfaceManager->ReleaseRessource(mysurf);
   SurfaceManager->ReleaseRessource(mysurf);
 
   /* **********************************************************************
