@@ -19,6 +19,10 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /* Entities are the basic units that can be manipulated in the game */
+
+#ifndef __ENTITY_HH__
+#define __ENTITY_HH__
+
 #include <SDL/SDL.h>
 #include <list>
 
@@ -39,3 +43,5 @@ public:
 /* Define a list of entities */
 typedef std::list<TEntity *> TEntities;
 typedef TEntities::iterator TEntitiesIterator;
+
+#endif

@@ -19,7 +19,12 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifndef __DISPLAY_HH__
+#define __DISPLAY_HH__
+
 #include <SDL/SDL.h>
+
+extern bool QuitGame;
 
 /* The TDisplay class renders stuff */
 class TDisplay {
@@ -32,3 +37,5 @@ public:
 
 /* The global display */
 extern TDisplay * Display;
+
+#endif

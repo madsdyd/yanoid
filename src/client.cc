@@ -33,7 +33,7 @@ void TClient::Run() {
   Uint32 ticks = SDL_GetTicks();
   Uint32 start = ticks;
   int count = 0;
-  while((ticks-start) < 50000) {
+  while((ticks-start) < 50000 && !QuitGame) {
     Game->Update(ticks-start);
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
     Display->Render(Screen);

@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 

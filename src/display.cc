@@ -20,18 +20,22 @@
 */
 #include "display.hh"
 #include "game.hh"
+#include "highscore.hh"
 #include "ConsoleSource/CON_console.h"
+#include "ConsoleSource/DT_drawtext.h"
 
 /* **********************************************************************
  * The global display
  * *********************************************************************/
 
 TDisplay * Display;
+bool QuitGame = false;
 
 /* **********************************************************************
  * Render, gets the gamestate, render it.
  * *********************************************************************/
 void TDisplay::Render(SDL_Surface * surface) {
+  static int ticks = 0;
   TGameState * GameState = Game->GetState();
   TEntitiesIterator End = GameState->MapState->Entities.end();
   TEntitiesIterator i;
@@ -44,8 +48,10 @@ void TDisplay::Render(SDL_Surface * surface) {
     switch (event.type) {
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
+      case SDLK_ESCAPE:	
+	QuitGame = true;
+	break;
       case SDLK_BACKQUOTE:
-      case SDLK_ESCAPE:
 	if (!ConsoleDown){
 	  ConsoleDown = true;
 	  SDL_EnableUNICODE(1);
@@ -68,8 +74,20 @@ void TDisplay::Render(SDL_Surface * surface) {
     }
   }
   
+  // Draw highscore if necessary
+  Highscore->Render(surface);
+
   if (ConsoleDown) {
     CON_DrawConsole();
+  }
+
+  // Draw framerate
+  int oldticks = ticks;
+  char framerate[20];
+  ticks = SDL_GetTicks();
+  if (ticks != oldticks) {
+    sprintf(framerate, "%.2f FPS", 1000.0 / (ticks - oldticks));
+    DT_DrawText(framerate, surface, 1, 1, surface->h - 40);
   }
 
 }

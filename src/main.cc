@@ -49,6 +49,7 @@
 #include "game.hh"
 #include "display.hh"
 #include "client.hh"
+#include "highscore.hh"
 
 /* **********************************************************************
  * A handler for segmentation errors 
@@ -62,14 +63,27 @@ void SignalHandler(int signal) {
 /* Prints the string you pass it into the console */
 void PrintMe(char *String)
 {
-        CON_ConOut("%s", String);
+  CON_ConOut("%s", String);
 }
 
 /* lets the user change the alpha level */
 void AlphaChange(char *alpha)
 {
-        CON_ConsoleAlpha(atoi(alpha));
-        CON_ConOut("Alpha set to %s.", alpha);
+  CON_ConsoleAlpha(atoi(alpha));
+  CON_ConOut("Alpha set to %s.", alpha);
+}
+
+
+/* show/hide highscore */
+void DisplayHighscore(char *arg)
+{
+  string _arg(arg);
+  if (_arg == "show")
+    Highscore->displayRankings();
+  else
+    Highscore->displayNone();
+
+  CON_ConOut("Highscore %s",arg);
 }
 
 int main(int argc, char ** argv) {
@@ -215,14 +229,19 @@ int main(int argc, char ** argv) {
   /* Add some commands to the console */
   CON_AddCommand(&PrintMe, "printme");
   CON_AddCommand(&AlphaChange, "alpha");
+  CON_AddCommand(&DisplayHighscore, "highscore");
   
   CON_ListCommands();
+  
+  CON_ConsoleAlpha(190);
   
   /* **********************************************************************
    * TEST - initialize game, display and client.
    * *********************************************************************/
   Game    = new TGame();
   Display = new TDisplay();
+  Highscore = new THighscore(Screen->w / 2  - 160, Screen->h / 2 - 150);
+
   TClient * Client = new TClient();
   
 
