@@ -181,6 +181,14 @@ bool THighscore::HandleEvent(SDL_Event * event) {
       cursorpos_y = (cursorpos_y > 0) ? cursorpos_y-1 : cursorpos_y;
       break;
     case SDLK_RIGHT: 
+
+      // added by Kim Schulz <kim@schulz.dk>
+      if (cursorpos_x > 8) { 
+              cursorpos_y++;
+              cursorpos_y = (cursorpos_y > 2) ? 0 : cursorpos_y;
+	      cursorpos_x = -1;
+       }
+      //////////////////////////////////////////////////////////////7
       // take special care of End and Del
       SoundManager->PlaySound("sounds/menu_move.wav");
       if (cursorpos_y == 2) {
@@ -192,6 +200,14 @@ bool THighscore::HandleEvent(SDL_Event * event) {
       cursorpos_x = (cursorpos_x < 9) ? cursorpos_x+1 : cursorpos_x;
       break;
     case SDLK_LEFT: 
+
+      //added by Kim Schulz <kim@schulz.dk>
+      if (cursorpos_x < 1) {
+	      cursorpos_y--;
+	      cursorpos_y = (cursorpos_y < 0) ? 2 : cursorpos_y;
+	      cursorpos_x = 10;
+      }
+      /////////////////////////////////////////////////////////7
       // take special care of End and Del
       SoundManager->PlaySound("sounds/menu_move.wav");
       if (cursorpos_y == 2) {

@@ -1,3 +1,11 @@
+2001-12-06  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Highscore
+	Added a patch to the highscore from Kim Schulz
+
+	* Powerup
+	Added a powerup level - does not work
+
 2001-12-05  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Preload

@@ -15,6 +15,7 @@ Jonas Christian Drewsen <jcd@xspect.dk>
 - Scripting interface 
 Mads Bondo Dydensborg <mads@dydensborg.dk> 
 
-The source code in src/ConsoleSource has been taken from the
-SDL_console project, and modified slightly to fit yanoid better.
+* Contributors
 
+- highscore movement patch
+Kim Schulz <kim@schulz.dk> 
