@@ -236,10 +236,16 @@ int main(int argc, char ** argv) {
    * Setup the audio. wave configuration is fixed at the moment.
    * *********************************************************************/
 
+  // fast hacky option
+  bool WantAudio = true;
+  if (argc > 1 && string(argv[1]) == "--no-audio") 
+    WantAudio = false;
+
   // open 11025 Hz, 8-bit, 1 channel, 512 chunksize
   bool AudioInitialized = false;
 #ifndef NO_MUSIC_THREAD
-  AudioInitialized = (Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0);
+  if (WantAudio)
+    AudioInitialized = (Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0);
   if (!AudioInitialized) {
     cout << "Unable to open audio" << endl;
   } else { 
