@@ -223,14 +223,14 @@ bool TMap::AddEntity(string type, string hitfunction,
 				    MapState->paddle->y() - 16,
 				    0, pixmap, TEntity::PIXEL, 
 				    TEntity::MOVING);*/
-    TEntity * e = new TPixmapEntity(200, 250, 0, pixmap, 
+    TEntity * e = new TPixmapEntity(300, 250, 0, pixmap, 
 				    TEntity::PIXEL, TEntity::BALL);
     e->SetScriptHitCall(hitfunction);
     // TODO, error handling.. 
     e->setMotion(new TFreeMotion);
     //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
     dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(2 * M_PI / 5);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.05);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.15);
     e->setName("Default Ball");
     MapState->Entities.push_back(e);
     MapState->num_balls++;

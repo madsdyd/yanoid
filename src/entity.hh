@@ -56,7 +56,9 @@ protected:
   string ScriptHitCall;
   bool changed;
   int collidecorner;
+  Uint32 LastUpdate;
   bool removable;
+  double AngleModifier; // only for paddel (should be in subclass)
 public:
   TEntity(double x_, double y_, Angle a_ = 0, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);
@@ -79,7 +81,7 @@ public:
   void setMotion(TMotion* m);
 
   /* Called when this entity collidies with another */
-  virtual void OnCollision(TEntity& other);
+  virtual void OnCollision(TEntity& other, Uint32 time = 0);
 
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
@@ -109,6 +111,7 @@ public:
   inline bool boundingBoxCollision(TEntity& obj);
   inline int getCollideCorner() { return collidecorner; }
   inline void resetCollideCorner() { collidecorner = 0; }
+  inline Uint32 getLastUpdate() { return LastUpdate; };
   /*
     return ! ((obj.position.y()+obj._h) < position.y() || 
 	      (position.y()+_h) < obj.position.y() || 

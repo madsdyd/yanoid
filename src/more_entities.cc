@@ -38,7 +38,7 @@ THole::~THole() {
 /* **********************************************************************
  * Collision
  * *********************************************************************/
-void THole::OnCollision(TEntity& other) {
+void THole::OnCollision(TEntity& other,Uint32 t) {
   LogLine(LOG_VERBOSE, "THole::OnCollision called");
   if (TEntity::BALL == other.getEntityType()) {
     /* Ah, hit by a ball */

@@ -21,10 +21,10 @@ for t in range(0, 360, 30):
                      "graphics/objects/red_oval_brick.png") 
             
 # Add the walls
-AddStatic(0, 0, 1, 550, "static_hit()")
-AddStatic(799, 0, 1, 550, "static_hit()")
-AddStatic(1, 0, 799, 1, "static_hit()")
-AddStatic(0, 550, 799, 50, "static_hit()")
+AddEntity("static", 0, 0, 10, 550, "static_hit()")
+AddEntity("static", 790, 0, 10, 550, "static_hit()")
+AddEntity("static", 10, 0, 780, 10, "static_hit()")
+AddEntity("hole", 0, 550, 800, 50, "static_hit()")
 
 # Add a paddle
 SetPaddle(400, 500, "graphics/objects/basic_paddle.png")

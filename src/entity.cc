@@ -31,7 +31,7 @@
 TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  collidecorner(0), removable(false)
+  collidecorner(0), removable(false), AngleModifier(0.05)
 {
 
 }
@@ -40,15 +40,15 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
 		 Angle a, CollisionType c, EntityType e):
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  changed(true),  collidecorner(0), removable(false)
+  changed(true),  collidecorner(0), removable(false), AngleModifier(0.05)
 {
-
+  cerr << "MJELLO" << endl;
 }
 
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
   collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
-  collidecorner(0), removable(false)
+  collidecorner(0), removable(false), AngleModifier(0.05)
 {
 
 }
@@ -105,7 +105,7 @@ void TEntity::Update(Uint32 deltatime)
 void TEntity::Render(SDL_Surface * surface) {
   SDL_Rect dest;
 
-  if (!changed)
+  if (!changed && false)
     return;
 
   dest.x = static_cast<int>(x()); 
@@ -159,8 +159,8 @@ bool TEntity::boundingBoxCollision(TEntity& o)
     if(x1+w1 > x2){
       if(y1 < y2){
 	if(y1+h1 > y2){
-	  collidepoint.setX(x2);
-	  collidepoint.setY(y2);
+	  collidepoint.setX(x1 + w1);
+	  collidepoint.setY(y1 + h1);
 	  o.collidepoint.setX(x2);
 	  o.collidepoint.setY(y2);
 	  o.collidecorner = 1;
@@ -170,10 +170,10 @@ bool TEntity::boundingBoxCollision(TEntity& o)
       }
       else{
 	if(y2+h2 > y1){
-	  collidepoint.setX(x2);
+	  collidepoint.setX(x1 + w1);
 	  collidepoint.setY(y1);
 	  o.collidepoint.setX(x2);
-	  o.collidepoint.setY(y1);
+	  o.collidepoint.setY(y2 + h2);
 	  o.collidecorner = 2;
 	  collidecorner = 4;
 	  return true;
@@ -187,8 +187,8 @@ bool TEntity::boundingBoxCollision(TEntity& o)
 	if(y2+h2 > y1){
 	  collidepoint.setX(x1);
 	  collidepoint.setY(y1);
-	  o.collidepoint.setX(x1);
-	  o.collidepoint.setY(y1);
+	  o.collidepoint.setX(x2 + w2);
+	  o.collidepoint.setY(y2 + h2);
 	  o.collidecorner = 3;
 	  collidecorner = 1;
 	  return true;
@@ -197,8 +197,8 @@ bool TEntity::boundingBoxCollision(TEntity& o)
       else{
 	if(y1+h1 > y2){
 	  collidepoint.setX(x1);
-	  collidepoint.setY(y2);
-	  o.collidepoint.setX(x1);
+	  collidepoint.setY(y1 + h1);
+	  o.collidepoint.setX(x2 + w2);
 	  o.collidepoint.setY(y2);
 	  o.collidecorner = 4;
 	  collidecorner = 2;
@@ -221,7 +221,7 @@ bool TEntity::pixelCollision(TEntity& o) {
 /* **********************************************************************
  * Called, when this entity collides with another
  * *********************************************************************/
-void TEntity::OnCollision(TEntity& other) {
+void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 
   /* This must only be called, when at least boundingCollision have been 
      called 
@@ -236,12 +236,20 @@ void TEntity::OnCollision(TEntity& other) {
     ball = this;
     tother = &other;
   } else if (other.getEntityType() == TEntity::BALL) {
-    return;
     ball = &other;
     tother = this;
   } 
+  
+  // set collision update time
+  // so that we won't calculate collisions
+  // 2 times on a entity
+  ball->LastUpdate = currenttime;
+  tother->LastUpdate = currenttime;
 
-  if (getMotion() && ball ) {
+  //
+  // If we have a ball in the collision
+  //
+  if (ball->getMotion() && ball ) {
     double colx = ball->x();
     double coly = ball->y();
     ball->getMotion()->rewind(*ball);
@@ -273,46 +281,52 @@ void TEntity::OnCollision(TEntity& other) {
     // Equation of two lines intersecting, knowing that one of 
     // the lines is vertical. The taking only the y component of the 
     // intersection point.
-    double lin_intersect_y = dy * ((ball->collidepoint.x() - (ball->x() + ballwidth) ) / dx) + ball->y() + ballheight; 
+    double lin_intersect_y = dy * ((tother->collidepoint.x() - (ball->x() + ballwidth) ) / dx) + ball->y() + ballheight; 
     
     bool verticalhit = false;
     switch(tother->collidecorner) {
     case 1:
-      if ( lin_intersect_y > ball->collidepoint.y() ) {
+      if ( lin_intersect_y > tother->collidepoint.y() && dx > 0) {
 	verticalhit = true;
       }
       break;
     case 2:
-      if ( lin_intersect_y < ball->collidepoint.y() ) {
+      if ( lin_intersect_y < tother->collidepoint.y() && dx > 0) {
 	verticalhit = true;
       }
       break;
     case 3:
-      if ( lin_intersect_y > ball->collidepoint.y() ) {
+      if ( lin_intersect_y < tother->collidepoint.y() && dx < 0) {
 	verticalhit = true;
       }
       break;
     case 4:
-      if ( lin_intersect_y < ball->collidepoint.y() ) {
+      if ( lin_intersect_y > tother->collidepoint.y() && dx < 0) {	
 	verticalhit = true;
       }
       break;
     }
 
-    
-    if ( verticalhit ) {
+    if ( verticalhit ) {	
       // OK collision on the side
-      
       // a hit from the left
       newangle = (dy < 0) ? 
 	M_PI - motion->getDir() :
-	3.0 * M_PI - motion->getDir();
+	3.0 * M_PI - motion->getDir(); 
       
-      cerr << "<<" << newangle << endl;
-      if (dy >= 0) {
-	ball->setX(colx - 2 * ( (colx + ballwidth) -  ball->collidepoint.x()));
+      if (dx >= 0) {
+	/*	cerr << ">> " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
+	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	*/
+	ball->setX(colx - 2 * ( (colx + ballwidth) -  tother->collidepoint.x()));	
       }else{
-	ball->setX(colx + 2 * ( ball->collidepoint.x() - colx ));
+	/*
+	cerr << "<< " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
+	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	*/
+	ball->setX(colx + 2 * ( tother->collidepoint.x() - colx ));
       }
       ball->setY(coly);
       
@@ -328,12 +342,29 @@ void TEntity::OnCollision(TEntity& other) {
       //      cerr << "vv" << newangle << endl;
       
       if (dy >= 0) {
-	cerr << "vv1 " << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight << " coly: " << coly << " collidepoint " << ball->collidepoint.y() << "corner: " << tother->collidecorner << " name: " << ball->getName() << endl;
-	//	ball->setY(coly + 2 * ( ball->collidepoint.y() -  (coly + ballheight)) );
-	ball->setY(coly - 2 * ( (coly + ballheight) -  ball->collidepoint.y()) );
+	/*
+	cerr << "vv " << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
+	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	*/
+	//		ball->setY(coly + 2 * ( ball->collidepoint.y() -  (coly + ballheight)) );
+	ball->setY(coly - 2 * ( (coly + ballheight) -  tother->collidepoint.y()) -1  );
+	// If the ball has hit the paddle from above we make some modifications to the angle
+	// depending where on the paddle the ball has hit.
+	if (tother->getEntityType() == TEntity::PADDLE) {
+	  double lx = (ball->x() + ball->w()/2) - tother->x();
+	  lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
+	  double modangle = (tother->w()/2 - lx) * tother->AngleModifier;
+	  cerr << "lx :" << lx << " modangle: " << modangle << endl;
+	  newangle += modangle;
+	}
       }else{
-	cerr << "vv2 "  << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight << " coly: " << coly << " collidepoint " << ball->collidepoint.y() << "corner: " << tother->collidecorner << " name: " << ball->getName() << endl;
-	ball->setY(coly - 2 * ( ball->collidepoint.y() -  coly) );
+	/*
+	cerr << "^^ "  << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
+	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	*/
+	ball->setY(coly + 2 * ( tother->collidepoint.y() -  coly) + 1 );
       }
 
       ball->setX(colx);

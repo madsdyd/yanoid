@@ -54,7 +54,7 @@ protected:
   Uint32 pausetime;
   TMap * Map;
   TGameState GameState;
-  void handleCollisions();
+  void handleCollisions(Uint32 currenttime);
 public:
   TGame();
   ~TGame();

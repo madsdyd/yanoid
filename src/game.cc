@@ -55,7 +55,7 @@ void TGame::Update(Uint32 currenttime) {
   Uint32 deltatime = currenttime - lastupdate;
   /* Update all objects in game */
   Map->Update(deltatime);
-  handleCollisions();
+  handleCollisions(currenttime);
   lastupdate = currenttime;
 }
 
@@ -73,7 +73,7 @@ TGameState * TGame::GetState() {
  * HandleCollisions
  * *********************************************************************/
 
-void TGame::handleCollisions() 
+void TGame::handleCollisions(Uint32 currenttime) 
 {
   TMapState* themap = GameState.MapState;
   TEntitiesIterator end = themap->Entities.end();
@@ -86,7 +86,7 @@ void TGame::handleCollisions()
     /* We only check moving stuff against stationary objects */
     TEntity::EntityType i1type = (*i1)->getEntityType();
     if (i1type == TEntity::STATIONARY) {
-      continue;
+      //      continue;
     }
     // LogLine(LOG_VER_2, "Checking " + (*i1)->getName());
     double maxy = (*i1)->y() + static_cast<double>((*i1)->h());
@@ -130,8 +130,8 @@ void TGame::handleCollisions()
 	If its a ball and it allready has collided
 	just ignore it.
        */
-      if ((i1type == TEntity::BALL && (*i1)->getCollideCorner()) || 
-	  ((*i2)->getEntityType() == TEntity::BALL && (*i2)->getCollideCorner()))
+      if ((i1type == TEntity::BALL && (*i1)->getLastUpdate() == currenttime) || 
+	  ((*i2)->getEntityType() == TEntity::BALL && (*i2)->getLastUpdate() == currenttime))
 	continue;
 
       /* If there are no collision between the current two entities, 
@@ -142,14 +142,11 @@ void TGame::handleCollisions()
       /* LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
 	 " and " + (*i2)->getName()); */
       /* Call the OnCollision events for both entities */
-      if ((*i1)->getEntityType() == TEntity::BALL)
-	resetEntityList.push_back(*i1);
 
-      if ((*i2)->getEntityType() == TEntity::BALL)
-	resetEntityList.push_back(*i2);
-
-      (*i1)->OnCollision(*(*i2));
-      (*i2)->OnCollision(*(*i1));
+      //      cerr << "i1: " << (*i1)->getName() << ", " << (*i1)->y() << " h: " << (*i1)->h()
+      //	   << " i2: " << (*i2)->getName() << ", " << (*i2)->y() << " h: " << (*i2)->h() << endl;
+      (*i1)->OnCollision(*(*i2),currenttime);
+      //            (*i2)->OnCollision(*(*i1),currenttime);
 
 
 
@@ -177,9 +174,6 @@ void TGame::handleCollisions()
 	// cout << "Making pixel perfect detection" << endl;
       }
     }
-  }
-  for(std::vector<TEntity*>::iterator i = resetEntityList.begin() ; i != resetEntityList.end() ; i++) {
-    (*i)->resetCollideCorner();
   }
 }
 

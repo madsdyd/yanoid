@@ -30,7 +30,7 @@ class THole : public TEntity {
 public:
   THole(double x_, double y_, int w_, int h_);
   virtual ~THole();
-  void OnCollision(TEntity& other);
+  virtual void OnCollision(TEntity& other,Uint32 currenttime=0);
   void Render(SDL_Surface * surface) {};
 };
 
