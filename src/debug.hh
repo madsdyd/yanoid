@@ -18,3 +18,26 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+/* Various stuff used when debugging */
+#ifndef __DEBUG_HH__
+#define __DEBUG_HH__
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef DEBUG 
+#include <signal.h>
+
+/* A custom assert */
+extern bool CustomAssert( bool expr, char * description , 
+			  int linenum, char * filename);
+#define Assert( expr, description ) \
+  if ( CustomAssert( (bool)(expr), description, __LINE__, __FILE__) ) { \
+  raise(SIGSEGV); \
+  }
+
+#else /* DEBUG */
+#define Assert( exp, description )
+#endif /*DEBUG */
+#endif /* __DEBUG_HH__ */

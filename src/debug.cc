@@ -18,3 +18,18 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include "debug.hh"
+#ifdef DEBUG
+#include <iostream>
+
+/* If this works well, I want to extend this assert to do some
+   interaction with the user */
+bool CustomAssert(bool expr, char * description, int linenum, char * filename) {
+  if (!expr) {
+    cerr << "CustomAssert failed at " << filename << ":" << linenum << " \""
+	 << description << "\"" << endl;
+    return true;
+  } 
+  return false;
+}
+#endif

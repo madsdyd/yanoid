@@ -1,0 +1,133 @@
+dnl ------------------------------------------------------------
+dnl Setup initial stuff
+AC_INIT(src/main.cc)
+AM_INIT_AUTOMAKE(yanoid, "0.0.1")
+dnl Enable --maintainer-mode
+AM_MAINTAINER_MODE
+dnl We want a config header
+AM_CONFIG_HEADER(src/config.h)
+
+dnl Make sure the flags are blank
+CPPFLAGS=""
+CFLAGS=""
+CXXFLAGS=""
+
+dnl ------------------------------------------------------------
+dnl Check system type
+dnl AC_CANONICAL_HOST
+
+dnl ------------------------------------------------------------
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_CPP
+
+dnl ------------------------------------------------------------
+dnl Checks for libraries.
+
+dnl SDL Check stolen from tuxracer
+
+SDL_VERSION=1.1.8
+AM_PATH_SDL($SDL_VERSION, have_SDL=yes, have_SDL=no)
+
+if test "x$have_SDL" = "xno" ; then
+    AC_MSG_ERROR([
+*** Unable to find a version of SDL that was never than 1.1.8
+*** This is required for yanoid to work.
+*** Most distributions include at least SDL 1.1.8 - never
+*** versions may be found at http://www.libsdl.org
+])
+fi
+
+TR_CFLAGS="$TR_CFLAGS $SDL_CFLAGS"
+TR_CXXFLAGS="$TR_CXXFLAGS $SDL_CFLAGS"
+TR_LIBS="$TR_LIBS $SDL_LIBS"
+
+dnl Check for SDL_mixer
+saved_LIBS="$LIBS"
+LIBS="$saved_LIBS $TR_LIBS"
+
+AC_CHECK_LIB( SDL_mixer, Mix_OpenAudio, 
+	      have_SDL_mixer=yes, have_SDL_mixer=no )
+
+if test "x$have_SDL_mixer" = "xyes" ; then 
+    AC_DEFINE(HAVE_SDL_MIXER, 1, We can use SDL Mixer for audio)
+    TR_LIBS="$TR_LIBS -lSDL_mixer"
+else
+    echo "*** SDL_mixer not found.  Configuring without audio support."
+fi
+
+LIBS="$saved_LIBS"
+
+
+dnl ------------------------------------------------------------
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/time.h unistd.h)
+
+dnl ------------------------------------------------------------
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_HEADER_TIME
+
+dnl ------------------------------------------------------------
+dnl Checks for library functions.
+
+dnl Check if gcc need -traditional to use ioctl's
+dnl We do not need this, AFAIK.
+dnl AC_PROG_GCC_TRADITIONAL
+
+dnl Check if the system have gettimeofday
+AC_CHECK_FUNCS(gettimeofday)
+
+dnl --------------------------------------------------------------------------
+dnl General options
+dnl Shamelessly stolen from TuxRacer
+dnl --------------------------------------------------------------------------
+TR_CPPFLAGS=""
+TR_CFLAGS="-Wall -Wtraditional -Wpointer-arith -Wconversion -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Woverloaded-virtual"
+TR_CXXFLAGS="-Wall -Wtraditional -Wpointer-arith -Wconversion -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Woverloaded-virtual"
+TR_OP_CFLAGS="-O2 -fomit-frame-pointer -ffast-math -fexpensive-optimizations"
+TR_OP_CXXFLAGS="-O2 -fomit-frame-pointer -ffast-math -fexpensive-optimizations"
+dnl TR_LIBS=""
+
+case "$host" in
+i*86-*-*) TR_OP_CFLAGS="$TR_OP_CFLAGS -malign-loops=2 -malign-jumps=2 -malign-functions=2";
+          TR_OP_CXXFLAGS="$TR_OP_CXXFLAGS -malign-loops=2 -malign-jumps=2 -malign-functions=2";;
+alpha*-*-linux-*) TR_CFLAGS="$TR_CFLAGS -mieee";;
+esac
+
+
+AC_ARG_ENABLE(debug,     [  --disable-debug         Produce an executable without debugging symbols], 
+                         , [AC_DEFINE(DEBUG, 1, High level debug setting) TR_CFLAGS="-g $TR_CFLAGS"; TR_CXXFLAGS="-g $TR_CXXFLAGS"])
+
+AC_ARG_ENABLE(optimize,  [  --enable-optimize       Enable various optimizations. Looooong compile time],
+			 [TR_CFLAGS="$TR_CFLAGS $TR_OP_CFLAGS"; TR_CXXFLAGS="$TR_CXXFLAGS $TR_OP_CXXFLAGS"])
+
+AC_ARG_ENABLE(pedantic,  [  --enable-pedantic       Enable -pedantic (and -ansi for C) when compiling], 
+                         [TR_CFLAGS="$TR_CFLAGS -ansi -pedantic"; TR_CXXFLAGS="$TR_CXXFLAGS -pedantic"])
+
+AC_ARG_ENABLE(profile,   [  --enable-profile        Produce a profiled executable],
+                         [TR_CFLAGS="$TR_CFLAGS -pg"; TR_CXXFLAGS="$TR_CXXFLAGS -pg"])
+
+
+dnl --------------------------------------------------------------------------
+dnl Other options
+dnl --------------------------------------------------------------------------
+
+dnl Specify data directory - stolen from tuxkart
+
+MY_EXPAND_DIR(yanoid_datadir, "$datadir/games/$PACKAGE")
+AC_DEFINE_UNQUOTED(YANOID_DATADIR, "$yanoid_datadir", Defines the location of the data directory)
+
+dnl AC_ARG_WITH(data-dir, [  --with-data-dir=PATH    Default yanoid data directory], 
+dnl                      TR_CPPFLAGS="$TR_CPPFLAGS -DDATA_DIR=\\\"$withval\\\"")
+
+dnl Set the final compiler and linker flags
+
+CPPFLAGS="$CPPFLAGS $TR_CPPFLAGS"
+CFLAGS="$CFLAGS $TR_CFLAGS"
+CXXFLAGS="$CXXFLAGS $TR_CXXFLAGS"
+LIBS="$LIBS $TR_LIBS"
+
+AC_OUTPUT(src/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/sounds/Makefile Makefile)

@@ -18,3 +18,42 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+/* This is an implementation of a log object. It sucks, but is a start */
+#ifndef __LOG_HH__
+#define __LOG_HH__
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+/* The log is only present, if we have compiled with the 
+   debug directive */
+#ifdef DEBUG 
+#include <string>
+
+#define LOG_FATAL 0
+#define LOG_ERROR 1
+#define LOG_WARNING 2
+#define LOG_INFO 3
+#define LOG_TRACE 4
+#define LOG_VERBOSE 5
+
+#define LogLine( _level, _line ) \
+  Log->AddLine( _level, __FILE__, __LINE__, _line )
+
+class TLog {
+  int level; /* Only stuff lower than this level is logged */
+public:
+  TLog() { level = LOG_VERBOSE; };
+  ~TLog() {};
+  void SetLevel(int nlevel) { level = nlevel; };
+  void AddLine(int level_, char * filename, int lineno, string line);
+};
+
+extern TLog * Log;
+
+#else
+#define LogLine( _level, _line ) 
+#endif
+
+#endif

@@ -1,0 +1,6 @@
+2001-09-22  Mads Bondo Dydensborg  <mads@dydensborg.dk>
+
+	* (Everything)
+	Made initial project, with autoconf support.
+	Created cvs repository.
+

@@ -2,6 +2,8 @@ The following is a list of stuff that needs to be implemented in yanoid, as
 well as the ressources (graphics, sounds) that will be needed before we have
 a game that can be considered ready for the SDL contest.
 
+For more specific "TODO" items, look in the bottom.
+
 * Implementation
 - Input system
   - keyboard
@@ -36,3 +38,7 @@ a game that can be considered ready for the SDL contest.
 - powerup sounds
 - bad sounds
 - gem sounds
+
+
+** TODO
+

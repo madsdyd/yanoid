@@ -18,3 +18,20 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include "log.hh"
+#ifdef DEBUG
+#include <iostream>
+
+TLog * Log;
+
+/* **********************************************************************
+ * The AddLine only prints to stdout at this moment 
+ * *********************************************************************/
+void TLog::AddLine(int level_, char * filename, int lineno, string line) {
+  if (level_ <= level) {
+    cout << "LOG: " << level_ << " in " << filename
+	 << ":" << lineno << " - \"" << line << "\"" << endl;
+  }
+}
+
+#endif

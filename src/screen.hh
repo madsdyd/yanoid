@@ -18,3 +18,12 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+/* This file provides a pointer to the SDL_Surface that is our screen 
+   This may seem like overkill - and, frankly, probably is.
+   It has to go somewhere though... */
+#ifndef __SCREEN_HH__
+#define __SCREEN_HH__
+#include "SDL/SDL.h"
+
+extern SDL_Surface * Screen;
+#endif
