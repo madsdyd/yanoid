@@ -194,7 +194,11 @@ void TClient::Run() {
   /* This font is used for the text effects */
   fonthandle_t * font 
     = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
-
+  if (!font) {
+    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
+    exit(-1);
+  }
+  
   /* Main loop - never quit the client */
   while(!QuitClient) {
     /* Make sure the console is not down and the game is not paused */
@@ -250,10 +254,6 @@ void TClient::Run() {
       case TGameState::DEAD: {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
-	if (!font) {
-	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
-	  exit(-1);
-	}
 	const char* str = "Game Over";
 	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_JUMPING_ANIM);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
@@ -283,10 +283,6 @@ void TClient::Run() {
 	//	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
 	//	RoundOverMenu->Run();
 	//	delete RoundOverMenu;
-	if (!font) {
-	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
-	  exit(-1);
-	}
 	const char* str = "You lost the ball..";
 	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_SWIRLING_ANIM);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
@@ -323,11 +319,6 @@ void TClient::Run() {
        * All bricks gone (MAPDONE)
        * *********************************************************************/
       case TGameState::MAPDONE: {
-	/* Maybe this should be handled differently */
-	if (!font) {
-	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
-	  exit(-1);
-	}
 	/* **********************************************************************
 	 * Do a text effect
 	 * *********************************************************************/
