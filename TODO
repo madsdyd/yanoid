@@ -1,56 +1,24 @@
-BUGS:
+The following is a list of stuff that needs to be implemented in
+yanoid before the game can be considered ready for the contest. 
 
-- Plenty
+**********************************************************************
+** SHOWSTOPPERS - MUST BE FIXED
 
-The following is a list of stuff that needs to be implemented in yanoid, as 
-well as the ressources (graphics, sounds) that will be needed before we have
-a game that can be considered ready for the SDL contest.
+- Collision code is flaky
+- Autoconf code for Python 2.2b is broken
+- Complete the gameplay (map changing) code
+- More maps
 
-For more specific "TODO" items, look in the bottom.
+
+**********************************************************************
+** IMPORTANT (or possible easy - stuff that we really should do)
+
+* Input system - keyboard movement of paddle is not fluent
 
 * Menu
 - Add help and about texts
 
-* Autotool
-- Fix Python autoconf
-  - libs and such for 1.5.2?
-- Make sure that we fail when something essentiel is missing
-- need to add libvorbisfile (-lvorbis -lvorbisfile) to configure.in
-- need to add asound (-lasound) to configure.in (alsa-lib-devel)
-- need to add smpeg  (-lsmpeg) to configrm ure.in
-- need to add libesound-devel
-
-The above three is probably what is needed to use SDL_mixer - so, in
-all fairness, we should check the output of sdl-config and check that
-each application is present or maybe we should try and build a small
-SDL application that uses SDL_mixer.
-
-* Python
-- Needs to figure out how we bind stuff more dynamically and
-  not so brittle. 
-
-* Implementation
-- Input system
-  - keyboard
-  - mouse
-  - joystick?
-- Basic game engine
-  - Objects (everything that reacts to game physics)
-  - Physics (bouncing, mostly, various hardness of surfaces, sinks)
-  - Map (Describes map layout)
-- Graphics system 
-  - (Represent game engine on screen)
-- Network system 
-  - (Get/deliver events/state from/to the network)
-- Update system
-  - Updates gamestate based on input and network stuff.
-- Main loop.
-
-
-* Graphics
-- Font for menu/startup/display of score
-- Paddle graphic
-- Graphic for different bricks
+* Powerups
 
 * Sounds
 - Menu sounds
@@ -62,6 +30,38 @@ SDL application that uses SDL_mixer.
 - bad sounds
 - gem sounds
 
+* Autotool
+- Make sure that we fail when something essentiel is missing
+- need to add libvorbisfile (-lvorbis -lvorbisfile) to configure.in
+- need to add asound (-lasound) to configure.in (alsa-lib-devel)
+- need to add smpeg  (-lsmpeg) to configrm ure.in
+- need to add libesound-devel
 
-** TODO
+The above three is probably what is needed to use SDL_mixer - so, in
+all fairness, we should check the output of sdl-config and check that
+each application is present or maybe we should try and build a small
+SDL application that uses SDL_mixer.
+
+
+**********************************************************************
+** NICE TO HAVE (stuff that we may have time for)
+
+* Graphics
+- Better Font for menu/startup/display of score
+- Better Paddle graphic(?)
+- Graphic for different bricks
+- Ball graphic
+- Powerup graphics
+- Various animation stuff
+
+
+**********************************************************************
+** IN YOUR DREAMS (stuff that we will must likely NOT have time for)
+
+* Network system 
+  - (Get/deliver events/state from/to the network)
+
+* Input system
+  - mouse (probably not)
+  - joystick? (very much unlikely)
 
