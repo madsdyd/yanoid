@@ -40,6 +40,7 @@ protected:
   bool HandleGlobalKeys(SDL_Event * event);
   void PauseGame();
   void ContinueGame();
+  bool NextMap();
 public:
   TClient();
   ~TClient();

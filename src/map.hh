@@ -36,6 +36,7 @@ public:
   double ballspeed; /* The speed of all balls in map */
   double ballbirth;
   double ballacceleration;
+  string mapname;
   TMapState();
   ~TMapState();
   TEntities Entities;
@@ -61,7 +62,8 @@ public:
   ~TMap();
   /* A static funtion to add the map modules */
   static bool AddModule();
-    
+  /* Set the map name */
+  bool SetMapName(string name);
   /* Add an entity, mostly bricks, walls, etc.
      , initialize with parameters (will probably change). 
      returns true on succes */

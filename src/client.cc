@@ -111,6 +111,54 @@ bool TClient::AddModule() {
 }
 
 /* **********************************************************************
+ * The next map method loads a map, initializes the game, and 
+ * does some other minor things.
+ * *********************************************************************/
+bool TClient::NextMap() {
+  if (!Game) {
+    return false;
+  }
+  fonthandle_t * font 
+    = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+  if (!font) {
+    return false;
+  }
+  
+  Game->GetState()->MapState->ballbirth = 0;
+  game_start      = SDL_GetTicks();
+  game_lastupdate = 0;
+  LogLine(LOG_VERBOSE, "Game->Update(0)");
+  Game->Update(0);
+  if (Game->LoadNextMap()) {
+    {
+      PauseGame();
+      Render();
+      TTextEffects tfx(Game->GetState()->MapState->mapname.c_str(), 
+		       Screen, font, 
+		       TTextEffects::CHARACTER_SPACED_ANIM);
+      tfx.setLocation(TPoint((Screen->w -  
+			      Game->GetState()->MapState->mapname.size()
+			      * DT_FontWidth(*font))/2, 
+			     Screen->h / 2));
+      tfx.setDuration(1500);
+      tfx.start();
+      while(!tfx.isStopped()) {
+	tfx.update(SDL_GetTicks());
+	SDL_Flip(Screen);
+      }
+      ContinueGame();
+    }
+    
+    
+    Game->GetState()->status = TGameState::PLAYING;
+    FontManager->ReleaseRessource(font);
+    return true;
+  } else {
+    FontManager->ReleaseRessource(font);
+    return false;
+  }
+}
+/* **********************************************************************
  * The Run method
  * Keeps running, until the player exits the client
  * Will (for now) create a default game, if none is present
@@ -133,6 +181,8 @@ void TClient::Run() {
     Assert(Game != NULL, "Could not create a default game");
     /* Load map names from maplist file */
     Interprenter->RunSimpleFile("maps/maplist.py");
+
+#ifdef TESTINGNEXTMAP
     if (Game->HasMap(Game->GetState()->currentmap)) {
       if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap))) {
 	CON_ConOut("Map succesfully loaded");
@@ -149,7 +199,15 @@ void TClient::Run() {
     /* Set the game status ... hmm. may not be appropiate */
     Game->GetState()->status = TGameState::PLAYING;
     Game->Update(0);
+
+#endif
     QuitCurrentGame = false; /* May be changed by the in game menu */
+    if (!NextMap()) {
+      LogLine(LOG_ERROR, "Unable to load any valid map");
+      CON_ConOut("Unable to load any valid map");
+      QuitCurrentGame = true;
+    }
+    
     Game->GetState()->MapState->ballbirth = 0;
 
     /* **********************************************************************
@@ -264,6 +322,9 @@ void TClient::Run() {
 	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
 	  exit(-1);
 	}
+	/* **********************************************************************
+	 * Do a text effect
+	 * *********************************************************************/
 	const char* str = "Level complete!";
 	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_SPACED_ANIM);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
@@ -273,6 +334,11 @@ void TClient::Run() {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
+
+#ifdef TESTINGNEXTMAP
+	/* **********************************************************************
+	 * Get on with loading a game
+	 * *********************************************************************/
 	Game->GetState()->MapState->ballbirth = 0;
 	//	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
 	//	MapDoneMenu->Run();
@@ -283,8 +349,33 @@ void TClient::Run() {
 	LogLine(LOG_VERBOSE, "Game->Update(0)");
 	Game->Update(0);
 	if (Game->LoadNextMap()) {
+	  {
+	    PauseGame();
+	    Render();
+	    const char* str = "New level coming up";
+	    TTextEffects tfx(str, Screen, font, 
+			     TTextEffects::CHARACTER_SPACED_ANIM);
+	    tfx.setLocation(TPoint((Screen->w - strlen(str) 
+				    * DT_FontWidth(*font))/2, 
+				   Screen->h / 2));
+	    tfx.setDuration(1500);
+	    tfx.start();
+	    while(!tfx.isStopped()) {
+	      tfx.update(SDL_GetTicks());
+	      SDL_Flip(Screen);
+	    }
+	    ContinueGame();
+	  }
+	  
+
 	  Game->GetState()->status = TGameState::PLAYING;
 	} else {
+	  LogLine(LOG_ERROR, "Unable to load any valid map");
+	  CON_ConOut("Unable to load any valid map");
+	  QuitCurrentGame = true;
+	}
+#endif
+	if (!NextMap()) {
 	  LogLine(LOG_ERROR, "Unable to load any valid map");
 	  CON_ConOut("Unable to load any valid map");
 	  QuitCurrentGame = true;

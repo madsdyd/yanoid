@@ -1,4 +1,6 @@
 # Python file that defines a _very_ simple map
+SetMapName("debug 0 - by JCD")
+
 
 # Add a number of bricks
 AddBrick("brick", 460, 50, "basic_brick_hit()",
@@ -19,3 +21,4 @@ def RoundStart():
 
 # And, call it - probably will go
 RoundStart();
+

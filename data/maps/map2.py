@@ -1,5 +1,7 @@
 # Python file that defines a _very_ simple map
 
+SetMapName("Circular Paths - by MBD")
+
 # Add a number of bricks
 for x in range(350, 450, 50):
     for y in range(220-2*18, 220+2*18, 18):

@@ -41,6 +41,20 @@ static TMap * CurrentMap = NULL;
  * *********************************************************************/
 
 /* **********************************************************************
+ * Set the map name
+ * *********************************************************************/
+static PyObject * MapName(PyObject * self, PyObject * args) {
+  char * name;
+  if (!CurrentMap || !PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  if (CurrentMap->SetMapName(name)) {
+    return Py_BuildValue("");
+  } else {
+    return NULL;
+  }
+}
+/* **********************************************************************
  * Add a brick or similar object to the current map
  * *********************************************************************/
 static PyObject * AddObject(PyObject * self, PyObject * args) {
@@ -100,6 +114,7 @@ static PyObject * PowerUp(PyObject * self, PyObject * args) {
  * *********************************************************************/
 
 static PyMethodDef map_methods[] = {
+  {"MapName", MapName, METH_VARARGS},
   {"AddObject", AddObject, METH_VARARGS},
   {"SetPaddle", SetPaddle, METH_VARARGS},
   {"PowerUp", PowerUp, METH_VARARGS},
@@ -213,6 +228,17 @@ bool TMap::Load(string mapname) {
   return result;
 }
 
+
+/* **********************************************************************
+ * Set the map name
+ * *********************************************************************/
+bool TMap::SetMapName(string name) {
+  if (!MapState) {
+    return false;
+  }
+  MapState->mapname = name;
+  return true;
+}
 /* **********************************************************************
  * AddEntity
  * This will need to be refined to allow for different types, etc.

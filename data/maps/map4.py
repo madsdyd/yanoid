@@ -1,5 +1,7 @@
 # Python file that defines a _very_ simple map
 
+SetMapName("Buckets of balls - by MBD")
+
 # Add a number of bricks
 for x in range(6, 750, 79):
     for y in range(91, 250, 29):

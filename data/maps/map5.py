@@ -1,5 +1,7 @@
 # Classic diagonal line of stay bricks
 
+SetMapName("Diagonal Frustration - by MBD")
+
 # Add a number of bricks
 width = 79
 height = 29

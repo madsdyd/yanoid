@@ -1,5 +1,7 @@
 # Python file that defines map3
 
+SetMapName("VV - by JDC")
+
 # Add a number of bricks
 for x in range(0, 9):
         AddBrick("brick", 400-x*40, 50+x*20, "basic_brick_hit()",

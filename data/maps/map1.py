@@ -1,5 +1,7 @@
 # Python file that defines a _very_ simple map
 
+SetMapName("Classic 1 - by MBD")
+
 # Define a hit function for testing purposes
 def powerup_ball_spawn():
     yanoid_map.PowerUp("powerup", "graphics/powerups/yellow_l.png",

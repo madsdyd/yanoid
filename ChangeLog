@@ -5,6 +5,8 @@
 	Added two different shots
 	Lots to be done
 	Added map5.py
+	Added a SetMapName function, and a text effect for 
+	writing the map name
 
 2001-11-24  Mads Bondo Dydensborg  <madsdyd@ripley>
 

@@ -40,9 +40,10 @@ public:
   TGameState() {
     /* We start in cut, 5 lives, no score */
     status = CUT;
-    lives = 2;
+    lives = 5;
     score = 0;
-    currentmap = 0;
+    /* Until a map is loaded, it is -1 */
+    currentmap = -1;
   }
   ~TGameState() {
     LogLine(LOG_TODO, "TGameState::~ Clean up stuff?");

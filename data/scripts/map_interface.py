@@ -1,5 +1,11 @@
 # This file defines a number of helper functions to be used by map defining code
 
+# SetMapName(string name)
+# Defines a string to be shown to the user, with the name of
+# the map, and possibly the creator
+def SetMapName(name):
+    yanoid_map.MapName(name)
+
 # AddBrick(string type, int x, int y, string hitfunction, string pixmap)
 # Adds a brick of type type at x, y, with pixmap pixmap.
 def AddBrick(type, x, y, hitfunction, pixmap):
