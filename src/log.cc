@@ -22,14 +22,43 @@
 #ifdef DEBUG
 #include <iostream>
 
+/* These MUST match the declarations in log.hh */
+static char * loglevel_to_name [] =
+{
+  "FATAL  ",
+  "ERROR  ",
+  "WARNING",
+  "TODO   ",
+  "INFO   ",
+  "TRACE  ",
+  "VERBOSE",
+  "MAX    "
+};
+
+/* **********************************************************************
+ * The log object.
+ * *********************************************************************/
+
 TLog * Log;
+
+/* **********************************************************************
+ * The Setlevel function.
+ * *********************************************************************/
+void TLog::SetLevel(int nlevel) {
+  if (nlevel < LOG_MAX) {
+    level = nlevel; 
+  } else {
+    LogLine(LOG_WARNING, "TLog::SetLevel - level to large");
+  }
+}
+
 
 /* **********************************************************************
  * The AddLine only prints to stdout at this moment 
  * *********************************************************************/
 void TLog::AddLine(int level_, char * filename, int lineno, string line) {
   if (level_ <= level) {
-    cout << "LOG: " << level_ << " in " << filename
+    cout << "LOG: " << loglevel_to_name[level_] << " in " << filename
 	 << ":" << lineno << " - \"" << line << "\"" << endl;
   }
 }

@@ -31,7 +31,7 @@ TPathManager * PathManager;
  * *********************************************************************/
 
 TPathManager::~TPathManager() {
-  LogLine(LOG_WARNING, "Need to empty the PathMap");
+  LogLine(LOG_TODO, "Need to empty the PathMap");
 };
 
 /* **********************************************************************
@@ -41,7 +41,7 @@ TPathManager::~TPathManager() {
 
 void TPathManager::AddPath(string path) {
   LogLine(LOG_VERBOSE, "PathManager is adding " + path);
-  LogLine(LOG_INFO, "AddPath not implemented");
+  LogLine(LOG_TODO, "AddPath not implemented");
 };
 
 /* **********************************************************************
@@ -50,6 +50,6 @@ void TPathManager::AddPath(string path) {
  * *********************************************************************/
 
 string TPathManager::Resolve(string filepath) {
-  LogLine(LOG_INFO, "Resolve not implemented");
+  LogLine(LOG_TODO, "Resolve not implemented");
   return "";
 };

@@ -31,12 +31,18 @@
 #ifdef DEBUG 
 #include <string>
 
-#define LOG_FATAL 0
-#define LOG_ERROR 1
-#define LOG_WARNING 2
-#define LOG_INFO 3
-#define LOG_TRACE 4
-#define LOG_VERBOSE 5
+/* If you any levels below, remember to update the
+   names (in log.cc) also */
+#define LOG_FATAL   0
+#define LOG_ERROR   (1+LOG_FATAL)
+#define LOG_WARNING (1+LOG_ERROR)
+#define LOG_TODO    (1+LOG_WARNING)
+#define LOG_INFO    (1+LOG_TODO)
+#define LOG_TRACE   (1+LOG_INFO)
+#define LOG_VERBOSE (1+LOG_TRACE)
+#define LOG_MAX     (1+LOG_VERBOSE)
+
+
 
 #define LogLine( _level, _line ) \
   Log->AddLine( _level, __FILE__, __LINE__, _line )
@@ -46,7 +52,7 @@ class TLog {
 public:
   TLog() { level = LOG_VERBOSE; };
   ~TLog() {};
-  void SetLevel(int nlevel) { level = nlevel; };
+  void SetLevel(int nlevel);
   void AddLine(int level_, char * filename, int lineno, string line);
 };
 
