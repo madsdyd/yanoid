@@ -156,10 +156,15 @@ void THole::OnCollision(TEntity& other,Uint32 t) {
       /* To cheat the ball into collision reflection, we
 	 have to swap the order... */
       // TEntity::OnCollision(other, t);
+      // I dare not touch this......
       other.OnCollision(*this, t);
     }
+  } 
+  else if ("POWERUP" == other.getEntityType()) {
+    other.MarkDying();
   } else {
-    // LogLine(LOG_WARNING, "THole should not be hit by anything but balls");
+    LogLineExt(LOG_WARNING, 
+	       ("THole hit by %s", other.getEntityType().c_str()));
   }
 }
 
