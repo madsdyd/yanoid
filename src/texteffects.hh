@@ -23,71 +23,58 @@
 #ifndef __TEXTEFFECTS__
 #define __TEXTEFFECTS__
 
+#include "text.hh"
+#include "effects.hh"
 #include <vector>
-#include <SDL/SDL.h>
 #include "point.hh"
 
-
-class TEffect {
-protected:
-  TPoint Location;
-  Uint32 last_update;
-  Uint32 begin_time;
-  typedef enum State { RUNNING, PAUSED, STOPPED } State;
-  State state;
-  Uint32 Duration;
-  bool no_erase;
-  SDL_Surface * background;
-public:
-  TEffect() : Location(0,0), last_update(0),begin_time(0),Duration(1000),no_erase(true) {}
-  void start() { state = RUNNING; } 
-  void pause() { state = PAUSED; }
-  void stop() { state = STOPPED; }
-  bool isStopped() { return state == STOPPED; } 
-  void setLocation(const TPoint& location) { Location = location; }
-  TPoint getLocation() { return Location; }
-  void setDuration(Uint32 dur) { Duration = dur; }
-  Uint32 getDuration() { return Duration; }
-  void update(Uint32 currenttime) { };
-};
-
 class TText;
-class TTextEffects : public TEffect {
-public:
-  typedef enum EffectType { SIMPLE_DISPLAY, 
-			    CHARACTER_SPACED_ANIM,
-			    CHARACTER_JUMPING_ANIM,
-			    CHARACTER_SWIRLING_ANIM
-  } EffectType;
+class TTextEffect : public TEffect {
 protected:
   std::vector<TPoint> char_points;
-  EffectType type;
   SDL_Surface * surface;
   const char* str;
   TText * TextRender;
-public:
-  TTextEffects(const char *str, SDL_Surface *surface, TText * _TextRender,
-	       EffectType et);
-  ~TTextEffects();
-  void update(Uint32 currenttime);
-
-private:
-  //
-  // All the effects
-  //
-  void simpleDisplay(Uint32 currenttime);
-  void characterSpacedAnim(Uint32 currenttime);
-  void characterJumpingAnim(Uint32 currenttime);
-  void characterSwirlingAnim(Uint32 currenttime);
-
-  //
   // Helper functions
-  //
-  void blitChars();
-  void saveCharsBackground();
-  void blitCharsBackground();
+  void blit();
+  virtual void saveBackground();
+  virtual void blitBackground();
+public:
+  TTextEffect(const char *str, SDL_Surface *surface, TText * _TextRender);
+  ~TTextEffect();
 };
 
+
+class TTextEffectDisplay : public TTextEffect {
+public:
+  TTextEffectDisplay(const char* str, SDL_Surface* surf, TText * _TextRender) :
+    TTextEffect(str,surf,_TextRender) {}
+  virtual void doEffect(Uint32 currenttime);
+};
+
+
+class TTextEffectSpaced : public TTextEffect {
+public:
+  TTextEffectSpaced(const char* str, SDL_Surface* surf, TText * _TextRender) :
+    TTextEffect(str,surf,_TextRender) {}
+  virtual void doEffect(Uint32 currenttime);
+};
+
+
+class TTextEffectJumping : public TTextEffect {
+public:
+  TTextEffectJumping(const char* str, SDL_Surface* surf, TText * _TextRender) :
+    TTextEffect(str,surf,_TextRender) {}
+  virtual void doEffect(Uint32 currenttime);
+};
+
+
+class TTextEffectSwirling : public TTextEffect {
+public:
+  TTextEffectSwirling(const char* str, SDL_Surface* surf, TText * _TextRender) :
+    TTextEffect(str,surf,_TextRender) {}
+  virtual void doEffect(Uint32 currenttime);
+};
 
 #endif
 

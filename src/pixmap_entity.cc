@@ -95,6 +95,7 @@ TPixmapEntity::~TPixmapEntity() {
  * SetPixmap changes the pixmap of the entity
  * *********************************************************************/
 void TPixmapEntity::setPixmap(const std::string& path) {
+
   if (currentsurface)
     SurfaceManager->ReleaseRessource(currentsurface);
 
@@ -116,6 +117,7 @@ void TPixmapEntity::setPixmap(const std::string& path) {
  * Change the pixmap, if different
  * *********************************************************************/
 void TPixmapEntity::setPixmap(SDL_Surface * pixmap) {
+
   if (currentsurface != pixmap) {
     SurfaceManager->ReleaseRessource(currentsurface);
     currentsurface = SurfaceManager->DuplicateRessource(pixmap);

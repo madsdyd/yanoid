@@ -8,7 +8,7 @@ yanoid_SOURCES = tabcomplete.cc readline.cc console.cc text.cc statistics.cc \
 		surfacemanager.cc musicmanager.cc \
 		ressourcemanager.cc highscore.cc \
 	        debug.cc log.cc screen.cc main.cc globals.cc  \
-		menu.cc texteffects.cc 
+		menu.cc effects.cc texteffects.cc imageeffects.cc
 
 # none of these are installed - here for dist
 noinst_HEADERS = tabcomplete.hh readline.hh console.hh text.hh statistics.hh \
@@ -19,4 +19,6 @@ noinst_HEADERS = tabcomplete.hh readline.hh console.hh text.hh statistics.hh \
 		 surfacemanager.hh musicmanager.hh \
 		 ressourcemanager.hh highscore.hh \
 		 debug.hh log.hh screen.hh \
-		 menu.hh texteffects.hh 
+		 menu.hh effects.hh imageeffects.hh texteffects.hh \
+		 imageeffects.hh
+

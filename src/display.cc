@@ -83,6 +83,17 @@ void TDisplay::Render(SDL_Surface * surface) {
     (*i)->Render(surface);
   }
 
+  Uint32 time = SDL_GetTicks();
+  for (std::vector<TEffect*>::iterator iter = effects.begin() ;
+       iter != effects.end() ; ++iter) {
+    if ((*iter)->isStopped()) {
+      //      delete (*iter);
+      //      iter = effects.erase(iter);
+    }else{
+      (*iter)->update(time);
+    }
+  }
+
   /* **********************************************************************
    * Draw the HUD...
    * *********************************************************************/

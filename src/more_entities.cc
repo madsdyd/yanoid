@@ -26,6 +26,8 @@
 #include "more_entities.hh"
 #include "soundmanager.hh"
 #include "surfacemanager.hh"
+#include "imageeffects.hh"
+#include "screen.hh"
 
 /* **********************************************************************
  * The hole bounces variable
@@ -67,6 +69,26 @@ void TBrick::OnCollision(TEntity& other) {
     TPixmapEntity::OnCollision(other);
     if (hitnum > 0 && --hitnum == 0) {
       removable = true;
+
+      // If we have an image initiate an exploding effect
+      if (currentsurface) {
+	SDL_Surface * img = SurfaceManager->DuplicateRessource(currentsurface);
+	
+	// pseudo random choosing the effect
+	TImageParticleEffect* ef;
+	//	int hack = ((int)this) / 10;
+	//	if ( hack % 2) {
+	ef = new TImageExplodeAllDirEffect(Screen, img, w(), h()); 
+	//	} else {
+	//	  ef = new TImageExplodeHorizontalBlocksEffect(Screen, img, w(), h()); 
+	//	}
+	ef->setDuration(300);
+	ef->setPostHoldTime(0);
+	ef->setLocation(position);
+	ef->start();
+	effects.push_back(ef);
+      }
+
     }
   }
 }
@@ -114,6 +136,18 @@ void TPowerUp::OnCollision(TEntity& other) {
        it should spawn a relevant powerup... */
     ExecuteScriptHitCall();
     removable = true;
+
+      // If we have an image initiate an exploding effect
+      if (currentsurface) {
+	SDL_Surface * img = SurfaceManager->DuplicateRessource(currentsurface);
+	TImageImplodeAllDirEffect* ef = 
+	  new TImageImplodeAllDirEffect(Screen, img, w(), h()); 
+	ef->setDuration(300);
+	ef->setPostHoldTime(0);
+	ef->setLocation(position);
+	ef->start();
+	effects.push_back(ef);
+      }
   }
 }
 /* **********************************************************************

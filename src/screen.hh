@@ -24,9 +24,13 @@
 #ifndef __SCREEN_HH__
 #define __SCREEN_HH__
 #include "SDL/SDL.h"
+#include <vector>
+#include "effects.hh"
 
 extern SDL_Surface * Screen; /* The Sreen */
 extern SDL_Surface * Splash; /* The splash logo */
 extern bool ConsoleDown;
 extern bool DisplayStat; 
+extern vector<TEffect*> effects;
+
 #endif

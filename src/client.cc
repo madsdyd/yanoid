@@ -185,15 +185,15 @@ bool TClient::NextMap() {
     {
       PauseGame();
       Render();
-      TTextEffects tfx(Game->GetState()->MapState->mapname.c_str(), 
-		       Screen, TextRender, 
-		       TTextEffects::CHARACTER_SPACED_ANIM);
+      TTextEffectSpaced tfx(Game->GetState()->MapState->mapname.c_str(), 
+			    Screen, TextRender);
       tfx.setLocation(TPoint((Screen->w -  
 			      Game->GetState()->MapState->mapname.size()
 			      // * DT_FontWidth(*font))/2, 
 			      * TextRender->GetGlyphWidth())/2, 
 			     Screen->h / 2));
       tfx.setDuration(1500);
+      tfx.setPostHoldTime(500);
       tfx.start();
       while(!tfx.isStopped()) {
 	tfx.update(SDL_GetTicks());
@@ -290,13 +290,13 @@ void TClient::Run() {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
 	const char* str = "Game Over";
-	TTextEffects tfx(str, Screen, TextRender, 
-			 TTextEffects::CHARACTER_JUMPING_ANIM);
+	TTextEffectJumping tfx(str, Screen, TextRender);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2, 
 				* TextRender->GetGlyphWidth())/2, 
 			       Screen->h / 2));
 	tfx.setDuration(1500);
+	tfx.setPostHoldTime(500);
 	tfx.start();
 	while(!tfx.isStopped()) {
 	  tfx.update(SDL_GetTicks());
@@ -318,33 +318,37 @@ void TClient::Run() {
        * Ball lost (CUT)
        * *********************************************************************/
       case TGameState::CUT: {
-	PauseGame();
-	//	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
-	//	RoundOverMenu->Run();
-	//	delete RoundOverMenu;
+	//	PauseGame();
+	/* No more shooting */
+	//	ContinueGame();
+
+	Game->GetState()->shot_time_left = 0;
+	Game->GetState()->current_shot_time_left = 0;
+
 	const char* str = "You lost the ball..";
-	TTextEffects tfx(str, Screen, TextRender, 
-			 TTextEffects::CHARACTER_SWIRLING_ANIM);
+	TTextEffectSwirling tfx(str, Screen, TextRender);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2,
 				* TextRender->GetGlyphWidth())/2,
 			       Screen->h / 2));
-	tfx.setDuration(1500);
 	tfx.start();
+	Uint32 _last_update = SDL_GetTicks();
 	while(!tfx.isStopped()) {
-	  tfx.update(SDL_GetTicks());
+	  Uint32 tmp = SDL_GetTicks();
+	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
+	  Game->GetState()->MapState->GetPaddle()->Render(Screen);
+	  tfx.update(tmp);
 	  SDL_Flip(Screen);
+	  HandleEvents();
+	  _last_update = tmp;
 	}
-	//	Game->GetState()->MapState->ballbirth = 0;
-	/* No more shooting */
-	Game->GetState()->shot_time_left = 0;
-	Game->GetState()->current_shot_time_left = 0;
-	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
 	  LogLine(LOG_ERROR, "Error running interprenter -RoundStart()-");
 	}
 	/* This is a hack to reset the paddle, when a map is done */
+	// WHY IS THAT ???
+	/*
 	{
 	  TEntity * paddle = Game->GetState()->MapState->GetPaddle();
 	  if (paddle) {
@@ -353,6 +357,7 @@ void TClient::Run() {
 	    paddle->getMotion()->setAccel( 0.0 );
 	  }
 	}
+	*/
 	/* Set the game status ... hmm. may not be appropiate */
 	LogLine(LOG_VERBOSE, "Setting game to PLAYING state");
 	Game->GetState()->status = TGameState::PLAYING;
@@ -366,13 +371,13 @@ void TClient::Run() {
 	 * Do a text effect that says the level is complete.
 	 * *********************************************************************/
 	const char* str = "Level complete!";
-	TTextEffects tfx(str, Screen, TextRender, 
-			 TTextEffects::CHARACTER_SPACED_ANIM);
+	TTextEffectSpaced tfx(str, Screen, TextRender);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2, 
 				* TextRender->GetGlyphWidth())/2, 
 			       Screen->h / 2 - 40));
 	tfx.setDuration(1500);
+	tfx.setDuration(500);
 	tfx.start();
 	while(!tfx.isStopped()) {
 	  tfx.update(SDL_GetTicks());
@@ -392,13 +397,13 @@ void TClient::Run() {
 	  /* No bonus */
 	  sprintf(msg, "No time bonus");
 	}
-	TTextEffects tfx2(msg, Screen, TextRender, 
-			  TTextEffects::CHARACTER_SPACED_ANIM);
+	TTextEffectSpaced tfx2(msg, Screen, TextRender);
 	tfx2.setLocation(TPoint((Screen->w - strlen(msg) 
 				 // * DT_FontWidth(*font))/2, 
 				 * TextRender->GetGlyphWidth())/2, 
 				Screen->h / 2 + 40));
 	tfx2.setDuration(1500);
+	tfx2.setDuration(500);
 	tfx2.start();
 	while(!tfx2.isStopped()) {
 	  tfx2.update(SDL_GetTicks());
@@ -437,13 +442,12 @@ void TClient::Run() {
 void TClient::UpdateGame() {
 
   if (paused > 0) { 
-    /* Only update the console, assume that 
+    /* Only update the console and paddle, assume that 
        Aj, this sucks.
      */
     Uint32 tmp = SDL_GetTicks() - console_lastupdate;
     Console->Update(tmp);
-
-    return; 
+    return;
   };
   /* Update the deltatick */
   Uint32 deltaticks = SDL_GetTicks() - game_start - game_lastupdate;
