@@ -97,4 +97,10 @@ SDL application that uses SDL_mixer.
   and I have no idea why. It is very simple, yet crashes frequently.
   I have ifdeffed it to hell. (mads)
 
+* The powerups passes behind bricks. This has to do with the y sorting
+  of entities. Fix?
 
+* Occasionally balls will pass through objects they are supposed to 
+  collide with. This appears to happen mostly when the framerate drops
+  below a certain threshhold. Fix? May be OK to decrease the virtual time
+  step, but it is alread quite low...
