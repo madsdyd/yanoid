@@ -1,7 +1,6 @@
 # Load the bricks code
 
-scripts = [ "objects/basic_brick.py",
-            "objects/powerups.py" ]
+scripts = [ "objects/powerups.py", "objects/basic_brick.py" ]
 
 for script in scripts:
     put_console("Executing " + yanoid.resolve(script))

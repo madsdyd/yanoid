@@ -196,7 +196,7 @@ bool TClient::NextMap() {
       tfx.setPostHoldTime(500);
       tfx.start();
       while(!tfx.isStopped()) {
-	tfx.update(SDL_GetTicks());
+	tfx.update(Screen, SDL_GetTicks());
 	SDL_Flip(Screen);
       }
       ContinueGame();
@@ -299,7 +299,7 @@ void TClient::Run() {
 	tfx.setPostHoldTime(500);
 	tfx.start();
 	while(!tfx.isStopped()) {
-	  tfx.update(SDL_GetTicks());
+	  tfx.update(Screen, SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
 	if (Highscore->isCandidate(Game->GetState()->score)) {
@@ -337,7 +337,7 @@ void TClient::Run() {
 	  Uint32 tmp = SDL_GetTicks();
 	  Game->GetState()->MapState->GetPaddle()->Update(tmp - _last_update);
 	  Game->GetState()->MapState->GetPaddle()->Render(Screen);
-	  tfx.update(tmp);
+	  tfx.update(Screen, tmp);
 	  SDL_Flip(Screen);
 	  HandleEvents();
 	  _last_update = tmp;
@@ -380,7 +380,7 @@ void TClient::Run() {
 	tfx.setDuration(500);
 	tfx.start();
 	while(!tfx.isStopped()) {
-	  tfx.update(SDL_GetTicks());
+	  tfx.update(Screen, SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
 	
@@ -406,7 +406,7 @@ void TClient::Run() {
 	tfx2.setDuration(500);
 	tfx2.start();
 	while(!tfx2.isStopped()) {
-	  tfx2.update(SDL_GetTicks());
+	  tfx2.update(Screen, SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
 

@@ -39,13 +39,15 @@ void TEffect::setPostHoldTime(Uint32 hold) {
     post_hold_time = hold; 
 }
 
-void TEffect::update(Uint32 currenttime) {
+void TEffect::update(SDL_Surface * surf, Uint32 currenttime) {
 
   if (state == STOPPED)
     return;
 
   if (!begin_time)
     begin_time = currenttime;
+
+  surface = surf;
 
   if ( (currenttime - begin_time) > Duration) {
 
@@ -83,7 +85,7 @@ void TEffect::run(SDL_Surface *Screen) {
   while(!isStopped()) {
 
     // Update/render the effect
-    update(SDL_GetTicks());
+    update(Screen, SDL_GetTicks());
 
     SDL_Event event;
     // handle keyevents

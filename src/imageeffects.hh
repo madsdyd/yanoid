@@ -62,7 +62,6 @@ protected:
     TPoint point;
   };
   std::vector<particle_t> particles;
-  SDL_Surface * surface;
   SDL_Surface * image;
   int img_w;
   int img_h;
@@ -74,7 +73,7 @@ protected:
   virtual void blitBackground();
 
 public:
-  TImageParticleEffect(SDL_Surface *surface, SDL_Surface* Image,
+  TImageParticleEffect(SDL_Surface* Image,
 		       int w, int h);
   ~TImageParticleEffect();
 };
@@ -82,27 +81,26 @@ public:
 
 class TImageExplodeAllDirEffect : public TImageParticleEffect {
 public:
-  TImageExplodeAllDirEffect(SDL_Surface *srf, SDL_Surface* img,
+  TImageExplodeAllDirEffect(SDL_Surface* img,
 			    int w, int h) :
-    TImageParticleEffect(srf, img, w, h) {}
+    TImageParticleEffect(img, w, h) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
 
 class TImageImplodeAllDirEffect : public TImageParticleEffect {
 public:
-  TImageImplodeAllDirEffect(SDL_Surface *srf, SDL_Surface* img,
-			    int w, int h) :
-    TImageParticleEffect(srf, img, w, h) {}
+  TImageImplodeAllDirEffect(SDL_Surface* img, int w, int h) :
+    TImageParticleEffect(img, w, h) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
 
 class TImageExplodeHorizontalBlocksEffect : public TImageParticleEffect {
 public:
-  TImageExplodeHorizontalBlocksEffect(SDL_Surface *srf, SDL_Surface* img,
+  TImageExplodeHorizontalBlocksEffect(SDL_Surface* img,
 			    int w, int h) :
-    TImageParticleEffect(srf, img, w, h) {}
+    TImageParticleEffect(img, w, h) {}
   virtual void doEffect(Uint32 currenttime);
 };
 
@@ -110,18 +108,18 @@ public:
 /*
 class TImageExplodeHorizontalEffect : public TImageParticleEffect {
 public:
-TImageExplodeAllDirEffect(SDL_Surface *surface, SDL_Surface* Image, 
+TImageExplodeAllDirEffect(SDL_Surface* Image, 
 EffectType et) :
-  TImageParticleEffect(surface, image) {}
+  TImageParticleEffect(image) {}
   virtual void doEffect(Uint32 currenttime);
 }
 
 
 class TImageBuildImageEffect : public TImageBuildImageEffect {
 public:
-  TImageBuildImageEffect(SDL_Surface *surface, SDL_Surface* Image, 
+  TImageBuildImageEffect(SDL_Surface* Image, 
   EffectType et) :
-  TImageParticleEffect(surface, image) {}
+  TImageParticleEffect(image) {}
   virtual void doEffect(Uint32 currenttime);
 }
 */

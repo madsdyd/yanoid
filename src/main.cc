@@ -237,9 +237,9 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
 
   // open 11025 Hz, 8-bit, 1 channel, 512 chunksize
+  bool AudioInitialized = false;
 #ifndef NO_MUSIC_THREAD
-  bool AudioInitialized
-    = (Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0);
+  AudioInitialized = (Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0);
   if (!AudioInitialized) {
     cout << "Unable to open audio" << endl;
   } else { 

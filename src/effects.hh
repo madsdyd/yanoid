@@ -38,6 +38,7 @@ protected:
   State state;
   Uint32 Duration;
   bool no_erase;
+  SDL_Surface * surface; // to blit on
   SDL_Surface * background;
   virtual void saveBackground() = 0;
   virtual void blitBackground() = 0;
@@ -54,7 +55,7 @@ public:
   void setDuration(Uint32 dur);
   void setPostHoldTime(Uint32 hold);
   Uint32 getDuration() { return Duration; }
-  void update(Uint32 currenttime);
+  void update(SDL_Surface * surface, Uint32 currenttime);
   virtual void doEffect(Uint32 currenttime) = 0;
   void run(SDL_Surface* screen);
 };

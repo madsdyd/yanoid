@@ -21,13 +21,13 @@
 */
 
 #include "imageeffects.hh"
+#include "debug.hh"
 #include <stdlib.h>
 #include <math.h>
 
-TImageParticleEffect::TImageParticleEffect(SDL_Surface *surf, 
-					   SDL_Surface *img,
+TImageParticleEffect::TImageParticleEffect(SDL_Surface *img,
 					   int w, int h) :  
-  surface(surf), image(img), img_w(w), img_h(h)
+  image(img), img_w(w), img_h(h)
 {
   /* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,
      as expected by OpenGL for textures */
@@ -76,8 +76,10 @@ TImageParticleEffect::TImageParticleEffect(SDL_Surface *surf,
 
 TImageParticleEffect::~TImageParticleEffect() 
 {
-  if (background)
+  if (background) {
     SDL_FreeSurface(background); 
+    background = 0;
+  }
 }
 
 
@@ -171,7 +173,6 @@ TImageExplodeHorizontalBlocksEffect::doEffect(Uint32 currenttime)
   blit();
 }
 
-
 void TImageParticleEffect::blit() 
 {
   int count = 0;
@@ -180,18 +181,38 @@ void TImageParticleEffect::blit()
   SDL_LockSurface( surface );
   SDL_LockSurface( image );
   int maxIndex = surface->w * surface->h;
+  int bpp = surface->format->BytesPerPixel;
+
   for (std::vector<particle_t>::iterator i = particles.begin();
        i != particles.end() ; ++i) {
 
     int x = (unsigned int)(i->point.x() + Location.x());
-    int index = ((x < 0) ? 0 : ((x > surface->w) ? surface->w : x)) + 
-      (int)(i->point.y() + Location.y()) * surface->w;
+    int y = (unsigned int)(i->point.y() + Location.y()) * surface->w;
+    int index = ((x < 0) ? 0 : ((x > surface->w) ? surface->w : x)) + y;
 
     if (index >= maxIndex)
       continue;
 
-    ((Uint32*)surface->pixels)[index] = 
-      ((Uint32*)image->pixels)[count];
+    switch(bpp) {
+    case 1:
+      ((Uint8*)surface->pixels)[index] = ((Uint8*)image->pixels)[count];
+      break;
+    case 2:
+      ((Uint16*)surface->pixels)[index] = ((Uint16*)image->pixels)[count];
+      break;
+    case 3: {
+      int i = index * 3;
+      int c = count * 3;
+      ((Uint8*)surface->pixels)[i] = ((Uint8*)image->pixels)[c];
+      ((Uint8*)surface->pixels)[i+1] = ((Uint8*)image->pixels)[c+1];
+      ((Uint8*)surface->pixels)[i+2] = ((Uint8*)image->pixels)[c+2];
+      break;
+    }
+    case 4:
+      ((Uint32*)surface->pixels)[index] = ((Uint32*)image->pixels)[count];
+    default:
+      Assert(0,"Error blitting pixels");
+    }
 
     count++;
   }
@@ -207,6 +228,8 @@ void TImageParticleEffect::saveBackground()
   SDL_LockSurface( background );
   // Print the character to the right place on the screen
   int maxIndex = surface->w * surface->h;
+  int bpp = surface->format->BytesPerPixel;
+
   for (std::vector<particle_t>::iterator i = particles.begin();
        i != particles.end() ; ++i) {
     int x = (unsigned int)(i->point.x() + Location.x());
@@ -216,8 +239,27 @@ void TImageParticleEffect::saveBackground()
     if (index >= maxIndex)
       continue;
 
-    ((Uint32*)background->pixels)[count] =
-	((Uint32*)surface->pixels)[index];
+    switch(bpp) {
+    case 1:
+      ((Uint8*)background->pixels)[count] = ((Uint8*)surface->pixels)[index];
+      break;
+    case 2:
+      ((Uint16*)background->pixels)[count] = ((Uint16*)surface->pixels)[index];
+      break;
+    case 3: {
+      int i = index * 3;
+      int c = count * 3;
+      ((Uint8*)background->pixels)[c] = ((Uint8*)surface->pixels)[i];
+      ((Uint8*)background->pixels)[c+1] = ((Uint8*)surface->pixels)[i+1];
+      ((Uint8*)background->pixels)[c+2] = ((Uint8*)surface->pixels)[i+2];
+      break;
+    }
+    case 4:
+      ((Uint32*)background->pixels)[count] = ((Uint32*)surface->pixels)[index];
+    default:
+      Assert(0,"Error blitting pixels");
+    }
+
     count++;
   }
   SDL_UnlockSurface( surface );
@@ -232,6 +274,8 @@ void TImageParticleEffect::blitBackground()
   SDL_LockSurface( background );
   // Print the character to the right place on the screen
   int maxIndex = surface->w * surface->h;
+  int bpp = surface->format->BytesPerPixel;
+
   for (std::vector<particle_t>::iterator i = particles.begin();
        i != particles.end() ; ++i) {
     int x = (unsigned int)(i->point.x() + Location.x());
@@ -239,8 +283,27 @@ void TImageParticleEffect::blitBackground()
       (int)(i->point.y() + Location.y()) * surface->w;
     if (index >= maxIndex)
       continue;
-    ((Uint32*)surface->pixels)[index] = 
-      ((Uint32*)background->pixels)[count];
+    switch(bpp) {
+    case 1:
+      ((Uint8*)surface->pixels)[index] = ((Uint8*)background->pixels)[count];
+      break;
+    case 2:
+      ((Uint16*)surface->pixels)[index] = ((Uint16*)background->pixels)[count];
+      break;
+    case 3: {
+      int i = index * 3;
+      int c = count * 3;
+      ((Uint8*)surface->pixels)[i] = ((Uint8*)background->pixels)[c];
+      ((Uint8*)surface->pixels)[i+1] = ((Uint8*)background->pixels)[c+1];
+      ((Uint8*)surface->pixels)[i+2] = ((Uint8*)background->pixels)[c+2];
+      break;
+    }
+    case 4:
+      ((Uint32*)surface->pixels)[index] = ((Uint32*)background->pixels)[count];
+    default:
+      Assert(0,"Error blitting pixels");
+    }
+
     count++;
   }
   SDL_UnlockSurface( surface );

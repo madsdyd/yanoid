@@ -90,7 +90,7 @@ void TDisplay::Render(SDL_Surface * surface) {
       //      delete (*iter);
       //      iter = effects.erase(iter);
     }else{
-      (*iter)->update(time);
+      (*iter)->update(surface, time);
     }
   }
 

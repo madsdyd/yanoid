@@ -78,7 +78,7 @@ void TBrick::OnCollision(TEntity& other) {
 	TImageParticleEffect* ef;
 	//	int hack = ((int)this) / 10;
 	//	if ( hack % 2) {
-	ef = new TImageExplodeAllDirEffect(Screen, img, w(), h()); 
+	ef = new TImageExplodeAllDirEffect(img, w(), h()); 
 	//	} else {
 	//	  ef = new TImageExplodeHorizontalBlocksEffect(Screen, img, w(), h()); 
 	//	}
@@ -141,7 +141,7 @@ void TPowerUp::OnCollision(TEntity& other) {
       if (currentsurface) {
 	SDL_Surface * img = SurfaceManager->DuplicateRessource(currentsurface);
 	TImageImplodeAllDirEffect* ef = 
-	  new TImageImplodeAllDirEffect(Screen, img, w(), h()); 
+	  new TImageImplodeAllDirEffect(img, w(), h()); 
 	ef->setDuration(300);
 	ef->setPostHoldTime(0);
 	ef->setLocation(position);
