@@ -6,7 +6,6 @@ SetMapName("Classic 1 - by MBD")
 for x in range(6, 750, 79):
     for y in range(91, 278, 29):
         row = y % 7
-        print row
         if (row == 0 or row == 6):
             AddBrick("brick", x, y, "basic_brick_hit()",
                      "graphics/bricks/blue2_75.png")
