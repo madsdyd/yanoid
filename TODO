@@ -33,6 +33,9 @@ TODO: Clean up this file, assign priorities and tasks...
 * Sounds (BS)
 - brick effect sounds (explosion, disappear, whatever)
 - sound for loosing a ball
+- Game Over
+- Game startup
+- stereo fx?
 
 * Pixel perfect collision detection?
 
@@ -57,15 +60,21 @@ SDL application that uses SDL_mixer.
 - Better Paddle graphic(? Must be rectangular. After 1/12/2001 we'll see)
 - Graphic for different bricks
 - Ball graphic 
+	fire
+	penetrator
+	"invisible"
+	big
 - Powerup graphics
 - Various animation stuff 
 	Level complete
 	Game over 
+- Background
+	Starfield sim or so?
 
 * Pause game on minimize (sleep to reduce CPU usage as well)
 
 **********************************************************************
-** IDEERS
+** IDEAS
 
 - Ball on fire. Makes more damage that normal ball.
 
@@ -74,6 +83,7 @@ SDL application that uses SDL_mixer.
 
 * Network system 
   - (Get/deliver events/state from/to the network)
+  - commit highscore to game homepage.
 
 * Input system
   - mouse (probably not)
