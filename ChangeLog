@@ -1,5 +1,11 @@
 2001-12-08  Mads Bondo Dydensborg  <madsdyd@ripley>
 
+	* Powerup
+	Added _non_ working ballspeed powerup.
+
+	* Highscore
+	Made it such that the highscore is shown, if you enter a new one.
+
 	* Rounding
 	Fixed proper rounding when blitting pixmapentities.
 	

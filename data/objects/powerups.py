@@ -18,6 +18,9 @@ from random import randrange
 # is the "weight" of the powerup.
 powerups = [ [9, "powerup_spawn_ball()"],
 
+             [4, 'powerup_spawn_ball_speed("graphics/powerups/grayblue_slowball.png", "20")'],
+             [4, 'powerup_spawn_ball_speed("graphics/powerups/grayblue_speedball.png", "500")'],
+
              [2, "powerup_spawn_life()"],
              [2, "powerup_spawn_remove_life()"],
 
@@ -106,7 +109,9 @@ PreloadAddSurfaceList([ "graphics/powerups/lightblue_-1000.png",
                         "graphics/shots/penetrating.png",
                         "graphics/powerups/powerup_normal.png",
                         "graphics/powerups/powerup_larger.png",
-                        "graphics/powerups/powerup_smaller.png"])
+                        "graphics/powerups/powerup_smaller.png",
+                        "graphics/powerups/grayblue_slowball.png",
+                        "graphics/powerups/grayblue_speedball.png" ])
 
 PreloadAddSoundList([ "sounds/powerup_collect.wav",
                       "sounds/powerup_bad.wav" ])
@@ -189,7 +194,7 @@ def powerup_size_paddle_hit(size, seconds):
     
 ######################################################################
 # Point powerups
-# Not, both pixmap and point are strings
+# Note, both pixmap and point are strings
 def powerup_spawn_point_adjust(pixmap, point):
     yanoid_map.PowerUp("powerup", pixmap,
                        "powerup_point_adjust_hit("+point+")")
@@ -201,3 +206,17 @@ def powerup_point_adjust_hit(point):
         PlaySound("sounds/powerup_collect.wav")
     AdjustScore(point)
         
+######################################################################
+# Ball speed powerups, note, argument is a string
+def powerup_spawn_ball_speed(pixmap, percent):
+    yanoid_map.PowerUp("powerup", pixmap,
+                       "powerup_ball_speed_hit('"+percent+"')")
+
+def powerup_ball_speed_hit(percent):
+    if (percent > 100):
+        PlaySound("sounds/powerup_bad.wav")
+    else:
+        PlaySound("sounds/powerup_collect.wav")
+    yanoid_map.PowerUp("ball-speed", percent, "");
+        
+

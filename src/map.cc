@@ -430,6 +430,20 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
       return false;
     }
   } /* "spawn-ball" */ 
+  
+  /* **********************************************************************
+   * Changing ball speed
+   * *********************************************************************/
+  else if ("ball-speed" == action) {
+    /* Arg1 = % change (150 % == 1.5 times as fast, 80 = 0.8 times, etc */
+    int percent = atoi(arg1.c_str());
+    if (percent > 0) {
+      MapState->ballspeed *= (percent/100.0);
+    } else {
+      LogLineExt(LOG_ERROR, ("ball-speed with invalid argument %s", arg1.c_str()));
+      return false;
+    }
+  } 
 
   /* **********************************************************************
    * size-paddle
