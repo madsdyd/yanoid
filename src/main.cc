@@ -48,6 +48,15 @@
 #include "display.hh"
 #include "client.hh"
 
+/* **********************************************************************
+ * A handler for segmentation errors 
+ * *********************************************************************/
+void SignalHandler(int signal) {
+  BackTrace();
+  exit(-1);
+}
+
+
 int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize the logging stuff, if present
@@ -57,6 +66,11 @@ int main(int argc, char ** argv) {
   Assert(Log != NULL, "Unable to create Log object");
   LogLine(LOG_VERBOSE, "Log object created");
 #endif
+
+  /* **********************************************************************
+   * Hangle signals *
+   * *********************************************************************/
+  signal(SIGSEGV, SignalHandler);
 
   /* **********************************************************************
    * Print our version, and so on.
@@ -93,27 +107,6 @@ int main(int argc, char ** argv) {
   */
 
   /* **********************************************************************
-   * Initialize the surface manager
-   * *********************************************************************/
-
-  SurfaceManager = new TSurfaceManager();
-  Assert(PathManager != NULL, "Unable to create SurfaceManager");
-  LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
-
-  /* A small test */
-  SDL_Surface * mysurf 
-    = SurfaceManager->RequireRessource("graphics/yanoid.png");
-  Assert(NULL != mysurf, "Error getting SDL_Surface *");
-  
-  /* **********************************************************************
-   * TEST - initialize game, display and client.
-   * *********************************************************************/
-  Game    = new TGame();
-  Display = new TDisplay();
-  TClient * Client = new TClient();
-  
-
-  /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -134,6 +127,30 @@ int main(int argc, char ** argv) {
 			    | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
   LogLine(LOG_VERBOSE, "Videomode set (800x600, fullscreen)");
+
+  /* **********************************************************************
+   * Initialize the surface manager (requires SDL to be initialized and 
+   * the video mode to be set!)
+   * *********************************************************************/
+
+  SurfaceManager = new TSurfaceManager();
+  Assert(PathManager != NULL, "Unable to create SurfaceManager");
+  LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
+
+  /* A small test */
+  SDL_Surface * mysurf 
+    = SurfaceManager->RequireRessource("graphics/yanoid.png");
+  Assert(NULL != mysurf, "Error getting SDL_Surface *");
+  
+  /* **********************************************************************
+   * TEST - initialize game, display and client.
+   * *********************************************************************/
+  Game    = new TGame();
+  Display = new TDisplay();
+  TClient * Client = new TClient();
+  
+
+
 
 
   /* **********************************************************************

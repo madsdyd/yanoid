@@ -29,6 +29,9 @@
 #ifdef DEBUG 
 #include <signal.h>
 
+/* A backtrace function */
+void BackTrace();
+
 /* A custom assert */
 extern bool CustomAssert( bool expr, char * description , 
 			  int linenum, char * filename);
