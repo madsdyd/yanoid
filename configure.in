@@ -162,6 +162,9 @@ fi
 AC_ARG_ENABLE(optimize,  [  --enable-optimize       Enable various optimizations. Looooong compile time],
 			 [YANOID_CFLAGS="$YANOID_CFLAGS $YANOID_OP_CFLAGS"; YANOID_CXXFLAGS="$YANOID_CXXFLAGS $YANOID_OP_CXXFLAGS"])
 
+AC_ARG_ENABLE(optimize-size,  [  --enable-optimize-size  Enable optimization for size. Only relevante in contest.],
+			 [YANOID_CFLAGS="$YANOID_CFLAGS -O"; YANOID_CXXFLAGS="$YANOID_CXXFLAGS -O"])
+
 AC_ARG_ENABLE(pedantic,  [  --enable-pedantic       Enable -pedantic (and -ansi for C) when compiling], 
                          [YANOID_CFLAGS="$YANOID_CFLAGS -ansi -pedantic"; YANOID_CXXFLAGS="$YANOID_CXXFLAGS -pedantic"])
 

@@ -26,7 +26,8 @@
 #include "config.h"
 #endif
 
-#ifdef DEBUG 
+#define ASSERT_ON
+#ifdef ASSERT_ON
 #include <signal.h>
 
 /* A backtrace function */

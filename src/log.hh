@@ -76,6 +76,7 @@ extern TLog * Log;
 
 #else
 #define LogLine( _level, _line ) 
+#define LogLineExt( _level, _line ) 
 #endif
 
 #endif

@@ -11,8 +11,10 @@ dnl PYTHON          - (/usr/bin/python) the Python executable
 dnl PYTHON_VERSION  - (x.y) the Python version
 dnl PYTHON_INCLUDES - (-I) the path to the Python include directory
 dnl PYTHON_LIBS     - (-l) libs required to link with the libpython lib
-dnl PYTHON_LDFLAGS  - (-L) dirs to search for the libpython lib
-dnl PYTHON_LIBRARY  - (-lpython<version>) the libpython lib
+dnl PYTHON_LIBDIR   - dir with the libpython lib in
+dnl PYTHON_LDFLAGS  - -LPYTHON_LIBDIR
+dnl PYTHON_LIBNAME  - python<version> - the libpython lib
+dnl PYTHON_LIBRARY  - -lPYTHON_LIBNAME
 
 dnl On failure, the variable mbd_check_python_failure is set to yes
 
@@ -140,13 +142,17 @@ else:
     AC_SUBST(PYTHON_LIBS)
     dnl Find the directory with the libpython file in
     dnl I do not know which of py_prefix and py_exec_prefix that is the correct to use
-    PYTHON_LDFLAGS="-L${py_prefix}/lib/python${PYTHON_VERSION}/config" 
+    PYTHON_LIBDIR="${py_prefix}/lib/python${PYTHON_VERSION}/config" 
+    PYTHON_LDFLAGS="-L$PYTHON_LIBDIR"
     if test "$py_prefix" != "$py_exec_prefix"; then
       PYTHON_LDFLAGS="$PYTHON_LDFLAGS -L${py_exec_prefix}/lib/python${PYTHON_VERSION}/config"
     fi
+    AC_SUBST(PYTHON_LIBDIR)
     AC_SUBST(PYTHON_LDFLAGS)
     dnl Buils the libpython name
-    PYTHON_LIBRARY="-lpython$PYTHON_VERSION"
+    PYTHON_LIBNAME="python$PYTHON_VERSION"
+    PYTHON_LIBRARY="-l$PYTHON_LIBNAME"
+    AC_SUBST(PYTHON_LIBNAME)
     AC_SUBST(PYTHON_LIBRARY)
     AC_MSG_RESULT([found])
  

@@ -103,6 +103,7 @@ void AlphaChange(char *alpha)
   }
 }
 
+#ifdef DEBUG
 /* Dup to console or not */
 void DupLogToConsole(char * arg) {
   duptoconsole = !duptoconsole;
@@ -112,6 +113,7 @@ void DupLogToConsole(char * arg) {
     CON_ConOut("Logging information not dupped to console");
   }
 }
+#endif
 
 /* Show/hide highscore */
 void DisplayHighscore(char *arg)
@@ -292,7 +294,9 @@ int main(int argc, char ** argv) {
   
   /* Add some commands to the console */
   CON_AddCommand(&AlphaChange,      "alpha");
+#ifdef DEBUG
   CON_AddCommand(&DupLogToConsole,  "duplogtoconsole");
+#endif
   CON_AddCommand(&DisplayHighscore, "highscore");
   CON_AddCommand(&Python,           "i");
   CON_AddCommand(&LoadMap,          "loadmap");

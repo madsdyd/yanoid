@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "debug.hh"
-#ifdef DEBUG
+#ifdef ASSERT_ON
 
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h> 
