@@ -33,6 +33,14 @@ TEntity::TEntity() {
 }
 
 /* **********************************************************************
+ * The destructor just clears the surface
+ * *********************************************************************/
+TEntity::~TEntity() {
+  SurfaceManager->ReleaseRessource(currentsurface);
+}
+
+
+/* **********************************************************************
  * The Update method simple moves the TEntity along with the velocity
  * *********************************************************************/
 void TEntity::Update(Uint32 deltatime) {

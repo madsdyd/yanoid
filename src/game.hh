@@ -26,9 +26,14 @@
 #include "entity.hh"
 
 
+#include "log.hh"
+
 class TGameState {
 public:
   TEntities Entities;
+  ~TGameState() {
+    LogLine(LOG_TODO, "TGameState::~ Clean up stuff");
+  }
 };
 
 /* The TGame contains all the game state, etc. */
