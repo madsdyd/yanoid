@@ -179,12 +179,16 @@ void TImageParticleEffect::blit()
 
   SDL_LockSurface( surface );
   SDL_LockSurface( image );
+  int maxIndex = surface->w * surface->h;
   for (std::vector<particle_t>::iterator i = particles.begin();
        i != particles.end() ; ++i) {
 
     int x = (unsigned int)(i->point.x() + Location.x());
     int index = ((x < 0) ? 0 : ((x > surface->w) ? surface->w : x)) + 
       (int)(i->point.y() + Location.y()) * surface->w;
+
+    if (index >= maxIndex)
+      continue;
 
     ((Uint32*)surface->pixels)[index] = 
       ((Uint32*)image->pixels)[count];
@@ -202,11 +206,15 @@ void TImageParticleEffect::saveBackground()
   SDL_LockSurface( surface );
   SDL_LockSurface( background );
   // Print the character to the right place on the screen
+  int maxIndex = surface->w * surface->h;
   for (std::vector<particle_t>::iterator i = particles.begin();
        i != particles.end() ; ++i) {
     int x = (unsigned int)(i->point.x() + Location.x());
     int index = ((x < 0) ? 0 : ((x > surface->w) ? surface->w : x)) + 
       (int)(i->point.y() + Location.y()) * surface->w;
+
+    if (index >= maxIndex)
+      continue;
 
     ((Uint32*)background->pixels)[count] =
 	((Uint32*)surface->pixels)[index];
@@ -223,12 +231,14 @@ void TImageParticleEffect::blitBackground()
   SDL_LockSurface( surface );
   SDL_LockSurface( background );
   // Print the character to the right place on the screen
+  int maxIndex = surface->w * surface->h;
   for (std::vector<particle_t>::iterator i = particles.begin();
        i != particles.end() ; ++i) {
     int x = (unsigned int)(i->point.x() + Location.x());
     int index = ((x < 0) ? 0 : ((x > surface->w) ? surface->w : x)) + 
       (int)(i->point.y() + Location.y()) * surface->w;
-
+    if (index >= maxIndex)
+      continue;
     ((Uint32*)surface->pixels)[index] = 
       ((Uint32*)background->pixels)[count];
     count++;
