@@ -131,6 +131,9 @@ public:
 /* Define a list of entities */
 typedef std::list<TEntity *> TEntities;
 typedef TEntities::iterator TEntitiesIterator;
+
+/* This is a hack. Yuck. Kids, don't do this at home */
+extern TEntity * current_script_entity;
 #endif
 
 

@@ -16,6 +16,10 @@ def paddle_hit():
     PlaySound("sounds/blip.wav")
 
 def ball_hit():
-    print "ball_hit is empty"
+    a = 0
+    # print "ball_hit is empty"
     #PlaySound("sounds/blip.wav")
 
+def power_up_add_ball_hit():
+    print "in power_up_add_ball_hit()"
+    AddBall("graphics/objects/basic_ball.png")

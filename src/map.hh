@@ -68,6 +68,8 @@ public:
   /* Set the paddle for the map */
   bool SetPaddle(int x, int y, string pathtype, double velocity,
 		 double angle, string pixmap);
+  /* PowerUp - typically called from scripts */
+  bool PowerUp(string action, string arg1, string arg2);
   /* Loading function - may be temporary*/
   bool Load(string mapname);
   inline TMapState * GetState() { return MapState; }

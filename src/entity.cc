@@ -26,6 +26,11 @@
 #include "interprenter.hh"
 
 /* **********************************************************************
+ * The current script entity. Yuck.
+ * *********************************************************************/
+TEntity * current_script_entity = NULL;
+
+/* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
 TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
@@ -376,10 +381,12 @@ void TEntity::SetScriptHitCall(string function) {
  
 void TEntity::ExecuteScriptHitCall() {
   if ("" != ScriptHitCall) {
+    current_script_entity = this;
     if(!Interprenter->RunSimpleString(ScriptHitCall)) {
       LogLine(LOG_WARNING, "TEntity::ExecuteScriptHitCall error");
     }
   } else {
     LogLineExt(LOG_VERBOSE, ("No script for %s", name.c_str()));
   }
+  current_script_entity = NULL;
 }

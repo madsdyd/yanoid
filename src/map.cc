@@ -59,7 +59,7 @@ static PyObject * AddObject(PyObject * self, PyObject * args) {
 }
 
 /* **********************************************************************
- * 
+ * Set the paddle
  * *********************************************************************/
 static PyObject * SetPaddle(PyObject * self, PyObject * args) {
   int x; int y;  
@@ -77,12 +77,32 @@ static PyObject * SetPaddle(PyObject * self, PyObject * args) {
   } else {
     return NULL;
   }
-  
 }
+
+/* **********************************************************************
+ * A general PowerUp handling function, takes a string as parameter
+ * *********************************************************************/
+static PyObject * PowerUp(PyObject * self, PyObject * args) {
+  char * action; char * arg1; char * arg2;
+  if (!CurrentMap || !PyArg_ParseTuple(args, "sss",
+				       &action, &arg1, &arg2)) {
+    return NULL;
+  }
+  if (CurrentMap->PowerUp(action, arg1, arg2)) {
+    return Py_BuildValue("");
+  } else {
+    return NULL;
+  }
+}
+
+/* **********************************************************************
+ * The map method table
+ * *********************************************************************/
 
 static PyMethodDef map_methods[] = {
   {"AddObject", AddObject, METH_VARARGS},
   {"SetPaddle", SetPaddle, METH_VARARGS},
+  {"PowerUp", PowerUp, METH_VARARGS},
   {NULL, NULL}
 };
 
@@ -291,6 +311,40 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
   MapState->Entities.push_back(paddle);
   MapState->paddle = paddle;
   return true;
+}
+
+/* **********************************************************************
+ * Powerup
+ * *********************************************************************/
+bool TMap::PowerUp(string action, string arg1, string arg2) {
+  LogLine(LOG_VERBOSE, "in powerup");
+  if ("spawn-ball" == action) {
+    LogLine(LOG_VERBOSE, "in spawnball");
+    /* Add a ball, based on the location of the current entity */
+    if (current_script_entity) {
+      /* arg1 == pixmap
+	 arg2 == hitfunction */
+      TEntity * e = new TPixmapEntity(current_script_entity->x(), 
+				      current_script_entity->y(), 
+				      0, arg1, 
+				      TEntity::PIXEL, TEntity::BALL);
+      e->SetScriptHitCall(arg2);
+      // TODO, error handling.. 
+      e->setMotion(new TFreeMotion);
+      //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
+      dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 3);
+      dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed);
+      e->setName("Default Ball");
+      MapState->Entities.push_back(e);
+      MapState->num_balls++;
+      return true;
+    } else {
+      LogLine(LOG_WARNING, "no current_script_entity");
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 /* **********************************************************************

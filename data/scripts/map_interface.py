@@ -25,6 +25,12 @@ def SetPaddle(x, y, pixmap):
     "Creates and sets a paddle for the current map"
     yanoid_map.SetPaddle(x, y, "FreeMotion", 0.0, 0.0, pixmap)
 
+# AddBall(string pixmap)
+# Creates a ball at the position of the current entity
+# Meant to be called from a hitfunction
+def AddBall(pixmap):
+    "Adds a ball at the position of the current entity"
+    yanoid_map.PowerUp("spawn-ball", pixmap, "ball_hit()")
     
     
     
