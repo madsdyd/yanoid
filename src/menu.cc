@@ -383,7 +383,7 @@ TPreGameMenu::TPreGameMenu() : TMenu(false) {
   items.push_back("Highscore");
   items.push_back("Help");
   items.push_back("About");
-  items.push_back("Toggle fullscreen");
+  items.push_back("Toggle full screen");
   items.push_back("Toggle music");
   items.push_back("Exit yanoid");
 }
@@ -434,7 +434,7 @@ TInGameMenu::TInGameMenu(TClient * client)
   : TMenu(true, false), Client(client) {
   items.push_back("Resume game");
   items.push_back("Toggle console");
-  items.push_back("Toggle fullscreen");
+  items.push_back("Toggle full screen");
   items.push_back("Toggle music");
   items.push_back("End game");
 }
