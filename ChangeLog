@@ -1,3 +1,13 @@
+2001-12-05  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Preload
+	Added a general preload thingy to the ressourcemanager class.
+	Preloaded all powerup graphics, it is in powerups.py.
+
+	* Profiling
+	Fiddled with profiling stuff. Seems 47 % of the time on map1.py is
+	spent in collision detection.
+
 2001-12-01  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* RELEASE!

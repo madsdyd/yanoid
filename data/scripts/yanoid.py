@@ -39,9 +39,11 @@ def help():
 
 # A list of python scripts to run
 # We collect them here
-default_scripts = [ "scripts/map_interface.py",
+# Note, that the order does matter. The client interface needs
+# to be established first, and so on.
+default_scripts = [ "scripts/client_interface.py",
                     "scripts/game_interface.py",
-                    "scripts/client_interface.py",
+                    "scripts/map_interface.py",
                     "objects/default.py"
                     ]
 
@@ -52,8 +54,8 @@ for script in default_scripts:
     runthis = "execfile('" + yanoid.resolve(script) + "')"
     eval(runthis)
 
-# This should probably not go here, but for now I need to put i here to
-# fix dependcies (client_interface needs to be loaded)
+# The preloads should probably not go here, but for now I need to put
+# i here to fix dependcies (client_interface needs to be loaded)
 
 # This preloads sounds to make sure that it does not lag the first
 # time it is played
@@ -66,3 +68,17 @@ sounds = [ "sounds/pop.wav",
 for sound in sounds:
     put_console("Caching sound " + yanoid.resolve(sound))
     LoadSound(sound)
+
+
+
+
+
+
+ 
+
+
+
+
+             
+
+

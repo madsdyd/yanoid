@@ -35,6 +35,7 @@
 #include "texteffects.hh"
 #include "ConsoleSource/DT_drawtext.h"
 #include "soundmanager.hh"
+#include "surfacemanager.hh"
 
 #include "entity.hh"
 #include "pixmap_entity.hh"
@@ -60,10 +61,27 @@ static PyObject * LoadSound(PyObject * self, PyObject * args) {
   if (!PyArg_ParseTuple(args, "s", &soundname)) {
     return NULL;
   }
-  SoundManager->LoadSound(soundname);
-  return Py_BuildValue("");
+  if (SoundManager->PreloadRessource(soundname)) {
+    return Py_BuildValue("");
+  } else {
+    return NULL;
+  }
 }
 
+/* **********************************************************************
+ * A method to load (cache) an surface
+ * *********************************************************************/
+static PyObject * LoadSurface(PyObject * self, PyObject * args) {
+  char * surfacename;
+  if (!PyArg_ParseTuple(args, "s", &surfacename)) {
+    return NULL;
+  }
+  if (SurfaceManager->PreloadRessource(surfacename)) {
+    return Py_BuildValue("");
+  } else {
+    return NULL;
+  }
+}
 
 /* **********************************************************************
  * The client method table
@@ -71,6 +89,7 @@ static PyObject * LoadSound(PyObject * self, PyObject * args) {
 static PyMethodDef client_methods[] = {
   {"PlaySound", PlaySound, METH_VARARGS},
   {"LoadSound", LoadSound, METH_VARARGS},
+  {"LoadSurface", LoadSurface, METH_VARARGS},
   {NULL, NULL}
 };
 

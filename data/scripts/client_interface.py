@@ -11,3 +11,8 @@ def LoadSound(soundname):
     "Load a sound"
     yanoid_client.LoadSound(soundname)
 
+# Load a surface (used for caching)
+def LoadSurface(surfacename):
+    "Load a surface"
+    yanoid_client.LoadSurface(surfacename)
+

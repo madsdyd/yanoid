@@ -139,6 +139,9 @@ public:
   /* Release will let the manager know that this pointer is no longer
      needed */
   void ReleaseRessource(res_t * ressource);
+  /* This is for preloading a ressource, to avoid it getting loaded at 
+     a critical point, returns true if the ressource was loaded. */
+  bool PreloadRessource(string name);
   /* This is for duplicating a ressource *
      Please us this, if you need to copy the * */
   res_t * DuplicateRessource(res_t * ressource);
@@ -226,6 +229,20 @@ void TRessourceManager <res_t>::ReleaseRessource(res_t * ressource) {
   }
   // LogLine(LOG_VER_2, "Releasing ressource " + tmp->GetName());
   tmp->ReleaseRessource();
+}
+
+/* **********************************************************************
+ * Preload a ressource
+ * *********************************************************************/
+template <typename res_t>
+bool TRessourceManager <res_t>::PreloadRessource(string name) {
+  res_t * tmp = RequireRessource(name);
+  if (tmp) {
+    ReleaseRessource(tmp);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 /* **********************************************************************

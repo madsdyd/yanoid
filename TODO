@@ -9,6 +9,10 @@ TODO: Clean up this file, assign priorities and tasks...
 * Add a small random angle to balls, when colliding with bricks, to
   stop never ending loops on e.g. "Diagonal Frustration".
 
+* Preload graphics from powerups and other that are randomly spawned.
+
+* Fix paddle to have 3 graphics in scripts
+
 * Ballspeed powerup
 
 * Profile the binary
