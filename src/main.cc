@@ -327,7 +327,7 @@ int main(int argc, char ** argv) {
   
   /* Init the console */
   // hacky
-  Assert(CON_ConsoleInit(PathManager->Resolve("graphics/fonts/ConsoleFont.bmp").c_str(), 
+  Assert(CON_ConsoleInit(PathManager->Resolve("graphics/fonts/ConsoleFont.png").c_str(), 
 			 Screen, 100, Con_Init) == 0,
 	 "Unable to initialize console");
   

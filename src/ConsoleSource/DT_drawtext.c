@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
 #include "DT_drawtext.h"
 
 
@@ -143,7 +144,7 @@ int DT_LoadFont(const char *BitmapName, int flags)
 	}
 	
 	/* load the font bitmap */
-	if(NULL ==  (Temp = SDL_LoadBMP(BitmapName)))
+	if(NULL ==  (Temp = IMG_Load(BitmapName)))
 	{
 		printf("Error Cannot load file %s\n", BitmapName );
 		return -1;

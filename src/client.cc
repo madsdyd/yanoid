@@ -133,7 +133,7 @@ bool TClient::NextMap() {
     return false;
   }
   fonthandle_t * font 
-    = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+    = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
   if (!font) {
     return false;
   }
@@ -193,7 +193,7 @@ void TClient::Run() {
 
   /* This font is used for the text effects */
   fonthandle_t * font 
-    = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+    = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
 
   /* Main loop - never quit the client */
   while(!QuitClient) {
@@ -251,7 +251,7 @@ void TClient::Run() {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
 	if (!font) {
-	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
 	  exit(-1);
 	}
 	const char* str = "Game Over";
@@ -284,7 +284,7 @@ void TClient::Run() {
 	//	RoundOverMenu->Run();
 	//	delete RoundOverMenu;
 	if (!font) {
-	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
 	  exit(-1);
 	}
 	const char* str = "You lost the ball..";
@@ -325,7 +325,7 @@ void TClient::Run() {
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
 	if (!font) {
-	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
 	  exit(-1);
 	}
 	/* **********************************************************************

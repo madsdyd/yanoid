@@ -38,9 +38,9 @@
  * *********************************************************************/
 
 TMenu::TMenu(bool capture_background, bool display_splash) {
-  font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+  font = FontManager->RequireRessource("graphics/fonts/LargeFont.png");
   if (!font) {
-    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+    LogFatal("Unable to load highscore font graphics/fonts/LargeFont.png");
     exit(-1);
   }
   cap_back   = capture_background;
