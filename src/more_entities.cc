@@ -147,7 +147,7 @@ THole::~THole() {
  * Collision
  * *********************************************************************/
 void THole::OnCollision(TEntity& other,Uint32 t) {
-  LogLine(LOG_VERBOSE, "THole::OnCollision called");
+  // LogLine(LOG_VERBOSE, "THole::OnCollision called");
   if ("BALL" == other.getEntityType()) {
     /* Ah, hit by a ball */
     if (!hole_bounces) {
@@ -159,7 +159,7 @@ void THole::OnCollision(TEntity& other,Uint32 t) {
       other.OnCollision(*this, t);
     }
   } else {
-    LogLine(LOG_WARNING, "THole should not be hit by anything but balls");
+    // LogLine(LOG_WARNING, "THole should not be hit by anything but balls");
   }
 }
 

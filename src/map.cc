@@ -353,9 +353,9 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
  * Powerup
  * *********************************************************************/
 bool TMap::PowerUp(string action, string arg1, string arg2) {
-  LogLine(LOG_VERBOSE, "in powerup");
+  // LogLine(LOG_VERBOSE, "in powerup");
   if ("spawn-ball" == action) {
-    LogLine(LOG_VERBOSE, "in spawnball");
+    // LogLine(LOG_VERBOSE, "in spawnball");
     /* Add a ball, based on the location of the current entity */
     if (current_script_entity) {
       /* arg1 == pixmap
@@ -382,7 +382,7 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
     }
   } /* "spawn-ball" */ 
   else if ("powerup" == action) {
-    LogLine(LOG_VERBOSE, "powerup added");
+    // LogLine(LOG_VERBOSE, "powerup added");
     if (!current_script_entity) {
       LogLine(LOG_WARNING, "no current_script_entity");
       return false;
@@ -414,7 +414,7 @@ void TMap::Update(Uint32 deltatime) {
     /* If we add a ball, remember to increase the number of balls */
     if ("BALL" == (*i)->getEntityType()) {
       MapState->num_balls++;
-      LogLine(LOG_VERBOSE, "Ball added");
+      // LogLine(LOG_VERBOSE, "Ball added");
     }
     tmpi = i;
     i++;
@@ -458,14 +458,14 @@ void TMap::Update(Uint32 deltatime) {
       tmp = (*candi);
       if ("BALL" == tmp->getEntityType()) {
 	MapState->num_balls--;
-	LogLine(LOG_VERBOSE, "Ball removed");
+	// LogLine(LOG_VERBOSE, "Ball removed");
 	Assert(MapState->num_balls >= 0, 
 	       "Cant have a negative number of balls");
       }
       /* If we remove a BRICK, reduce the number of brics */
       if ("BRICK" == tmp->getEntityType()) {
 	MapState->num_bricks--;
-	LogLine(LOG_VERBOSE, "Brick removed");
+	// LogLine(LOG_VERBOSE, "Brick removed");
 	Assert(MapState->num_bricks >= 0, 
 	       "Can't have a negative number of bricks");
       }
