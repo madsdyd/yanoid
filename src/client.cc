@@ -33,6 +33,27 @@
 #include "motion.hh"
 #include "texteffects.hh"
 #include "ConsoleSource/DT_drawtext.h"
+#include "soundmanager.hh"
+
+/* **********************************************************************
+ * A method to play a sound from scripts
+ * *********************************************************************/
+static PyObject * PlaySound(PyObject * self, PyObject * args) {
+  char * soundname;
+  if (!PyArg_ParseTuple(args, "s", &soundname)) {
+    return NULL;
+  }
+  SoundManager->PlaySound(soundname);
+  return Py_BuildValue("");
+}
+
+/* **********************************************************************
+ * The client method table
+ * *********************************************************************/
+static PyMethodDef client_methods[] = {
+  {"PlaySound", PlaySound, METH_VARARGS},
+  {NULL, NULL}
+};
 
 /* **********************************************************************
  * The global client
@@ -69,6 +90,19 @@ void TClient::ContinueGame() {
     pausetime = SDL_GetTicks() - pausetime;
     game_start += pausetime;
   }
+}
+/* **********************************************************************
+ * The Stuff to handle modules
+ * *********************************************************************/
+bool TClient::ModuleAdded = false;
+
+bool TClient::AddModule() {
+  if (!ModuleAdded) {
+    if (Interprenter->AddModule("yanoid_client", client_methods)) {
+      ModuleAdded = true;
+    }
+  }    
+  return ModuleAdded;
 }
 
 /* **********************************************************************

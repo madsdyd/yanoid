@@ -22,7 +22,19 @@ The yanoid.mod music file was taken from www.modarchive.???
 Composer: ???
 
 ----------------------------------------------------------------------
-* Graphics
+* SOUNDS
+
+The following is a list of sounds, and where they were taken
+from. Sounds not mentioned on this list has been created for yanoid by
+the yanoid development team.
+
+pop.wav - taken from the game gnibbles (Gnome game pack, GPL).
+laser.wav - taken from the OpenAL distribution (renamed from boom.wav)
+cannon.wav - taken from the source code to the No Starch PLG book.
+blip.wav - taken from the game defendguin (GPL, renamed from select.wav)
+
+----------------------------------------------------------------------
+* GRAPHICS
 
 The fonts used for the menus was taken from ???
 Creator : ???

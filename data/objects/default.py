@@ -7,5 +7,15 @@ for script in bricks:
     runthis = "execfile('" + yanoid.resolve(script) + "')"
     eval(runthis)
 
+
+# Define a number of smaller functions here.
 def static_hit():
-    print "static_hit"
+    PlaySound("sounds/blip.wav")
+
+def paddle_hit():
+    PlaySound("sounds/blip.wav")
+
+def ball_hit():
+    print "ball_hit is empty"
+    #PlaySound("sounds/blip.wav")
+

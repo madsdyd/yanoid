@@ -48,15 +48,17 @@ static PyObject * AdjustScore(PyObject * self, PyObject * args) {
  * *********************************************************************/
 static PyObject * AddMap(PyObject * self, PyObject * args) {
   char * mapname;
-
   if (!CurrentGame || !PyArg_ParseTuple(args, "s", &mapname)) {
     return NULL;
   }
-
   CurrentGame->AddMapName(mapname);
   return Py_BuildValue("");
 }
 
+
+/* **********************************************************************
+ * The method table
+ * *********************************************************************/
 static PyMethodDef game_methods[] = {
   {"AdjustScore", AdjustScore, METH_VARARGS},
   {"AddMap", AddMap, METH_VARARGS},

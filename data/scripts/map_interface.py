@@ -16,7 +16,7 @@ def AddEntity(type, x, y, w, h, hitfunction):
 # Adds a ball at a default position
 def AddBallDefault(pixmap):
     "Adds a ball at a default position"
-    yanoid_map.AddObject("default-ball", "", 0, 0, 0, 0, pixmap)
+    yanoid_map.AddObject("default-ball", "ball_hit()", 0, 0, 0, 0, pixmap)
 
 # SetPaddle(int x, int y, string pixmap)
 # Creates and sets the paddle for the current map

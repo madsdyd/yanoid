@@ -32,6 +32,7 @@ protected:
   Uint32 pausetime;
   bool QuitCurrentGame;
   int paused;
+  static bool ModuleAdded;
   /* Splitting stuff up, to make it easier to handle */
   void UpdateGame();
   void Render();
@@ -43,6 +44,7 @@ public:
   TClient();
   ~TClient();
   inline TGame * GetGame() const { return Game; }
+  static bool AddModule();
   void Run();
   void ToggleConsole();
 };

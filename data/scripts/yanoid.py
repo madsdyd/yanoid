@@ -41,6 +41,7 @@ def help():
 # We collect them here
 default_scripts = [ "scripts/map_interface.py",
                     "scripts/game_interface.py",
+                    "scripts/client_interface.py",
                     "objects/default.py"
                     ]
 
