@@ -25,10 +25,11 @@
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
-TEntity::TEntity() {
-  x = 0; y = 0; vel_x = 1; vel_y = 1;
+TEntity::TEntity(int x_, int y_) {
+  x = x_; y = y_; 
+  vel_x = x/60; vel_y = y/20;
   currentsurface
-    = SurfaceManager->RequireRessource("graphics/yanoid.png");
+    = SurfaceManager->RequireRessource("graphics/objects/basic_brick.png");
   Assert(NULL != currentsurface, "Error loading graphics for entity");
 }
 

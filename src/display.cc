@@ -31,9 +31,9 @@ TDisplay * Display;
  * *********************************************************************/
 void TDisplay::Render(SDL_Surface * surface) {
   TGameState * GameState = Game->GetState();
-  TEntitiesIterator End = GameState->Entities.end();
+  TEntitiesIterator End = GameState->MapState->Entities.end();
   TEntitiesIterator i;
-  for (i = GameState->Entities.begin(); i != End; i++) {
+  for (i = GameState->MapState->Entities.begin(); i != End; i++) {
     (*i)->Render(surface);
   }
 }

@@ -18,24 +18,26 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/* Entities are the basic units that can be manipulated in the game */
-#include <SDL/SDL.h>
-#include <list>
+/* This is Map state - currently a list of entities */
 
-class TEntity {
-protected:
-  // TODO: Some sort of fancy vector class? 
-  int x, y; /* The position of the entity */
-  int vel_x, vel_y; /* The velocity of this entity */
-  SDL_Surface * currentsurface; /* The current image to blit */
+#include "log.hh"
+#include "entity.hh"
+
+class TMapState {
 public:
-  TEntity(int x_, int y_);
-  ~TEntity();
-  
-  void Update(Uint32 deltatime);
-  void Render(SDL_Surface * surface);
+  TEntities Entities;
+  ~TMapState();
 };
 
-/* Define a list of entities */
-typedef std::list<TEntity *> TEntities;
-typedef TEntities::iterator TEntitiesIterator;
+/* This is a map clas. It can load a map, and contains the state of a map
+ */
+
+class TMap {
+protected:
+  TMapState MapState;
+public:
+  TMap();
+  ~TMap();
+  TMapState * GetState();
+  void Update(Uint32 deltatime);
+};

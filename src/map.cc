@@ -18,50 +18,53 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
-#include "game.hh"
-#include "log.hh"
+#include "map.hh"
 
 /* **********************************************************************
- * The global game 
+ * TMapState destructor
  * *********************************************************************/
-
-TGame * Game;
-
-/* **********************************************************************
- * The constructor currently constructs a single entity
- * *********************************************************************/
-TGame::TGame() {
-  lastupdate = 0; // TODO: Fix
-  
-  /* Set up the gamestate "pointer class" */
-  GameState.MapState = Map.GetState();
-}
-
-/* **********************************************************************
- * Destructor, clean up... 
- * *********************************************************************/
-TGame::~TGame() {
-  LogLine(LOG_TODO, "Clean up TGame destructor and GameState");
+TMapState::~TMapState() {
+  TEntitiesIterator End = Entities.end();
+  TEntitiesIterator i;
+  for (i = Entities.begin(); i != End; i++) {
+    delete(*i);
+  }  
 }
 
 
 /* **********************************************************************
- * Update calculates difference, calls entities.
+ * Constructor
+ * Currently builds a simple map.
  * *********************************************************************/
-void TGame::Update(Uint32 currenttime) {
-  Uint32 deltatime = currenttime - lastupdate;
-  /* Update all objects in game */
-  Map.Update(deltatime);
-
-  lastupdate = currenttime;
+TMap::TMap() {
+  for (int x = 0; x < 760; x += 60) {
+    for (int y = 0; y < 200; y += 20) {
+      MapState.Entities.push_back(new TEntity(x, y));
+    }
+  }
 }
 
 /* **********************************************************************
- * Get access to the game state
- * This requires updating stuff
+ * Destructor
  * *********************************************************************/
+TMap::~TMap() {
+  LogLine(LOG_TODO, "Clean up TMap?");
+}
 
-TGameState * TGame::GetState() {
-  return &GameState;
+/* **********************************************************************
+ * Get the mapstate
+ * *********************************************************************/
+TMapState * TMap::GetState() {
+  return &MapState;
+}
+
+/* **********************************************************************
+ * Update - update all entities
+ * *********************************************************************/
+void TMap::Update(Uint32 deltatime) {
+  TEntitiesIterator End = MapState.Entities.end();
+  TEntitiesIterator i;
+  for (i = MapState.Entities.begin(); i != End; i++) {
+    (*i)->Update(deltatime);
+  }
 }

@@ -176,7 +176,7 @@ res_t * TRessourceManager <res_t>::RequireRessource(string name) {
   /* Check if name is already mapped, return that */
   storage_t * storage = NameToStorageMap[name];
   if (storage) {
-    LogLine(LOG_VERBOSE, "Reusing " + name);
+    LogLine(LOG_VER_2, "Reusing " + name);
     return storage->TakeRessource();
   };
   

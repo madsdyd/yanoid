@@ -23,16 +23,15 @@
    TGame to the TDisplay class 
    This _WILL_ change. Several times. */
 #include <SDL/SDL.h>
-#include "entity.hh"
-
-
 #include "log.hh"
+#include "map.hh"
+
 
 class TGameState {
 public:
-  TEntities Entities;
+  TMapState * MapState;
   ~TGameState() {
-    LogLine(LOG_TODO, "TGameState::~ Clean up stuff");
+    LogLine(LOG_TODO, "TGameState::~ Clean up stuff?");
   }
 };
 
@@ -40,6 +39,7 @@ public:
 class TGame {
 protected:
   Uint32 lastupdate;
+  TMap Map;
   TGameState GameState;
 public:
   TGame();
