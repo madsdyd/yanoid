@@ -26,6 +26,7 @@
 #include "ressourcemanager.hh"
 #include "fontmanager.hh"
 #include "ConsoleSource/DT_drawtext.h"
+#include "screen.hh"
 #include <sstream>
 #include <iomanip.h>
 
@@ -40,7 +41,8 @@ THighscore * Highscore;
  * *********************************************************************/
 
 THighscore::THighscore(int x_, int y_): 
-  TEntity(x_,y_), DisplayMode(NONE), NumRankings(10)
+  TEntity(x_,y_), DisplayMode(NONE), NumRankings(10),
+  close(false), cursorpos_x(0), cursorpos_y(0)
 {
   LogLine(LOG_TODO, "Clean up THighscore contructor");
   Score s = 42;
@@ -54,6 +56,10 @@ THighscore::THighscore(int x_, int y_):
     LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
     exit(-1);
   }
+  name[0] = '_';
+  name[1] = '_';
+  name[2] = '_';
+  name[3] = 0x00;
 }
 
 /* **********************************************************************
@@ -75,11 +81,135 @@ void THighscore::Update(Uint32 currenttime) {
 }
 
 /* **********************************************************************
+ * Run - checks for events, renders the menu, decide it is time to leave.
+ * *********************************************************************/
+bool THighscore::Run() {
+  close = false;
+
+  SDL_Rect dest;
+  dest.x = 0;
+  dest.y = 00;
+  dest.w = 800;
+  dest.h = 600;
+  SDL_FillRect(Screen, &dest, 0x00000000);
+
+  RenderSplash();
+
+  /* While until the menu is done */
+  while(!close) {
+    Render(Screen);
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+      HandleEvent(&event);
+    }
+    /* Let the system be a little idle, sleep for 10 ms */
+    SDL_Delay(10);
+  }
+
+  return !close;
+}
+
+
+/* **********************************************************************
+ * RenderSplash - renders the splash screen
+ * *********************************************************************/
+void THighscore::RenderSplash() {
+    /* Put on the splash screen */
+    SDL_Rect src, dest;
+    src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
+    dest.x = (Screen->w-src.w)/2; dest.y = 50; dest.w = src.w; dest.h = src.h;
+    SDL_BlitSurface(Splash, &src, Screen, &dest);
+}
+
+/* **********************************************************************
+ * Handle keypresses (no mouse)
+ * *********************************************************************/
+bool THighscore::HandleEvent(SDL_Event * event) {
+  static int curchar = 0;
+  if (SDL_KEYDOWN == event->type) {
+    switch (event->key.keysym.sym) {
+    case SDLK_DOWN: 
+      cursorpos_y = (cursorpos_y < 2) ? cursorpos_y+1 : cursorpos_y;
+      break;
+    case SDLK_UP: 
+      cursorpos_y = (cursorpos_y > 0) ? cursorpos_y-1 : cursorpos_y;
+      break;
+    case SDLK_RIGHT: 
+      // take special care of End and Del
+      if (cursorpos_y == 2) {
+	if (cursorpos_x == 6 || cursorpos_x == 7) {
+	  cursorpos_x = 8;
+	  break;
+	}
+      }
+      cursorpos_x = (cursorpos_x < 9) ? cursorpos_x+1 : cursorpos_x;
+      break;
+    case SDLK_LEFT: 
+      // take special care of End and Del
+      if (cursorpos_y == 2) {
+	if (cursorpos_x == 6 || cursorpos_x == 7) {
+	  cursorpos_x = 5;
+	  break;
+	}
+	if (cursorpos_x == 8 || cursorpos_x == 9) {
+	  cursorpos_x = 7;
+	  break;
+	}
+      }
+      cursorpos_x = (cursorpos_x > 0) ? cursorpos_x-1 : cursorpos_x;
+      break;
+    case SDLK_SPACE:
+    case SDLK_RETURN: {
+      if (cursorpos_y == 2) {
+	if (cursorpos_x == 6 || cursorpos_x == 7) {
+	  name[curchar] = '_';
+	  curchar = (curchar > 0) ? curchar-1 : curchar;
+	  name[curchar] = '_';
+	  break;
+	}
+	if (cursorpos_x == 8 || cursorpos_x == 9) {
+	  if (name[0] != '_') {
+	    name[3] = 0x00;
+	    if (name[2] == '_')
+	      name[2] = ' ';
+	    if (name[1] == '_')
+	      name[1] = ' ';
+	    if (name[0] != '_')
+	      update(name,curscore);
+	  }
+	  close = true;
+	  name[0] = '_';
+	  name[1] = '_';
+	  name[2] = '_';
+	  name[3] = 0x00;
+	  curchar = 0;
+	  return false;
+	}
+      }
+      name[curchar] = static_cast<int>('A') + cursorpos_y * 10 + cursorpos_x;
+      curchar = (curchar < 3) ? curchar+1 : curchar;
+    }
+    break;
+    case SDLK_ESCAPE: {
+      close = true;
+      name[0] = '_';
+      name[1] = '_';
+      name[2] = '_';
+      curchar = 0;
+    }
+    }
+  }
+  return false;
+};
+
+/* **********************************************************************
  * Render will render the highscore according to the current
  * state of the highscore
  * *********************************************************************/
 void THighscore::Render(SDL_Surface * surface)
 {
+  static int oldcursorpixpos_x = 0;
+  static int oldcursorpixpos_y = 0;
   switch (DisplayMode) {
   case HIGHSCORE: {
     //    LogLine(LOG_VERBOSE, "Displaying highscore rankings");
@@ -90,16 +220,50 @@ void THighscore::Render(SDL_Surface * surface)
 	  Rankings.begin(); 
 	i != Rankings.end() && count < NumRankings; ++i, ++count ) {
       std::ostringstream RankLine;
-      RankLine << setw(20) << i->first 
+      RankLine << setw(20) << setiosflags(ios::left) << i->first 
 	       << setw(10) << setiosflags(ios::right) << i->second;
-      cerr << RankLine.str() << endl;
       DT_DrawText(RankLine.str().c_str(), surface, *fontHandle, drawx, drawy);
       drawy += 20;
     }
   }
   break;
   case INPUT: {
-    LogLine(LOG_VERBOSE, "Displaying highscore input");
+    char * s1 = "A B C D E F G H I J";
+    char * s2 = "K L M N O P Q R S T";
+    char * s3 = "U V W X Y Z Del End";
+
+    int drawx=static_cast<int>(x());
+    int drawy=static_cast<int>(y());
+    SDL_Rect dest;
+    // take special care of Del and End
+    if (cursorpos_y == 2) {
+      if (cursorpos_x == 6 || cursorpos_x == 7) {
+	dest.x = drawx + DT_FontWidth(*fontHandle) * 13 ;
+      }else if (cursorpos_x == 8 || cursorpos_x == 9) {
+	dest.x = drawx + DT_FontWidth(*fontHandle) * 17 ;
+      } else {
+	dest.x = drawx + DT_FontWidth(*fontHandle) * 2 * cursorpos_x;
+      }
+    } else {
+      dest.x = drawx + DT_FontWidth(*fontHandle) * 2 * cursorpos_x;
+    }
+    dest.y = drawy + 40 * cursorpos_y + 20;
+    char pointer[2] = { static_cast<int>('y') + 6, 0 };
+    DT_DrawText(" ", surface, *fontHandle, oldcursorpixpos_x, oldcursorpixpos_y);    
+    oldcursorpixpos_x = dest.x;
+    oldcursorpixpos_y = dest.y;
+    DT_DrawText(pointer, surface, *fontHandle, dest.x, dest.y);    
+    DT_DrawText(s1, surface, *fontHandle, drawx, drawy);    
+    drawy += 40;
+    DT_DrawText(s2, surface, *fontHandle, drawx, drawy);    
+    drawy += 40;
+    DT_DrawText(s3, surface, *fontHandle, drawx, drawy);    
+    drawy += 40;
+    name[3] = 0x00;
+    DT_DrawText(name, surface, *fontHandle, 
+		drawx + 7 * 2 * DT_FontWidth(*fontHandle), drawy);    
+
+    //    LogLine(LOG_VERBOSE, "Displaying highscore input");
   }
   break;
   case NONE: {
@@ -110,6 +274,7 @@ void THighscore::Render(SDL_Surface * surface)
     LogLine(LOG_VERBOSE, "Got unknown display mode during display "
 	    "of highscore");
   }
+  SDL_Flip(Screen);
 }
 
 /* **********************************************************************
@@ -139,14 +304,16 @@ bool THighscore::update(const std::string& name, const Score& s)
   unsigned int count = 0;
   for(std::list<pair<std::string, Score> >::iterator i = Rankings.begin() ;
       i != Rankings.end() ; ++i, ++count) {
-
+    cerr << i->first << ", " << i->second << endl;
     // Ensure that we have only MAX_RANKINGS rankings in list
     if (count == MAX_RANKINGS) {
+      cerr << "erasing" << endl;
       Rankings.erase(i, Rankings.end());
       break;
     }
 
-    if (i->second < s) {
+    if (i->second < s && !success) {
+      cerr << "inserting" << endl;
       Rankings.insert(i,1,make_pair(realname,s));
       success = true;
     }
@@ -158,8 +325,9 @@ bool THighscore::update(const std::string& name, const Score& s)
  * DisplayNameInput enables displaying of user interface for inputting
  * username. This will disable all other display modes set by THighscore
  * *********************************************************************/
-void THighscore::displayNameInput()
+void THighscore::displayNameInput(const Score& score)
 {
+  curscore = score;
   DisplayMode = INPUT;
 }
 

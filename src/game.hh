@@ -40,7 +40,7 @@ public:
   TGameState() {
     /* We start in cut, 5 lives, no score */
     status = CUT;
-    lives = 50;
+    lives = 2;
     score = 0;
     currentmap = 0;
   }

@@ -29,6 +29,7 @@
 #include "display.hh"
 
 #include "menu.hh"
+#include "highscore.hh"
 
 #include "motion.hh"
 #include "texteffects.hh"
@@ -193,6 +194,11 @@ void TClient::Run() {
 	while(!tfx.isStopped()) {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
+	}
+	if (Highscore->isCandidate(Game->GetState()->score)) {
+	  Highscore->displayNameInput(Game->GetState()->score);
+	  Highscore->Run();
+	  Highscore->displayNone();
 	}
 	//	TGameOverMenu * GameOverMenu = new TGameOverMenu();
 	//	GameOverMenu->Run();

@@ -40,6 +40,10 @@ protected:
   std::list<pair<std::string, Score> > Rankings;
   unsigned int NumRankings;
   fonthandle_t * fontHandle;
+  bool close;
+  int cursorpos_x, cursorpos_y;
+  char name[4];
+  Score curscore;
 public:
   THighscore(int x_, int y_);
   virtual ~THighscore();
@@ -48,10 +52,14 @@ public:
 
   bool update(const std::string& name, const Score& s);
 
-  void displayNameInput();
+  void displayNameInput(const Score& s);
   void displayRankings();
   void displayNone();
   
+  bool HandleEvent(SDL_Event * event);
+  bool Run();
+  void RenderSplash();
+
   /* Num visible rankings */
   void setNumRankings(unsigned int n) { NumRankings = n; }
 

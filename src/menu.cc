@@ -23,6 +23,7 @@
 #include "screen.hh"
 #include "client.hh"
 #include "fontmanager.hh"
+#include "highscore.hh"
 #include <SDL/SDL.h>
 #include "ConsoleSource/DT_drawtext.h"
 
@@ -334,6 +335,7 @@ TPreGameMenu::TPreGameMenu() : TMenu(false) {
   HelpMenu = new THelpMenu();
   AboutMenu = new TAboutMenu();
   items.push_back("Start Game");
+  items.push_back("Highscore");
   items.push_back("Help");
   items.push_back("About");
   items.push_back("Exit yanoid");
@@ -352,12 +354,17 @@ void TPreGameMenu::SelectFocused() {
     close = true;
     return;
   case 1: 
+    Highscore->displayRankings();
+    Highscore->Run();
+    Highscore->displayNone();
+    return;
+  case 2: 
     HelpMenu->Run();
     return;
-  case 2:
+  case 3:
     AboutMenu->Run();
     return;
-  case 3: /* Exit */
+  case 4: /* Exit */
     cancel = true;
     return;
   default:
