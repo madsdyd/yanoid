@@ -201,8 +201,8 @@ int main(int argc, char ** argv) {
    * Setup the screen. Resolution is fixed at the moment.
    * Colourdepth is 0 == use current
    * *********************************************************************/
-  Screen = SDL_SetVideoMode(640, 480, 0, 
-			    SDL_HWSURFACE | SDL_DOUBLEBUF
+  Screen = SDL_SetVideoMode(800, 600, 0, 
+			    SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN
 			    );
   // | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
@@ -221,6 +221,9 @@ int main(int argc, char ** argv) {
   LogLineExt(LOG_VERBOSE, ("Videomode set (%ix%i - %s)", 
 			   Screen->w, Screen->h, tmp.c_str()));
 #endif
+
+  /* Hide the mouse */
+  SDL_ShowCursor(SDL_DISABLE);
 
   /* **********************************************************************
    * Setup the audio. wave configuration is fixed at the moment.

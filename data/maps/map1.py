@@ -1,12 +1,8 @@
 # Python file that defines a _very_ simple map
 
-print "In map1.py"
-
 # Add a number of bricks
-xv = [ 60, 120, 180, 240, 300, 360, 420, 480, 540 ]
-yv = [ 30, 60, 90, 120 ]
-for x in xv:
-    for y in yv:
+for x in range(60, 750, 50):
+    for y in range(30, 120, 30):
         if (y == 30):
             AddBrick(x, y, "basic_brick_hit()",
                      "graphics/objects/weird_brick.png")
@@ -19,19 +15,17 @@ for x in xv:
 
             
 # Add the walls
-AddStatic(0, 0, 10, 400, "static_hit()")
-AddStatic(630, 0, 10, 400, "static_hit()")
-AddStatic(10, 0, 620, 10, "static_hit()")
-AddStatic(0, 400, 640, 100, "static_hit()")
+AddStatic(0, 0, 1, 550, "static_hit()")
+AddStatic(799, 0, 1, 550, "static_hit()")
+AddStatic(1, 0, 799, 1, "static_hit()")
+AddStatic(0, 550, 799, 50, "static_hit()")
 
 # Add a paddle
-SetPaddle(300, 300, "graphics/objects/basic_paddle.png")
+SetPaddle(300, 300, "graphics/objects/paddle.png")
 
 # define a round start function
 def RoundStart():
-    AddBallDefault("graphics/objects/basic_ball.png")
+    AddBallDefault("graphics/objects/ball.png")
 
 # And, call it - probably will go
 RoundStart();
-
-print("Loaded map1")

@@ -1,3 +1,10 @@
+2001-11-02  Mads Bondo Dydensborg  <madsdyd@ripley>
+        * Graphics
+	Added graphics from Bjarke
+	Changed size of screen to 800x600
+	Changed maps (map1.py and map2.py)
+	Added toggle between fullscreen and window 
+
 2001-10-21  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Python

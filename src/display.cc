@@ -28,6 +28,8 @@
 #include "ConsoleSource/DT_drawtext.h"
 #include "motion.hh"
 
+
+#include "screen.hh"
 /* **********************************************************************
  * The global display
  * *********************************************************************/
@@ -88,6 +90,21 @@ void TDisplay::Render(SDL_Surface * surface) {
 	  SDL_EnableUNICODE(0);
 	}
 	return;
+      case SDLK_F11:
+	SDL_Surface * tmp; 
+	if (SDL_FULLSCREEN & Screen->flags) {
+	  tmp = SDL_SetVideoMode(Screen->w, Screen->h, 0,
+				 SDL_HWSURFACE | SDL_DOUBLEBUF);
+	} else {
+	  tmp = SDL_SetVideoMode(Screen->w, Screen->h, 0,
+				 SDL_HWSURFACE | SDL_DOUBLEBUF 
+				 | SDL_FULLSCREEN);
+	}
+	if (tmp) {
+	  SDL_FreeSurface(Screen);
+	  Screen = tmp;
+	}
+	break;
       default:
 	break;
       }
