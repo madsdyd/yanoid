@@ -45,6 +45,21 @@ AC_PROG_CPP
 AM_PROG_LIBTOOL
 
 
+MBD_CHECK_PYTHON
+AC_MSG_RESULT([$PACKAGE uses
+PYTHON          : $PYTHON
+PYTHON_VERSION  : $PYTHON_VERSION
+PYTHON_INCLUDES : $PYTHON_INCLUDES
+PYTHON_LIBS     : $PYTHON_LIBS
+PYTHON_SYSLIBS  : $PYTHON_SYSLIBS
+PYTHON_LINK     : $PYTHON_LINK
+])
+if test "x$mbd_check_python_failure" != "xno"; then
+  AC_MSG_ERROR(Python check failed)
+fi
+
+
+
 dnl ------------------------------------------------------------
 dnl Checks for libraries.
 dnl ------------------------------------------------------------
