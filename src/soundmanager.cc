@@ -50,10 +50,13 @@ void TSoundManager::UnloadRessource(Mix_Chunk * sound) {
  * Play Sound - a convenience function
  * *********************************************************************/
 void TSoundManager::PlaySound(string name) {
-  Mix_Chunk * tmp = RequireRessource(name);
-  if (tmp) {
-    Mix_PlayChannel(-1, tmp, 0);
-    ReleaseRessource(tmp);
+  if (initialized) {
+    Mix_Chunk * tmp = RequireRessource(name);
+    if (tmp) {
+      Mix_PlayChannel(-1, tmp, 0);
+      /* Ups, this is a problem .. */
+      ReleaseRessource(tmp);
+    }
   }
 }
 

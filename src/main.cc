@@ -269,17 +269,21 @@ int main(int argc, char ** argv) {
 
   /* Hide the mouse */
   SDL_ShowCursor(SDL_DISABLE);
-
+  
   /* **********************************************************************
    * Setup the audio. wave configuration is fixed at the moment.
    * *********************************************************************/
 
   // open 11025 Hz, 8-bit, 1 channel, 512 chunksize
 #ifndef NO_MUSIC_THREAD
-  Assert( Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0 , 
-	  "Unable to set audio mode");
-  LogLine(LOG_VERBOSE, 
-	  "Audiomode set (11025 Hz, 8-bit, 1 ch, 256 byte chunks)");
+  bool AudioInitialized
+    = (Mix_OpenAudio(11025, AUDIO_U8, 1, 256) >= 0);
+  if (!AudioInitialized) {
+    cout << "Unable to open audio" << endl;
+  } else { 
+    LogLine(LOG_VERBOSE, 
+	    "Audiomode set (11025 Hz, 8-bit, 1 ch, 256 byte chunks)");
+  }
 #endif
   /* **********************************************************************
    * Initialize the surface manager (requires SDL to be initialized and 
@@ -296,20 +300,15 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
 
 #ifndef NO_MUSIC_THREAD
-  MusicManager = new TMusicManager();
+  MusicManager = new TMusicManager(AudioInitialized);
   Assert(MusicManager != NULL, "Unable to create MusicManager");
   LogLine(LOG_VERBOSE, "MusicManager Initialized");
-
-  /* A small MOD test */
-  Mix_Music * modmusic
-    = MusicManager->RequireRessource("music/yanoid.xm");
-  Assert(NULL != modmusic, "Error getting Mix_Music *");
 
 #endif
   /* **********************************************************************
    * Initialize the sound manager
    * *********************************************************************/
-  SoundManager = new TSoundManager();
+  SoundManager = new TSoundManager(AudioInitialized);
   Assert(SoundManager != NULL, "Unable to create SoundManager");
   LogLine(LOG_VERBOSE, "SoundManager Initialized");
   
@@ -389,17 +388,9 @@ int main(int argc, char ** argv) {
     SDL_Flip(Screen);
   }
 
-  /* Start the music */
 #ifndef NO_MUSIC_THREAD
-  // Test the MOD music
-  if ( ! Mix_PlayingMusic() ) {
-    Mix_PlayMusic(modmusic, -1);
-  }
-
-  // Test the ogg vorbis music
-  if ( ! Mix_PlayingMusic() ) {
-    //    Mix_PlayMusic(oggmusic, 0);
-  }
+  /* Start the music */
+  MusicManager->PlayMusic("music/yanoid.xm", -1);
 #endif 
 
   /* Let the impression sink in... ;-) */
@@ -428,7 +419,7 @@ int main(int argc, char ** argv) {
   
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(Splash);
-  MusicManager->ReleaseRessource(modmusic);
+  // MusicManager->ReleaseRessource(modmusic);
   /* **********************************************************************
    * Exit gracefully
    * *********************************************************************/

@@ -45,3 +45,16 @@ void TMusicManager::UnloadRessource(Mix_Music * music) {
   else
     LogLine(LOG_ERROR, "Error. Tried to Unload NULL music");
 }
+/* **********************************************************************
+ * Play a piece of music
+ * *********************************************************************/
+void TMusicManager::PlayMusic(string name, int loop) {
+  if (initialized) {
+    Mix_Music * music = RequireRessource(name);
+    if (music) {
+      Mix_PlayMusic(music, loop);
+      /* Ups, this is a problem */
+      ReleaseRessource(music);
+    }
+  }
+}

@@ -31,8 +31,10 @@ class TMusicManager : public TRessourceManager<Mix_Music> {
 protected:
   Mix_Music * LoadRessource(string filename);
   void UnloadRessource(Mix_Music * music);
+  bool initialized;
 public:
-  TMusicManager() : TRessourceManager<Mix_Music>() {};
+  TMusicManager(bool _i) : TRessourceManager<Mix_Music>(), initialized(_i) {};
+  void PlayMusic(string name, int loop);
 };
 
 extern TMusicManager * MusicManager;
