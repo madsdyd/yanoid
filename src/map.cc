@@ -453,6 +453,7 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
 	  tmp->getMotion()->setCurrentVelocity(tmp->getMotion()->getCurrentVelocity()*percent);
 	}
       }
+      return true;
     } else {
       LogLineExt(LOG_ERROR, ("ball-speed with invalid argument %s", arg1.c_str()));
       return false;
