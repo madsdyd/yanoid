@@ -111,17 +111,3 @@ public:
   };
 };
 
-class TRoundOverMenu : public TDialogMenu {
-public:
-  TRoundOverMenu() : TDialogMenu("OK", true, false) {
-    AddLines("You loose a life");
-  };
-};
-
-class TMapDoneMenu : public TDialogMenu {
-public:
-  TMapDoneMenu() : TDialogMenu("OK", true, false) {
-    AddLines("Map completed - well done");
-  };
-};
-
