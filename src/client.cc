@@ -189,9 +189,13 @@ void TClient::Run() {
      something will go onto the screen, input will be handled, etc.
      However, when the client is exicted, the game ends. */
   TPreGameMenu * MyPre = new TPreGameMenu();
-
   bool QuitClient = !MyPre->Run();
-  
+
+  /* This font is used for the text effects */
+  fonthandle_t * font 
+    = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+
+  /* Main loop - never quit the client */
   while(!QuitClient) {
     /* Make sure the console is not down and the game is not paused */
     ConsoleDown = false;
@@ -246,7 +250,6 @@ void TClient::Run() {
       case TGameState::DEAD: {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
-	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
 	if (!font) {
 	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
 	  exit(-1);
@@ -280,7 +283,6 @@ void TClient::Run() {
 	//	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
 	//	RoundOverMenu->Run();
 	//	delete RoundOverMenu;
-	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
 	if (!font) {
 	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
 	  exit(-1);
@@ -322,8 +324,6 @@ void TClient::Run() {
        * *********************************************************************/
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
-	fonthandle_t * font 
-	  = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
 	if (!font) {
 	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
 	  exit(-1);
@@ -357,7 +357,12 @@ void TClient::Run() {
     Game = NULL;
     
     QuitClient = !MyPre->Run();    
-  }
+  } /* While !QuitCurrentClient */
+
+  /* Delete the font */
+  FontManager->ReleaseRessource(font);
+  
+  /* Delete the pre menu */
   delete MyPre;
 }
 
