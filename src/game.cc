@@ -21,6 +21,7 @@
 
 #include "game.hh"
 #include "log.hh"
+#include "debug.hh"
 #include "motion.hh"
 
 /* **********************************************************************
@@ -99,7 +100,7 @@ void TGame::handleCollisions()
       // bigger than maxy. If so we know that the rest
       // of the objects in the list must be located at a
       // too high y to bee colliding and we can skip the tests
-
+      Assert((*i2) != NULL, "(*i2) == NULL - how come?");
       if (maxy < (*i2)->y())
 	break;
       
@@ -144,7 +145,9 @@ void TGame::handleCollisions()
  * Load a map - TMap handles it
  * *********************************************************************/
 bool TGame::LoadMap(string mapname) {
-  return Map->Load(mapname);
+  bool result = Map->Load(mapname);
+  GameState.MapState = Map->GetState();
+  return result;
 }
 
 
