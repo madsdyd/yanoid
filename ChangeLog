@@ -1,3 +1,11 @@
+2002-02-08  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* RPM
+	Simplified the RPM build script
+	Bumped the version number
+	Added a couple of requirements
+	Fixed autoconf python problem
+
 2002-01-17  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Version

@@ -16,7 +16,7 @@ Url:            http://yanoid.sf.net/
 Source:         %{name}-%{version}.tar.gz
 Packager:       Jonas Christian Drewsen <jcd@xspect.dk>
 BuildRoot:      /var/tmp/%{name}-%{version}-root
-Requires:       python2
+Requires:       python >= 2.0, libSDL1.2 >= 1.2.2, libSDL_image1.2 >= 1.2.0, libSDL_mixer1.2 >= 1.2.0
 
 %description
 Yet Another Arkanoid (yanoid) is a clone of the old arkanoid,
@@ -24,10 +24,9 @@ but has several additional features.
 
 %prep
 %setup
-./bootstrap
 
 %build
-./configure --prefix=%{prefix}
+./configure --prefix=%{prefix} --disable-debug --enable-optimize
 make
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{prefix}
