@@ -513,7 +513,7 @@ void TClient::HandleEvents() {
 	  if (!paddle) break;
 	  TEntity * shot = new TShot(static_cast<int>(paddle->x())+20,
 				     static_cast<int>(paddle->y()), 
-				     "graphics/balls/red.png", 
+				     "graphics/shots/greenball.png", 
 				     "", "");
 	  Game->GetState()->MapState->Entities.push_back(shot);
 	  break; }

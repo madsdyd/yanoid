@@ -18,10 +18,10 @@ for x in range(6, 750, 79):
             row = y % 3
             if row == 0:
                 AddBrick("brick", x, y, "basic_brick_hit()",
-                         "graphics/bricks/blue_75.png")
+                         "graphics/bricks/blue2_75.png")
             elif row == 1:
                 AddBrick("brick", x, y, "basic_brick_hit()",
-                         "graphics/bricks/green_75.png")
+                         "graphics/bricks/green2_75.png")
             else:
                 AddBrick("brick", x, y, "basic_brick_hit()",
                          "graphics/bricks/red_75.png")
@@ -33,7 +33,7 @@ for x in range(6, 750, 79):
                 AddBrick("brick", x, y,
 #                         "power_up_add_ball_hit()",
                          "powerup_ball_spawn()",
-                         "graphics/bricks/red_75.png")
+                         "graphics/bricks/red2_75.png")
                 
             
 # Add the walls
@@ -48,3 +48,5 @@ def RoundStart():
 
 # And, call it - probably will go
 RoundStart();
+
+

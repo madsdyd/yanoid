@@ -314,7 +314,7 @@ public:
     AddLines("Yanoid was created for the 2001 SDL contest by");
     AddLines("    ");
     AddLines("Jonas Christian Drewsen <jcd@xspect.dk>");
-    AddLines("Programming");
+    AddLines("Programming & artist");
     AddLines("    ");
     AddLines("Bjarke Soerensen <bs@wasd.dk>");
     AddLines("Artist");
