@@ -57,6 +57,7 @@ public:
     currentmap = -1;
     /* Uhhh, the hacks we make */
     shot_time_left = 0;
+    current_shot_time_left = 0;
   }
   ~TGameState() {
     LogLine(LOG_TODO, "TGameState::~ Clean up stuff?");

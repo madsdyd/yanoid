@@ -72,6 +72,9 @@ static PyObject * EnableShot(PyObject * self, PyObject * args) {
   CurrentGame->GetState()->shot_pixmap = pixmap;
   CurrentGame->GetState()->shot_hitfunction = hitfunction;
   CurrentGame->GetState()->shot_time_left = shot_time;
+  /* Note, we do not change the current_shot_time_left, because
+     we want the canon to "cool off" even if we pick up another
+     powerup. */
   CurrentGame->GetState()->time_between_shots = time_between_shots;
   return Py_BuildValue("");
 }

@@ -165,6 +165,9 @@ bool TClient::NextMap() {
     
     
     Game->GetState()->status = TGameState::PLAYING;
+    /* No more shooting */
+    Game->GetState()->shot_time_left = 0;
+    Game->GetState()->current_shot_time_left = 0;
     FontManager->ReleaseRessource(font);
     return true;
   } else {
@@ -201,25 +204,6 @@ void TClient::Run() {
     /* Load map names from maplist file */
     Interprenter->RunSimpleFile("maps/maplist.py");
 
-#ifdef TESTINGNEXTMAP
-    if (Game->HasMap(Game->GetState()->currentmap)) {
-      if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap))) {
-	CON_ConOut("Map succesfully loaded");
-      } else {
-	CON_ConOut("Error loading map");
-      }
-    }else{
-      	CON_ConOut("Error loading maplist file");
-    }
-    /* Initialize the timer stuff */
-    game_start      = SDL_GetTicks();
-    game_lastupdate = 0;
-    LogLine(LOG_VERBOSE, "Game->Update(0)");
-    /* Set the game status ... hmm. may not be appropiate */
-    Game->GetState()->status = TGameState::PLAYING;
-    Game->Update(0);
-
-#endif
     QuitCurrentGame = false; /* May be changed by the in game menu */
     if (!NextMap()) {
       LogLine(LOG_ERROR, "Unable to load any valid map");
@@ -313,6 +297,7 @@ void TClient::Run() {
 	Game->GetState()->MapState->ballbirth = 0;
 	/* No more shooting */
 	Game->GetState()->shot_time_left = 0;
+	Game->GetState()->current_shot_time_left = 0;
 	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
@@ -355,49 +340,9 @@ void TClient::Run() {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
-
-#ifdef TESTINGNEXTMAP
 	/* **********************************************************************
-	 * Get on with loading a game
+	 * Change maps
 	 * *********************************************************************/
-	Game->GetState()->MapState->ballbirth = 0;
-	/* No more shooting */
-	Game->GetState()->shot_time_left = 0;
-	//	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
-	//	MapDoneMenu->Run();
-	//	delete MapDoneMenu;
-	/* Initialize the timer stuff */
-	game_start      = SDL_GetTicks();
-	game_lastupdate = 0;
-	LogLine(LOG_VERBOSE, "Game->Update(0)");
-	Game->Update(0);
-	if (Game->LoadNextMap()) {
-	  {
-	    PauseGame();
-	    Render();
-	    const char* str = "New level coming up";
-	    TTextEffects tfx(str, Screen, font, 
-			     TTextEffects::CHARACTER_SPACED_ANIM);
-	    tfx.setLocation(TPoint((Screen->w - strlen(str) 
-				    * DT_FontWidth(*font))/2, 
-				   Screen->h / 2));
-	    tfx.setDuration(1500);
-	    tfx.start();
-	    while(!tfx.isStopped()) {
-	      tfx.update(SDL_GetTicks());
-	      SDL_Flip(Screen);
-	    }
-	    ContinueGame();
-	  }
-	  
-
-	  Game->GetState()->status = TGameState::PLAYING;
-	} else {
-	  LogLine(LOG_ERROR, "Unable to load any valid map");
-	  CON_ConOut("Unable to load any valid map");
-	  QuitCurrentGame = true;
-	}
-#endif
 	if (!NextMap()) {
 	  LogLine(LOG_ERROR, "Unable to load any valid map");
 	  CON_ConOut("Unable to load any valid map");
@@ -528,7 +473,7 @@ void TClient::HandleEvents() {
 	  //	  paddle->getMotion()->setVelocity( 0.5 );
 	  //	  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
 	  break;
-	  // Testing shots
+	  // Performing a shot.
 	case SDLK_SPACE: {
 	  if (!paddle) break;
 	  if (!Game) break;
@@ -548,7 +493,7 @@ void TClient::HandleEvents() {
 	    Game->GetState()->MapState->Entities.push_back(shot);
 	    Game->GetState()->current_shot_time_left = 
 	      Game->GetState()->time_between_shots;
-	  }
+	  } 
 	  break;}
 	}
 	break;
