@@ -197,7 +197,7 @@ bool TMenu::HandleEvent(SDL_Event * event) {
 void TDialogMenu::Render() {
   RenderBackground();
   RenderSplash();
-  RenderLines();
+  RenderLines(0, 150, Screen->w, 300);
   RenderItems(0, 300, Screen->w, Screen->h);
   SDL_Flip(Screen);
 };
@@ -213,6 +213,73 @@ TDialogMenu::TDialogMenu(string caption,
   items.push_back(caption);
 };
 
+void TDialogMenu::AddLines(string _lines) {
+  int width = 600;
+  /* Scan through lines, build lines from _lines */
+  string newline = "";
+  unsigned int currentleft = width;
+  string tmpstring = "";
+  int ff = 0;
+  while("" != _lines && ff != -1) {
+    /* Get token */
+    ff = _lines.find(' ');
+    if (ff != -1) {
+      tmpstring = _lines.substr(0, ff+1);
+      _lines.erase(0, ff+1);
+    } else {
+      tmpstring = _lines;
+      _lines = "";
+	
+    }
+    if (currentleft >= tmpstring.size()*16) {
+      /* Can be added to this line */
+      newline += tmpstring;
+      currentleft -= tmpstring.size()*16;
+    } else {
+      /* Uhoh, line is full, lets proceed */
+      if (newline[newline.size()-1] == ' ') {
+	newline.erase(newline.size()-1, 1);
+      }
+      lines.push_back(newline);
+      cout << "newline " << newline << endl;
+      newline = tmpstring;
+      currentleft = width - newline.size()*16;
+    }
+    cout << "ff " << ff << endl;
+    cout << "tmpstring " << tmpstring << endl;
+    cout << "_lines " << _lines << endl;
+    /* check if there is room in this line */
+    /* Still using 16 as char width */
+  }
+  if (newline[newline.size()-1] == ' ') {
+    newline.erase(newline.size()-1, 1);
+  }
+  if ("" != newline) {
+    lines.push_back(newline);
+  }
+
+}
+
+void TDialogMenu::RenderLines(int xlow, int ylow, int xhigh, int yhigh) {
+  /* Render from the center of the area. We use a fixed font, so we can
+     calculate where it is 
+     20 is the height spacing of the font, 16 is the width */
+  int h = yhigh - ylow;
+  int w = xhigh - xlow;
+  int drawy = (h - lines.size()*20) / 2 + ylow;
+  unsigned int count = 0;
+  int drawx;
+  string tmp;
+  TItemsIterator End = lines.end();
+  for (TItemsIterator i = lines.begin(); i != End; i++) {
+    tmp = *i;
+    drawx = (w - tmp.size()*16) / 2 + xlow;
+    DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
+    count++;
+    drawy += 20;
+  }
+}
+
 /* **********************************************************************
  * These menus are used internally.
  * *********************************************************************/
@@ -221,33 +288,26 @@ TDialogMenu::TDialogMenu(string caption,
  * The Help Menu
  * *********************************************************************/
 class THelpMenu : public TDialogMenu {
-protected:
-  void RenderLines();
 public:
-  THelpMenu() : TDialogMenu("Return") {};
+  THelpMenu() : TDialogMenu("Return") {
+    AddLines("Dette er en lang linie, som jeg gerne ser bliver "
+	     "autoombrudt af AddLines, men jeg ved ikke om det "
+	     "kan lade sig gøre");
+    
+  };
 };
 
-void THelpMenu::RenderLines() {
-  string text = "Here is room for a help text";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-}
 
 /* **********************************************************************
  * The About Menu
  * *********************************************************************/
 class TAboutMenu : public TDialogMenu {
-protected:
-  void RenderLines();
 public:
-  TAboutMenu() : TDialogMenu("Return") {};
+  TAboutMenu() : TDialogMenu("Return") {
+    AddLines("Here is room for an about dialog");
+  };
 };
 
-void TAboutMenu::RenderLines() {
-  string text = "Here is room for an about text";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-}
 
 /* **********************************************************************
  * The PreGameMenu
@@ -319,28 +379,3 @@ void TInGameMenu::SelectFocused() {
   }
 }
 
-/* **********************************************************************
- * TGameOver menu
- * *********************************************************************/
-void TGameOverMenu::RenderLines() {
-  string text = "Game over";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-}
-
-/* **********************************************************************
- * TRoundOverMenu
- * *********************************************************************/
-void TRoundOverMenu::RenderLines() {
-  string text = "You loose a life";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-}
-/* **********************************************************************
- * TMapDoneMenu
- * *********************************************************************/
-void TMapDoneMenu::RenderLines() {
-  string text = "Map completed - well done!";
-  int drawx = (Screen->w - text.size()*16) / 2;
-  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-}

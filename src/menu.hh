@@ -92,7 +92,10 @@ public:
    pressed */
 class TDialogMenu : public TMenu {
 protected:
-  virtual void RenderLines() = 0; /* Overridden by subclasses */
+  TItems lines;
+  /* This method formats the string passed to it into lines */
+  void AddLines(string _lines);
+  void RenderLines(int xlow, int ylow, int xhigh, int yhigh);
   void SelectFocused();
   void Render();
 public:
@@ -102,23 +105,23 @@ public:
 
 
 class TGameOverMenu : public TDialogMenu {
-protected: 
-  void RenderLines();
 public:
-  TGameOverMenu() : TDialogMenu("OK", true, false) {};
+  TGameOverMenu() : TDialogMenu("OK", true, false) {
+    AddLines("Game Over");
+  };
 };
 
 class TRoundOverMenu : public TDialogMenu {
-protected:
-  void RenderLines();
 public:
-  TRoundOverMenu() : TDialogMenu("OK", true, false) {};
+  TRoundOverMenu() : TDialogMenu("OK", true, false) {
+    AddLines("You loose a life");
+  };
 };
 
 class TMapDoneMenu : public TDialogMenu {
-protected:
-  void RenderLines();
 public:
-  TMapDoneMenu() : TDialogMenu("OK", true, false) {};
+  TMapDoneMenu() : TDialogMenu("OK", true, false) {
+    AddLines("Map completed - well done");
+  };
 };
 
