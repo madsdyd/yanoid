@@ -1,5 +1,8 @@
 2001-11-30  Mads Bondo Dydensborg  <madsdyd@ripley>
 
+	* Sounds
+	Added a number of sounds
+
 	* Fixes
 	A lot of minor fixes
 	Updated makefiles to only install files that are used

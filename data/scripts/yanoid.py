@@ -58,7 +58,10 @@ for script in default_scripts:
 # This preloads sounds to make sure that it does not lag the first
 # time it is played
 sounds = [ "sounds/blip.wav",
-           "sounds/pop.wav" ]
+           "sounds/pop.wav",
+           "sounds/powerup_collect.wav",
+           "sounds/fire.wav",
+           "sounds/peep.wav"]
 
 for sound in sounds:
     put_console("Caching sound " + yanoid.resolve(sound))

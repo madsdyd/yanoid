@@ -488,6 +488,7 @@ void TClient::HandleEvents() {
 	  if (Game->GetState()->shot_time_left > 0
 	      && Game->GetState()->current_shot_time_left == 0) {
 	    /* Arh, the hacks upon hacks */
+	    SoundManager->PlaySound("sounds/fire.wav");
 	    TEntity * shot 
 	      = new TShot(0, 
 			  static_cast<int>(paddle->y()),

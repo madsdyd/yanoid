@@ -19,13 +19,14 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 #include "menu.hh"
 #include "screen.hh"
 #include "client.hh"
 #include "fontmanager.hh"
+#include "soundmanager.hh"
 #include "highscore.hh"
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
 #include "ConsoleSource/DT_drawtext.h"
 
 /* **********************************************************************
@@ -200,17 +201,25 @@ bool TMenu::HandleEvent(SDL_Event * event) {
   if (SDL_KEYDOWN == event->type) {
     switch (event->key.keysym.sym) {
     case SDLK_DOWN: {
+      int oldfocused = focused;
       focused += 1;
       if (focused >= items.size()) {
 	focused = 0;
       }
+      if (oldfocused != focused) {
+	SoundManager->PlaySound("sounds/menu_move.wav");
+      }
       return true;
     }
     case SDLK_UP: {
+      int oldfocused = focused;
       if (focused == 0) {
 	focused = items.size() - 1;
       } else {
 	focused -= 1;
+      }
+      if (oldfocused != focused) {
+	SoundManager->PlaySound("sounds/menu_move.wav");
       }
       return true;
     }

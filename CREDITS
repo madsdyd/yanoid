@@ -5,15 +5,18 @@ other projects.
 * CODE
 
 * Console
-The console sources and console font was taken from the SDL_console code. 
+The console sources was taken from the SDL_console code. 
 Author  : Garrett Banuk
 Homepage: http://www.mongeese.org/SDL_Console/
+License : ? (Probably GPL, fill in)
 
 * Pixel collision code
 The code in entity.cc that does pixel perfect collision detection was
 taken from libsge
 Author  : Anders Lindström
 Homepage: http://www.etek.chalmers.se/~e8cal1/sge/
+License : ? (Probably GPL, fill in)
+
 
 ----------------------------------------------------------------------
 * MUSIC
@@ -30,15 +33,26 @@ The following is a list of sounds, and where they were taken
 from. Sounds not mentioned on this list has been created for yanoid by
 the yanoid development team.
 
-pop.wav - taken from the game gnibbles (Gnome game pack, GPL).
-laser.wav - taken from the OpenAL distribution (renamed from boom.wav)
-cannon.wav - taken from the source code to the No Starch PLG book.
-blip.wav - taken from the game defendguin (GPL, renamed from select.wav)
+pop.wav             - From the game gnibbles, part of the Gnome game pack 
+		      GPL
+blip.wav            - From the game defendguin 
+                      GPL, renamed from select.wav
+powerup_collect.wav - From the KDE project
+		      GPL, renamed from KDE_Beep_Connect.wav
+fire.wav            - From the KDE project
+		      GPL, renamed from KDE_Window_Shade_Up.wav
+menu_move.wav       - From the KDE project
+		      GPL, renamed from KDE_Window_DeIconify.wav
+peep.wav            - From the KDE project
+		      GPL, renamed from KDE_Beep_Pop.wav
+
 
 ----------------------------------------------------------------------
 * GRAPHICS
 
-The fonts used for the menus was the ones that came with the 
-SDL_Console code.
+The font used for the menus was the ones that came with the 
+SDL_Console code, although edited in color.
+
+The font used for the console came with the SDL_Console code.
 
 

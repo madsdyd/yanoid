@@ -47,6 +47,7 @@ def powerup_spawn_ball():
                        "powerup_ball_hit()")
     
 def powerup_ball_hit():
+    PlaySound("sounds/powerup_collect.wav")
     yanoid_map.PowerUp("spawn-ball", "graphics/balls/red.png",
                        "ball_hit()")
 
@@ -56,6 +57,7 @@ def powerup_spawn_life():
                        "powerup_life_hit()")
     
 def powerup_life_hit():
+    PlaySound("sounds/powerup_collect.wav")
     AdjustLives(1)
 
 
@@ -65,6 +67,7 @@ def powerup_spawn_shot():
                        "powerup_shot_hit()")
     
 def powerup_shot_hit():
+    PlaySound("sounds/powerup_collect.wav")
     EnableShot("", "graphics/shots/greenball.png", "", 20,
                1)
 
@@ -74,6 +77,7 @@ def powerup_spawn_super_shot():
                        "powerup_super_shot_hit()")
     
 def powerup_super_shot_hit():
+    PlaySound("sounds/powerup_collect.wav")
     EnableShot("REMOVEALL", "graphics/shots/penetrating.png",
                "", 12, 3)
 
