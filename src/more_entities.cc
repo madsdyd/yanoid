@@ -75,7 +75,8 @@ void TBrick::OnCollision(TEntity& other) {
  * DelayBrick
  * *********************************************************************/
 TDelayBrick::TDelayBrick(int x_, int y_, string removefunction, int millisecs_tolive) :
-  TEntity(x_, y_, 0, 0, 0, "BRICK"), millisecs_left(millisecs_tolive) {
+  TEntity(x_, y_, 0, 0, 0, "BRICK", TEntity::STATIONARY, TEntity::BOX), 
+  millisecs_left(millisecs_tolive) {
   SetScriptHitCall(removefunction);
 }
 

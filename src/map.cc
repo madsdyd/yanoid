@@ -289,8 +289,8 @@ bool TMap::AddEntity(string type, string hitfunction,
     /* Add a brick that automatically disappears after a while 
        w is used as the time to stay in millisecs */
     TEntity * e = new TDelayBrick(x, y, hitfunction, w);
-    MapState->MovingEntities.push_back(e);
-    sortEntities(MapState->MovingEntities);
+    MapState->StationaryEntities.push_back(e);
+    sortEntities(MapState->StationaryEntities);
     /* And, this counts towards the bricks. */
     MapState->num_bricks++;
     return true;
@@ -538,6 +538,8 @@ void TMap::Update(Uint32 deltatime) {
     tmp = *i;
     i++;
     if (tmp->IsRemovable()) {
+      // LogLineExt(LOG_VER_2, ("Stationary object of type %s is removable", 
+      // tmp->getEntityType().c_str()));
       /* If we remove a BRICK, reduce the number of brics */
       if ("BRICK" == tmp->getEntityType()) {
 	MapState->num_bricks--;
@@ -553,9 +555,11 @@ void TMap::Update(Uint32 deltatime) {
   End = MapState->MovingEntities.end();
   for (i = MapState->MovingEntities.begin(); i != End;) {
     candi = i;
+    tmp = *i;
     i++;
-    if ((*candi)->IsRemovable()) {
-      tmp = (*candi);
+    if (tmp->IsRemovable()) {
+      // LogLineExt(LOG_VER_2, ("Moving object of type %s is removable", 
+      // tmp->getEntityType().c_str()));
       if ("BALL" == tmp->getEntityType()) {
 	MapState->num_balls--;
 	// LogLine(LOG_VERBOSE, "Ball removed");
