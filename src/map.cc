@@ -234,7 +234,9 @@ bool TMap::AddEntity(string type, string hitfunction,
   } else if ("brick-stay" == type ) {
     /* This is a pixmapentity */
     MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction, -1));
-    MapState->num_bricks++;
+    // Obviously, do not increase the number of bricks, if the brick
+    // can not be removed... *douh*
+    // MapState->num_bricks++;
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */
