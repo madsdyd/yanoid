@@ -31,7 +31,7 @@ class TGameState {
 public:
   TMapState * MapState;
   /* This stuff will move/change */
-  typedef enum { PLAYING, CUT, DEAD } StatusType;
+  typedef enum { CUT, PLAYING, MAPDONE, DEAD } StatusType;
   StatusType status;
   int lives; /* This will go/move somewhere else */
   int score;

@@ -341,3 +341,11 @@ void TRoundOverMenu::RenderLines() {
   int drawx = (Screen->w - text.size()*16) / 2;
   DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
 }
+/* **********************************************************************
+ * TMapDoneMenu
+ * *********************************************************************/
+void TMapDoneMenu::RenderLines() {
+  string text = "Map completed - well done!";
+  int drawx = (Screen->w - text.size()*16) / 2;
+  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
+}

@@ -114,3 +114,11 @@ protected:
 public:
   TRoundOverMenu() : TDialogMenu("OK", true, false) {};
 };
+
+class TMapDoneMenu : public TDialogMenu {
+protected:
+  void RenderLines();
+public:
+  TMapDoneMenu() : TDialogMenu("OK", true, false) {};
+};
+

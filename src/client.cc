@@ -113,16 +113,17 @@ void TClient::Run() {
       HandleEvents();
 
       /* Check for Game Over, display menu */
-      if (TGameState::DEAD == Game->GetState()->status) {
+      switch(Game->GetState()->status) {
+      case TGameState::DEAD: {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
 	TGameOverMenu * GameOverMenu = new TGameOverMenu();
 	GameOverMenu->Run();
 	delete GameOverMenu;
 	QuitCurrentGame = true;
+	break;
       }
-      if (TGameState::CUT == Game->GetState()->status) {
-	LogLine(LOG_VERBOSE, "Game is in CUT state");
+      case TGameState::CUT: {
 	PauseGame();
 	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
 	RoundOverMenu->Run();
@@ -135,6 +136,30 @@ void TClient::Run() {
 	/* Set the game status ... hmm. may not be appropiate */
 	LogLine(LOG_VERBOSE, "Setting game to PLAYING state");
 	Game->GetState()->status = TGameState::PLAYING;
+	break;
+      }
+      case TGameState::MAPDONE: {
+	/* Maybe this should be handled differently */
+	PauseGame();
+	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
+	MapDoneMenu->Run();
+	delete MapDoneMenu;
+	ContinueGame();
+	LogLine(LOG_TODO, "Need to reset map time?");
+	if (Game->LoadMap("maps/map2.py")) {
+	  CON_ConOut("Map maps/map2.py succesfully loaded");
+	} else {
+	  CON_ConOut("Error loading map maps/map1.py");
+	}
+	/* Initialize the timer stuff */
+	game_start      = SDL_GetTicks();
+	game_lastupdate = 0;
+	LogLine(LOG_VERBOSE, "Game->Update(0)");
+	Game->GetState()->status = TGameState::PLAYING;
+	Game->Update(0);
+	break;
+      }
+      case TGameState::PLAYING: ;
       }
     } /* While !QuitCurrentGame */
     delete Game;

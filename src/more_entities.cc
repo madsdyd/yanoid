@@ -41,6 +41,7 @@ TBrick::~TBrick() {
  * *********************************************************************/
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
   removable = true;
+  TPixmapEntity::OnCollision(other, currenttime);
 }
 
 

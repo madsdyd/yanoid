@@ -322,6 +322,12 @@ void TMap::Update(Uint32 deltatime) {
 	Assert(MapState->num_balls >= 0, "Cant have a negative number of balls");
       }
       /* The only stationary entities that are removed are bricks */
+      if (TEntity::STATIONARY == tmp->getEntityType()) {
+	MapState->num_bricks--;
+	LogLine(LOG_VERBOSE, "Brick removed");
+	Assert(MapState->num_bricks >= 0, "Can't have a negative number of bricks");
+      }
+
       MapState->Entities.erase(candi);
       delete tmp;
     }

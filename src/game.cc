@@ -100,21 +100,35 @@ void TGame::Update(Uint32 currenttime) {
   handleCollisions(currenttime);
   lastupdate = currenttime;
 
-  /* Check game state */
+  /* If we are not in PLAYING state, no need to check for state changes, 
+     as changing to PLAYING state always is initiated from the outside */
+  if (TGameState::PLAYING != GameState.status) {
+    return;
+  }
+
+  /* At this point, the status is always PLAYING */
+
+  /* Check game state for a loosing player */
   if (Map->GetState()->num_balls == 0) {
     /* There are no balls. Player must loose a life, and we need to add 
        a ball */
     if (GameState.lives <= 1) {
-      LogLine(LOG_VERBOSE, "Player has no more lives");
+      LogLine(LOG_VERBOSE, "Going into DEAD state");
       GameState.status = TGameState::DEAD;
     } else {
-      if (GameState.status != TGameState::CUT) {
-	LogLine(LOG_VERBOSE, "Going into CUT state");
-	GameState.lives--;
-	GameState.status = TGameState::CUT;
-      }
+      LogLine(LOG_VERBOSE, "Going into CUT state");
+      GameState.lives--;
+      GameState.status = TGameState::CUT;
     }
   }
+  
+  /* Check game state for a winning player */
+  if (Map->GetState()->num_bricks == 0) {
+    /* There are no bricks, player has won a map */
+    LogLine(LOG_VERBOSE, "Going into MAPDONE state");
+    GameState.status = TGameState::MAPDONE;
+  }
+
 }
 
 /* **********************************************************************
