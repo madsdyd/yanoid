@@ -30,6 +30,8 @@
 class TMenu {
 protected:
   fonthandle_t * font;
+  /* Used for animating */
+  Uint32 start_time;
   /* Wheter or not we capture the background */
   bool cap_back;
   SDL_Surface * background;

@@ -384,8 +384,6 @@ int main(int argc, char ** argv) {
     SDL_Flip(Screen);
   }
 
-
-
   /* Run the client */
   Client->Run();
 

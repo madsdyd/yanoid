@@ -58,6 +58,7 @@ TMenu::~TMenu() {
  * *********************************************************************/
 bool TMenu::Run() {
   cancel = false; close = false;
+  start_time = SDL_GetTicks();
   /* Copy the background, if neccesary */
   if (cap_back) {
     LogLine(LOG_VERBOSE, "Capturing the screen");
@@ -151,6 +152,10 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
     /* Mark the focused one */
     if (count == focused) {
       tmp = ">>> " + tmp + " <<<";
+      /* Toogle x times pr second */
+      int offset = ((SDL_GetTicks() - start_time) / 225) % 3;
+      tmp[offset] = '|';
+      tmp[tmp.size()-1-offset] = '|';
     }
     drawx = (w - tmp.size()*16) / 2 + xlow;
     DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
