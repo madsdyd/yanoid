@@ -25,29 +25,45 @@
 #include "game.hh"
 #include "display.hh"
 
+/* Setup for max deltaticks */ 
+static const Uint32 max_deltaticks = 10;
+
 /* **********************************************************************
  * The Run method - basically a wrapper around calls to Display
  * and Game. I Suppose.
  * *********************************************************************/
 void TClient::Run() {
-  Uint32 ticks = SDL_GetTicks();
-  Uint32 start = ticks;
+  Uint32 start = SDL_GetTicks();
+  Uint32 deltaticks = 0;
+  Uint32 lastupdate = 0;
   int count = 0;
+  lastupdate = 0;
+  /* Make sure the game is updated at time 0 */
+  Game->Update(lastupdate);
   while(!QuitGame) {
-    Uint32 s = SDL_GetTicks();
 
-    Game->Update(ticks-start);
-
+    /* Update the game state in max_deltaticks ms at a time */
+    while (deltaticks > max_deltaticks) {
+      lastupdate += max_deltaticks;
+      Game->Update(lastupdate);
+      deltaticks -= max_deltaticks;
+    }
+    if (deltaticks != 0) {
+      lastupdate += deltaticks;
+      Game->Update(lastupdate);
+    }
+    
+    /* Get the system to display the game state */
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-
     Display->Render(Screen);
-    Uint32 e = SDL_GetTicks();
-    //    cerr << "Loop ticks: " << e-s << endl;
-    // SDL_UpdateRect(Screen, 0, 0, 0, 0);
     SDL_Flip(Screen);
-    ticks = SDL_GetTicks();
+    
+    /* Count the number of frames */
     count++;
+    
+    /* Update the deltatick */
+    deltaticks = SDL_GetTicks() - start - lastupdate;
   }
-  cout << "Info ; " << count << " frames in " << (ticks - start) << " ms "
-       << (count/((ticks-start)/1000.0)) << " fps" << endl;
+  cout << "Info ; " << count << " frames in " << lastupdate << " ms "
+       << (count/(lastupdate/1000.0)) << " fps" << endl;
 }

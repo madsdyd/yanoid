@@ -1,6 +1,12 @@
+2001-10-13  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* GameTime
+	Changed the code in client, to include finer graded virtuel
+	simulated time. (Fancy words, simple thing).
+
 2001-10-11  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
-	* Collsion
+	* Collision
 	Collision code is ok, but the actions carried out on a collosion
 	is not.
 	Added a ball which gets loaded when map1.py is loaded.
