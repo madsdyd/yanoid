@@ -19,8 +19,6 @@ For more specific "TODO" items, look in the bottom.
   - (Get/deliver events/state from/to the network)
 - Update system
   - Updates gamestate based on input and network stuff.
-- Ressource management
-  - (Load ressources on demand)
 - Main loop.
 
 
