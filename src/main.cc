@@ -189,9 +189,11 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
   cout << "Yet Another Arkanoid (yanoid) version " << VERSION << endl
        << "Copyright (C) 2001 Mads Bondo Dydensborg "
-       << "<mads@dydensborg.dk> " << endl 
+       << "<mads@dydensborg.dk>" << endl 
        << "Copyright (C) 2001 Jonas Christian Drewsen "
-       << "<jcd@xspect.dk> " << endl 
+       << "<jcd@xspect.dk>" << endl 
+       << "Copyright (C) 2001 Bjarke Soerensen "
+       << "<bs@wasd.dk" << endl 
        << "Yet Another Arkanoid comes with ABSOLUTLY NO WARRANTY." << endl
        << "This is free software, and you are welcome to "
        << "redistribute it" << endl 
@@ -446,5 +448,8 @@ int main(int argc, char ** argv) {
   delete Log;
 #endif
 
+  /* Print bye */
+  cout << "Thank you for playing Yanoid - see you soon!" << endl;
+ 
   return 0;
 }

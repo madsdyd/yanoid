@@ -185,7 +185,7 @@ int DT_LoadFont(const char *BitmapName, int flags)
 		DT_SetFontAlphaGL(FontNumber, SDL_ALPHA_OPAQUE);
 	}
 	
-	printf("Loaded font \"%s\". Width:%d, Height:%d\n", BitmapName, (*CurrentFont)->CharWidth, (*CurrentFont)->CharHeight );
+	// printf("Loaded font \"%s\". Width:%d, Height:%d\n", BitmapName, (*CurrentFont)->CharWidth, (*CurrentFont)->CharHeight );
 	return FontNumber;
 }
 

@@ -392,16 +392,16 @@ bool THighscore::update(const std::string& name, const Score& s)
   unsigned int count = 0;
   for(std::list<pair<std::string, Score> >::iterator i = Rankings.begin() ;
       i != Rankings.end() ; ++i, ++count) {
-    cerr << i->first << ", " << i->second << endl;
+    // cerr << i->first << ", " << i->second << endl;
     // Ensure that we have only MAX_RANKINGS rankings in list
     if (count == MAX_RANKINGS) {
-      cerr << "erasing" << endl;
+      // cerr << "erasing" << endl;
       Rankings.erase(i, Rankings.end());
       break;
     }
 
     if (i->second < s && !success) {
-      cerr << "inserting" << endl;
+      // cerr << "inserting" << endl;
       Rankings.insert(i,1,make_pair(realname,s));
       success = true;
     }

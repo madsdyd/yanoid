@@ -558,7 +558,7 @@ void CON_ConOut(const char *str, ...)
 	}
 
 	/* And print to stdout */
-	printf("%s\n", temp);
+	// printf("%s\n", temp);
 }
 
 
