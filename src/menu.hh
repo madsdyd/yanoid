@@ -67,10 +67,12 @@ public:
    a new game, false if exit has been choosen */
 class THelpMenu;
 class TAboutMenu;
+class TExitMenu;
 class TPreGameMenu : public TMenu {
 protected:
   THelpMenu * HelpMenu;
   TAboutMenu * AboutMenu;
+  TExitMenu * ExitMenu;
   void SelectFocused();
 public:
   TPreGameMenu();

@@ -374,12 +374,30 @@ public:
 
 
 /* **********************************************************************
+ * The exit menu
+ * *********************************************************************/
+class TExitMenu : public TDialogMenu {
+public:
+  TExitMenu() : TDialogMenu("OK") {
+    AddLines("Thank you for playing Yanoid!");
+    AddLines("     ");
+    AddLines("Visit the project homepage at");
+    AddLines("     ");
+    AddLines("http://www.sf.net/projects/yanoid/");
+    AddLines("     ");
+    AddLines("for updates to Yanoid, or if you want to join "
+	     "in the development.");
+  }
+};
+
+/* **********************************************************************
  * The PreGameMenu
  * *********************************************************************/
 
 TPreGameMenu::TPreGameMenu() : TMenu(false) {
   HelpMenu = new THelpMenu();
   AboutMenu = new TAboutMenu();
+  ExitMenu = new TExitMenu();
   items.push_back("Start Game");
   items.push_back("Highscore");
   items.push_back("Help");
@@ -392,6 +410,7 @@ TPreGameMenu::TPreGameMenu() : TMenu(false) {
 TPreGameMenu::~TPreGameMenu() {
   delete HelpMenu;
   delete AboutMenu;
+  delete ExitMenu;
 }
 
 void TPreGameMenu::SelectFocused() {
@@ -422,6 +441,7 @@ void TPreGameMenu::SelectFocused() {
     break;
   case 6: /* Exit */
     cancel = true;
+    ExitMenu->Run();
     return;
   default:
     LogLineExt(LOG_ERROR, ("TPreGameMenu - focused out of range %i", focused));
