@@ -1,3 +1,13 @@
+2002-03-9  Jonas Christian Drewsen  <drewsen@mmm>
+
+	* Bugfixes
+	Fixed crashes for depths other that 16 bpp
+	Fixed messed up paddle during CUT and other
+	sequences
+
+	* Features
+	Added --no-audio option flag
+	
 2002-02-18  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* CREDITS
