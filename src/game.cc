@@ -57,6 +57,19 @@ void TGame::Update(Uint32 currenttime) {
   Map->Update(deltatime);
   handleCollisions(currenttime);
   lastupdate = currenttime;
+
+  /* Check game state */
+  if (Map->GetState()->num_balls == 0) {
+    LogLine(LOG_VERBOSE, "Player must loose a life!");
+    LogLine(LOG_VERBOSE, "Ups, need to add a ball here");
+    // Map->AddEntity, "default-ball", 
+    GameState.lives--;
+    if (GameState.lives == 0) {
+      LogLine(LOG_VERBOSE, "Player has no more lives");
+      GameState.status = TGameState::DEAD;
+    }
+    
+  }
 }
 
 /* **********************************************************************
