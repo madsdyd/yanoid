@@ -8,7 +8,7 @@
 # cases, a powerup is spawned
 # NOTE: There are currently no way to reset this value. 
 
-powerup_spawn_probability = 50;
+powerup_spawn_probability = 20;
 
 # Do I need to import math, before importing random?
 from math import *
@@ -16,7 +16,7 @@ from random import randrange
 
 # The powerups are defined in here. The first number in each sublist
 # is the "weight" of the powerup.
-powerups = [ [10, "powerup_spawn_ball()"],
+powerups = [ [9, "powerup_spawn_ball()"],
              [2, "powerup_spawn_life()"],
              [6, "powerup_spawn_shot()"],
              [3, "powerup_spawn_super_shot()"],
