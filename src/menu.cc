@@ -59,7 +59,7 @@ bool TMenu::Run() {
   start_time = SDL_GetTicks();
   /* Copy the background, if neccesary */
   /* This simply does not work on my system */
-#ifdef IEVERFIGUREOUTWHATISWRONG
+#if 1 // IEVERFIGUREOUTWHATISWRONG
   if (cap_back) {
     // LogLine(LOG_VERBOSE, "Capturing the screen");
     /* Copy the screen - make it a background */

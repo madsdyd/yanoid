@@ -48,7 +48,7 @@ powerup_bad.wav     - From EgoBoo game, GPL
 ----------------------------------------------------------------------
 * GRAPHICS
 
-The font used to be used for the menus is the one that came with the
+The font used for the menus, score, etc.is the one that came with the
 SDL_Console code, although edited in color.
 
 

@@ -1,3 +1,16 @@
+2002-02-18  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* CREDITS
+	Changed a couple of words
+
+	* TODO
+	Cleaned up file a bit
+
+	* SLD_MapRGB
+	It seems the SDL_MapRGB stuff in surfacemanager.cc has completly
+	fixed the menu transparency and screenshot problems - at least on
+	my system.
+
 2002-02-08  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* RPM

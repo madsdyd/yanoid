@@ -1,9 +1,6 @@
-The following is a list of stuff that needs to be implemented in
-yanoid before the game can be considered ready for the contest. 
+This is a mixture of bugs, wishes, tasks, etc.
 
 TODO: Clean up this file, assign priorities and tasks...
-
-* There might be issues with SDL_MapRGB. Audit.
 
 * To compile on gcc 3.0 (and other c++) we need to use std::string or
   open the std namespace all over....(Kim Schulz)
@@ -16,8 +13,6 @@ TODO: Clean up this file, assign priorities and tasks...
 * Ballspeed powerup
 
 * Profile the binary
-
-* Add a statistics option to log framerate
 
 * Do not reset paddle, allow first ball to be "fired"
 
@@ -43,14 +38,12 @@ TODO: Clean up this file, assign priorities and tasks...
 
 * no sounds from paddle when colliding with bricks (MBD)
 - Should shots and powerups die, when the player dies?(MBD)
-- There are no background in menus (see above)... (MBD)
 
 * Sounds (BS)
 - brick effect sounds (explosion, disappear, whatever)
 - sound for loosing a ball
 - Game Over
 - Game startup
-- stereo fx?
 
 * Pixel perfect collision detection?
 
@@ -91,10 +84,10 @@ SDL application that uses SDL_mixer.
 **********************************************************************
 ** IDEAS
 
-- Ball on fire. Makes more damage that normal ball.
+- Ball on fire. Makes more damage than normal ball.
 
 **********************************************************************
-** IN YOUR DREAMS (stuff that we will NOT have time for)
+** WISHLIST
 
 * Network system 
   - (Get/deliver events/state from/to the network)
@@ -107,19 +100,23 @@ SDL application that uses SDL_mixer.
 **********************************************************************
 ** PUZZLING BUGS
 
-* The menu background code simply does not work on my system
-  and I have no idea why. It is very simple, yet crashes frequently.
-  I have ifdeffed it to hell. (mads)
-
 * The powerups passes behind bricks. This has to do with the y sorting
-  of entities. Fix?
+  of entities. Fix? <<-- Jonas may have fixed this!
 
 * Occasionally balls will pass through objects they are supposed to 
   collide with. This appears to happen mostly when the framerate drops
   below a certain threshhold. Fix? May be OK to decrease the virtual time
   step, but it is alread quite low...
 
-* The highscore class is rather impressed with negative scores...
+* The paddle can only collide with a single object each virtuel timestep.
+  That is a problem!
+
+* Spawned balls sometimes have a crazy speed.
+
+* The texteffects have a bad influence on the paddle.
+
+* The highscore class is rather impressed with negative scores... <<-- 
+  Has this been fixed by Jonas???
 
 * The highscore class seems to accept empty names, but will ignore them 
-  in the list.
+  in the list. <<-- Has this been fixed by Jonas?
