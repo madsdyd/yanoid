@@ -187,6 +187,14 @@ void TConsole::Render(SDL_Surface * surface) {
     /*display->textrender->Pos(0, display->GetHeight() 
 			     - position
 			     + i*display->textrender->size); */
+    /* OK, this is hackish, because my own code is confusing me, and I dont 
+       really care to tidy it up, because I am not only lazy but sleepy as well. */
+    SDL_Rect dest;
+    dest.y = 0;
+    dest.x = 0;
+    dest.w = surface->w;
+    dest.h = position + 2 * TextRender->GetGlyphHeight();
+    SDL_FillRect(surface, &dest, SDL_MapRGB(surface->format, 0, 0, 0));
   } else {
     // cout << "fadetime " << fade_time << endl;
     /* render without background */
