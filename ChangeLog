@@ -1,7 +1,8 @@
 2001-12-08  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Rounding
-
+	Fixed proper rounding when blitting pixmapentities.
+	
 	* Scripts
 	Moved the preload stuff around a bit, added a ReloadScripts()
 	command, preloads the powerup_bad.wav file
