@@ -144,14 +144,14 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Print our version, and so on.
    * *********************************************************************/
-  cout << "Yet Another Arkanoid (yanoid) version " << VERSION << endl
+  cout << "Yet Another Arkanoid (YaNOID) version " << VERSION << endl
        << "Copyright (C) 2001 Mads Bondo Dydensborg "
        << "<mads@dydensborg.dk>" << endl 
        << "Copyright (C) 2001 Jonas Christian Drewsen "
        << "<jcd@xspect.dk>" << endl 
-       << "Copyright (C) 2001 Bjarke Soerensen "
-       << "<bs@wasd.dk" << endl 
-       << "Yet Another Arkanoid comes with ABSOLUTLY NO WARRANTY." << endl
+       << "Copyright (C) 2001 Bjarke Sørensen "
+       << "<bs@wasd.dk>" << endl 
+       << "Yet Another ArkaNOID comes with ABSOLUTELY NO WARRANTY." << endl
        << "This is free software, and you are welcome to "
        << "redistribute it" << endl 
        << "under certain conditions. See the file COPYING for details." 
@@ -197,7 +197,7 @@ int main(int argc, char ** argv) {
 	 "Unable to register SDL_Quit with atexit");
   LogLine(LOG_VERBOSE, "SDL initialized");
   /* Set a caption */
-  SDL_WM_SetCaption("-- Yanoid --", 0);
+  SDL_WM_SetCaption("-- YaNOID --", 0);
 
   /* **********************************************************************
    * Setup the screen. Resolution is fixed at the moment.
@@ -402,7 +402,7 @@ int main(int argc, char ** argv) {
 #endif
 
   /* Print bye */
-  cout << "Thank you for playing Yanoid - see you soon!" << endl;
+  cout << "Thank you for playing YaNOID - see you soon!" << endl;
  
   return 0;
 }
