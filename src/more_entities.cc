@@ -61,9 +61,12 @@ void TBrick::MarkDying() {
  * *********************************************************************/
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
   /* Calling our ancestors onCollision gives us scripts, etc. */
-  TPixmapEntity::OnCollision(other, currenttime);
-  if (hitnum > 0 && --hitnum == 0) {
-    removable = true;
+  if ("BALL" == other.getEntityType() ||
+      "SHOT" == other.getEntityType()) {
+    TPixmapEntity::OnCollision(other, currenttime);
+    if (hitnum > 0 && --hitnum == 0) {
+      removable = true;
+    }
   }
 }
 
