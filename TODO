@@ -90,6 +90,11 @@ SDL application that uses SDL_mixer.
   - mouse (probably not)
   - joystick? (very much unlikely)
 
+**********************************************************************
+** PUZZLING BUGS
 
+* The menu background code simply does not work on my system
+  and I have no idea why. It is very simple, yet crashes frequently.
+  I have ifdeffed it to hell. (mads)
 
 
