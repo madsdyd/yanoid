@@ -415,6 +415,7 @@ void TEntity::ExecuteScriptHitCall() {
       LogLine(LOG_WARNING, "TEntity::ExecuteScriptHitCall error");
     }
   } else {
+
     // LogLineExt(LOG_VERBOSE, ("No script for %s", name.c_str()));
   }
   current_script_entity = NULL;

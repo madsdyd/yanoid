@@ -15,6 +15,7 @@ yanoid before the game can be considered ready for the contest.
 Stuff that seems to be fixed:
 - Sometimes the game crashes when it wants to display the in game 
   menu. Related to the text effects? (MBD, JCD?) <-- fixed?
+  Fixed, but no background now... Weirdness and ? posted to SDL list.
 
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)

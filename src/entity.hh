@@ -103,7 +103,7 @@ public:
   void ExecuteScriptHitCall();
 
   /* MarkDying - prepare this entity for its destiny... */
-  void MarkDying();
+  virtual void MarkDying();
   /* Ask if entity can be removed */
   bool IsRemovable();
 

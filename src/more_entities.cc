@@ -47,6 +47,16 @@ TBrick::~TBrick() {
 };
 
 /* **********************************************************************
+ * MarkDying - can't die if hitnum < 0
+ * *********************************************************************/
+void TBrick::MarkDying() {
+  if (hitnum >= 0) {
+    removable = true;
+  }
+}
+
+
+/* **********************************************************************
  * OnCollision - most bricks simply die, when they are part of a collision
  * *********************************************************************/
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
