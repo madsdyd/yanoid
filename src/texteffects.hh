@@ -65,6 +65,7 @@ protected:
   fonthandle_t * font;
 public:
   TTextEffects(const char *str, SDL_Surface *surface, fonthandle_t * Font, EffectType et);
+  ~TTextEffects();
   void update(Uint32 currenttime);
 
 private:

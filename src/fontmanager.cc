@@ -34,7 +34,7 @@ TFontManager * FontManager;
  * **********************************************************************/
 fonthandle_t * TFontManager::LoadRessource(string filename) {
   fonthandle_t * tmp1 = new fonthandle_t;
-  *tmp1 = DT_LoadFont(filename.c_str(),0); 
+  *tmp1 = DT_LoadFont(filename.c_str(),TRANS_FONT); 
   if (*tmp1 < 0) {
     LogLine(LOG_ERROR, "Error loading ressource");
     delete tmp1;

@@ -86,24 +86,37 @@ void THighscore::Update(Uint32 currenttime) {
 bool THighscore::Run() {
   close = false;
 
-  SDL_Rect dest;
-  dest.x = 0;
-  dest.y = 00;
-  dest.w = 800;
-  dest.h = 600;
-  SDL_FillRect(Screen, &dest, 0x00000000);
-
-  RenderSplash();
+  LogLine(LOG_VERBOSE, "Capturing the screen");
+  /* Copy the screen - make it a background */
+  background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
+				    Screen->format->BitsPerPixel,
+				    Screen->format->Rmask,
+				    Screen->format->Gmask,
+				    Screen->format->Bmask,
+				    Screen->format->Amask);
+  if (background == NULL) {
+    LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
+  } else {
+    SDL_Rect d;
+    d.x = 0; d.y = 0; 
+    d.w = background->w;
+    d.h = background->h;
+    SDL_BlitSurface(Screen, &d, background, &d);
+    SDL_SetAlpha(background, SDL_SRCALPHA, 64);
+  }
 
   /* While until the menu is done */
   while(!close) {
+    RenderBackground();
+    if (DisplayMode != INPUT)
+      RenderSplash();
     Render(Screen);
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       HandleEvent(&event);
     }
     /* Let the system be a little idle, sleep for 10 ms */
-    SDL_Delay(10);
+    //    SDL_Delay(10);
   }
 
   return !close;
@@ -119,6 +132,23 @@ void THighscore::RenderSplash() {
     src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
     dest.x = (Screen->w-src.w)/2; dest.y = 50; dest.w = src.w; dest.h = src.h;
     SDL_BlitSurface(Splash, &src, Screen, &dest);
+}
+
+/* **********************************************************************
+ * RenderBackground - renders the background
+ * *********************************************************************/
+void THighscore::RenderBackground() {
+  if (background) {
+    SDL_FillRect(Screen, NULL, 
+		 SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
+    SDL_Rect d;
+    d.x = 0; d.y = 0; 
+    d.w = background->w;
+    d.h = background->h;
+    SDL_BlitSurface(background, &d, Screen, &d);
+  } else {
+    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  }
 }
 
 /* **********************************************************************
@@ -261,7 +291,7 @@ void THighscore::Render(SDL_Surface * surface)
     drawy += 40;
     name[3] = 0x00;
     DT_DrawText(name, surface, *fontHandle, 
-		drawx + 7 * 2 * DT_FontWidth(*fontHandle), drawy);    
+		drawx + 7 * DT_FontWidth(*fontHandle), drawy);    
 
     //    LogLine(LOG_VERBOSE, "Displaying highscore input");
   }

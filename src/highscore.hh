@@ -44,6 +44,7 @@ protected:
   int cursorpos_x, cursorpos_y;
   char name[4];
   Score curscore;
+  SDL_Surface * background;
 public:
   THighscore(int x_, int y_);
   virtual ~THighscore();
@@ -59,6 +60,7 @@ public:
   bool HandleEvent(SDL_Event * event);
   bool Run();
   void RenderSplash();
+  void RenderBackground();
 
   /* Num visible rankings */
   void setNumRankings(unsigned int n) { NumRankings = n; }

@@ -63,6 +63,12 @@ TTextEffects::TTextEffects(const char *str_, SDL_Surface *surface_,
   char_points = vector<TPoint>(slen);
 }
 
+TTextEffects::~TTextEffects() 
+{
+  if (background)
+    SDL_FreeSurface(background);
+}
+
 void
 TTextEffects::update(Uint32 currenttime)
 {
@@ -201,7 +207,7 @@ TTextEffects::characterJumpingAnim(Uint32 currenttime)
     } else {
       i->setY(_y);
     }
-    i->setX(_x);
+    i->setX(_x - characters/2 + count * fontwidth);
     count++;
   }
   saveCharsBackground();

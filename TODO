@@ -4,24 +4,19 @@ yanoid before the game can be considered ready for the contest.
 **********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
-- Game over should not autoremove (player should be allowed to view his 
-  score) (JCD)
-- Ball should never go horizontal or vertical (interval around) (JCD) <<- fixed?
 - Sometimes the game crashes when it wants to display the in game 
   menu. Related to the text effects? (MBD, JCD?) <-- fixed?
 - More maps (BS,MBD...)
-- Make fonts png and use colorkey (MBD)
+- Make fonts png and use colorkey (MBD) 
+	[update: LargeFont.bmp is now colorkeyed (JCD)]
 - Make pixmap and other ressourcehandling, use a default "thingy", 
   when loads and such fails (MBD)
 - precache sounds (MBD)
 - No points for bricks that stay (MBD)
 - Remove point for highscore? (JCD)
 
-
 **********************************************************************
 ** IMPORTANT (or possible easy - stuff that we really should do)
-
-* The highscore list?
 
 * Pixel perfect collision detection?
 
