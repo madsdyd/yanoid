@@ -34,8 +34,3 @@ def help():
     put_console("  i yanoid.yreload()")
     put_console("  i put_console(fak(4))")
     put_console("  i rules(4)")
-
-
-                
-        
-        
