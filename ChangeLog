@@ -1,4 +1,11 @@
-2001-10-04  Mads Bondo Dydensborg  <madsdyd@mother>
+2001-10-05  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* Paddle
+	Moved the paddle to the gamestate, where it belongs
+	Due to some weirdness in the collision detection code, 
+	it was neccesary to fixate one of the moving ovals.
+
+2001-10-04  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* Version 0.0.6
 	Jonas have added paths, motion, bounding boxes and simple

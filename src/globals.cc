@@ -22,7 +22,6 @@
 #include "globals.hh"
 
 bool QuitGame = false;
-TEntity * paddle = 0;
 
 
 

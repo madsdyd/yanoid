@@ -38,7 +38,7 @@ TMap * CurrentMap = NULL;
  * *********************************************************************/
 
 /* **********************************************************************
- * Add a brick to the current map
+ * Add a brick or similar object to the current map
  * *********************************************************************/
 static PyObject * AddObject(PyObject * self, PyObject * args) {
   int x; int y; int w; int h; 
@@ -54,13 +54,46 @@ static PyObject * AddObject(PyObject * self, PyObject * args) {
   }
 }
 
+/* **********************************************************************
+ * 
+ * *********************************************************************/
+static PyObject * SetPaddle(PyObject * self, PyObject * args) {
+  int x; int y;  
+  char * pathtype; 
+  double velocity;
+  double angle; /* Have to use a type that works with parsetuple */
+  char * pixmap;
+  if (!CurrentMap || !PyArg_ParseTuple(args, "iisdds", 
+				       &x, &y, &pathtype,
+				       &velocity, &angle, &pixmap)) {
+    return NULL;
+  }
+  if (CurrentMap->SetPaddle(x, y, pathtype, velocity, angle, pixmap)) {
+    return Py_None;
+  } else {
+    return NULL;
+  }
+  
+}
+
 static PyMethodDef map_methods[] = {
   {"AddObject", AddObject, 6},
+  {"SetPaddle", SetPaddle, 6},
   {NULL, NULL}
 };
 
 static bool ConnectedToInterprenter = false;
 
+/* **********************************************************************
+ * TMapState stuff
+ * *********************************************************************/
+
+/* **********************************************************************
+ * TMapState constructor
+ * *********************************************************************/
+TMapState::TMapState() : paddle(NULL) {
+
+}
 /* **********************************************************************
  * TMapState destructor
  * *********************************************************************/
@@ -73,12 +106,24 @@ TMapState::~TMapState() {
 }
 
 /* **********************************************************************
+ * Get the paddle
+ * *********************************************************************/
+TEntity * TMapState::GetPaddle() {
+  return paddle;
+}
+
+
+/* **********************************************************************
  * load - loads a TMapState and associated entities from path.
  * *********************************************************************/
 void TMapState::load(const std::string& path)
 {
 
 }
+
+/* **********************************************************************
+ * TMap stuff
+ * *********************************************************************/
 
 /* **********************************************************************
  * Constructor
@@ -107,41 +152,19 @@ TMap::TMap() {
   e->setName("Entity 2");
   MapState.Entities.push_back(e);
   */
-  /*
-  e = new TEntity(0, 0);
-  e->setName("Roof");
-  e->setW(10);
-  e->setH(400);
-  MapState.Entities.push_back(e);
-
-  e = new TEntity(630, 0);
-  e->setName("Wall 2");
-  e->setW(10);
-  e->setH(400);
-  MapState.Entities.push_back(e);
-
-  e = new TEntity(10, 0);
-  e->setName("Roof");
-  e->setW(620);
-  e->setH(10);
-  MapState.Entities.push_back(e);
-
-  e = new TEntity(0, 400);
-  e->setName("Floor");
-  e->setW(640);
-  e->setH(100);
-  MapState.Entities.push_back(e);
-  */
-  paddle = new TPixmapEntity(300, 200, 0, "graphics/objects/weird_brick.png");
+#ifdef NO_ANY_MORE
+  TEntity * paddle = 
+    new TPixmapEntity(300, 200, 0, "graphics/objects/weird_brick.png");
   paddle->setMotion(new TFreeMotion);
   paddle->getMotion()->setVelocity(0.0);
   dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir(0);
   paddle->setName("Paddle");
   MapState.Entities.push_back(paddle);
+#endif
 
   e = new TPixmapEntity(240, 50, 0, "graphics/objects/red_oval_brick.png");
   e->setMotion(new TFreeMotion);
-  e->getMotion()->setVelocity(0.1);
+  e->getMotion()->setVelocity(0.0);
   dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(20.0);
   MapState.Entities.push_back(e);
   e->setName("Floater 1");
@@ -173,7 +196,21 @@ TMap::~TMap() {
 }
 
 /* **********************************************************************
- * AddBrick 
+ * Load a map - set the current pointer, load the python mapname into the
+ * interprenter, unset the current pointer, return
+ * *********************************************************************/
+
+bool TMap::Load(string mapname) {
+  CurrentMap = this;
+  bool result = Interprenter->RunSimpleFile(PathManager->Resolve(mapname));
+  /* Eventually we may want to unset the current map - currently we just 
+     keep it, such that we can do our stuff from the console */
+  // CurrentMap = NULL;
+  return result;
+}
+
+/* **********************************************************************
+ * AddEntity
  * This will need to be refined to allow for different types, etc.
  * *********************************************************************/
 bool TMap::AddEntity(string type, int x, int y, int w, int h, 
@@ -193,18 +230,40 @@ bool TMap::AddEntity(string type, int x, int y, int w, int h,
   }
 }
 
+
 /* **********************************************************************
- * Load a map - set the current pointer, load the python mapname into the
- * interprenter, unset the current pointer, return
+ * Set the paddle - should probably mean that we remove the current
+ * from the list of entities.
  * *********************************************************************/
 
-bool TMap::LoadMap(string mapname) {
-  CurrentMap = this;
-  bool result = Interprenter->RunSimpleFile(PathManager->Resolve(mapname));
-  /* Eventually we may want to unset the current map - currently we just 
-     keep it, such that we can do our stuff from the console */
-  // CurrentMap = NULL;
-  return result;
+bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
+		     double angle, string pixmap) {
+  /* Check if the mapstate already have a paddle
+     we can not handle that */
+  if (MapState.paddle) {
+    LogLine(LOG_WARNING, "TMap::SetPaddle - paddle already set");
+    return false;
+  } 
+
+  /* First, try and make things work */
+  TEntity * paddle = 
+    new TPixmapEntity(x, y, 0, pixmap);
+  if ("FreeMotion" == pathtype) {
+    paddle->setMotion(new TFreeMotion);    
+    dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir(angle);
+  } else {
+    LogLine(LOG_ERROR, "TMap::SetPaddle - unknown pathtype "  
+	    + pathtype);
+    delete paddle;
+    return false;
+  }
+  
+  /* Set standard parameters */
+  paddle->getMotion()->setVelocity(velocity);
+  paddle->setName("Paddle");
+  MapState.Entities.push_back(paddle);
+  MapState.paddle = paddle;
+  return true;
 }
 
 /* **********************************************************************

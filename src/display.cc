@@ -46,24 +46,30 @@ void TDisplay::Render(SDL_Surface * surface) {
     (*i)->Render(surface);
   }
 
+  TEntity * paddle = GameState->MapState->GetPaddle();
+
   SDL_Event event;
   if (SDL_PollEvent(&event)) {
     switch (event.type) {
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
       case SDLK_LEFT:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( -0.5 );
 	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
       break;
       case SDLK_RIGHT:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.5 );
 	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
       break;
       case SDLK_UP:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.5 );
 	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( M_PI_2 );	
 	break;
       case SDLK_DOWN:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.5 );
 	dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( -M_PI_2 );
 	break;
@@ -88,15 +94,19 @@ void TDisplay::Render(SDL_Surface * surface) {
     case SDL_KEYUP:
       switch (event.key.keysym.sym) {
       case SDLK_LEFT:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.0 );
 	break;
       case SDLK_RIGHT:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.0 );
 	break;
       case SDLK_UP:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.0 );
 	break;
       case SDLK_DOWN:
+	if (!paddle) break;
 	paddle->getMotion()->setVelocity( 0.0 );
 	break;
       }

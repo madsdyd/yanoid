@@ -25,7 +25,6 @@
 #include "entity.hh"
 
 extern bool QuitGame;
-extern TEntity * paddle;
 
 #endif
 

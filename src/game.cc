@@ -136,7 +136,7 @@ void TGame::handleCollisions()
  * Load a map - TMap handles it
  * *********************************************************************/
 bool TGame::LoadMap(string mapname) {
-  return Map.LoadMap(mapname);
+  return Map.Load(mapname);
 }
 
 

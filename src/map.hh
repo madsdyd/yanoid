@@ -23,10 +23,15 @@
 #include "log.hh"
 #include "entity.hh"
 
+class TMap;
 class TMapState {
+  TEntity * paddle;
+  friend TMap;
 public:
-  TEntities Entities;
+  TMapState();
   ~TMapState();
+  TEntities Entities;
+  TEntity * GetPaddle();
   void load(const std::string& path);
 };
 
@@ -42,11 +47,14 @@ public:
   TMap();
   ~TMap();
   /* Add an entity, mostly bricks, walls, etc.
-     , initialize with parameters (will change). 
+     , initialize with parameters (will probably change). 
      returns true on succes */
   bool AddEntity(string type, int x, int y, int w, int h, string pixmap);
-  /* Temporary loading function */
-  bool LoadMap(string mapname);
+  /* Set the paddle for the map */
+  bool SetPaddle(int x, int y, string pathtype, double velocity,
+		 double angle, string pixmap);
+  /* Loading function - may be temporary*/
+  bool Load(string mapname);
   inline TMapState * GetState() { return &MapState; }
   void Update(Uint32 deltatime);
 };
