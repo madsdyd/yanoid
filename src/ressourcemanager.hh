@@ -164,7 +164,6 @@ TRessourceManager <res_t>::~TRessourceManager() {
       delete ((*i).second);
     }
   }
-  LogLine(LOG_TODO, "Free ressources and storage_t in maps");
 };
 
 
@@ -202,7 +201,7 @@ res_t * TRessourceManager <res_t>::RequireRessource(string name) {
     return 0;
   };
   /* Should be OK now - save the stuff in the maps */
-  LogLine(LOG_VERBOSE, "Inserting storage for " + name);
+  LogLine(LOG_VER_2, "Inserting storage for " + name);
   NameToStorageMap[name] = storage ;
   RessourceToStorageMap[ressource] = storage;
   return storage->TakeRessource();

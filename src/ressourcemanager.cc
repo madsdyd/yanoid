@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <dirent.h>
 
-#define DEBUG_RES_MAN
+//#define DEBUG_RES_MAN
 #ifndef DEBUG_RES_MAN
 #define LogLine(a, b)
 #endif
