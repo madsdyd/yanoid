@@ -355,11 +355,24 @@ int main(int argc, char ** argv) {
     SDL_Flip(Screen);
   }
 
+  /* Start the music */
+#ifndef NO_MUSIC_THREAD
+  // Test the MOD music
+  if ( ! Mix_PlayingMusic() ) {
+    Mix_PlayMusic(modmusic, 0);
+  }
+
+  // Test the ogg vorbis music
+  if ( ! Mix_PlayingMusic() ) {
+    //    Mix_PlayMusic(oggmusic, 0);
+  }
+#endif 
+
   /* Let the impression sink in... ;-) */
   SDL_Delay(2000);
 
   // scroll up splash to make room for menu
-  int endi = dest.y - 100;
+  int endi = dest.y - 50;
   for(int i=0 ; i < endi/8; i++) {
     erasedest = dest;
     dest.y -= 8; 
@@ -372,17 +385,6 @@ int main(int argc, char ** argv) {
   }
 
 
-#ifndef NO_MUSIC_THREAD
-  // Test the MOD music
-  if ( ! Mix_PlayingMusic() ) {
-    Mix_PlayMusic(modmusic, 0);
-  }
-
-  // Test the ogg vorbis music
-  if ( ! Mix_PlayingMusic() ) {
-    //    Mix_PlayMusic(oggmusic, 0);
-  }
-#endif 
 
   /* Run the client */
   Client->Run();

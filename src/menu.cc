@@ -19,6 +19,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include <unistd.h>
 #include "menu.hh"
 #include "screen.hh"
 #include "client.hh"
@@ -85,6 +86,8 @@ bool TMenu::Run() {
     while (SDL_PollEvent(&event)) {
       HandleEvent(&event);
     }
+    /* Let the system be a little idle, sleep for 10 ms */
+    usleep(10000);
   }
   /* If cancelled, return false, if not, return true */
   return !cancel;
@@ -108,7 +111,7 @@ void TMenu::RenderSplash() {
     /* Put on the splash screen */
     SDL_Rect src, dest;
     src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
-    dest.x = (Screen->w-src.w)/2; dest.y = 100; dest.w = src.w; dest.h = src.h;
+    dest.x = (Screen->w-src.w)/2; dest.y = 50; dest.w = src.w; dest.h = src.h;
     SDL_BlitSurface(Splash, &src, Screen, &dest);
   }
 }
@@ -196,8 +199,8 @@ bool TMenu::HandleEvent(SDL_Event * event) {
 void TDialogMenu::Render() {
   RenderBackground();
   RenderSplash();
-  RenderLines(0, 150, Screen->w, 300);
-  RenderItems(0, 300, Screen->w, Screen->h);
+  RenderLines(0, 200, Screen->w, 400);
+  RenderItems(0, 400, Screen->w, Screen->h);
   SDL_Flip(Screen);
 };
 
@@ -213,7 +216,7 @@ TDialogMenu::TDialogMenu(string caption,
 };
 
 void TDialogMenu::AddLines(string _lines) {
-  int width = 600;
+  int width = 700;
   /* Scan through lines, build lines from _lines */
   string newline = "";
   unsigned int currentleft = width;
@@ -240,13 +243,9 @@ void TDialogMenu::AddLines(string _lines) {
 	newline.erase(newline.size()-1, 1);
       }
       lines.push_back(newline);
-      cout << "newline " << newline << endl;
       newline = tmpstring;
       currentleft = width - newline.size()*16;
     }
-    cout << "ff " << ff << endl;
-    cout << "tmpstring " << tmpstring << endl;
-    cout << "_lines " << _lines << endl;
     /* check if there is room in this line */
     /* Still using 16 as char width */
   }
@@ -289,10 +288,14 @@ void TDialogMenu::RenderLines(int xlow, int ylow, int xhigh, int yhigh) {
 class THelpMenu : public TDialogMenu {
 public:
   THelpMenu() : TDialogMenu("Return") {
-    AddLines("Dette er en lang linie, som jeg gerne ser bliver "
-	     "autoombrudt af AddLines, men jeg ved ikke om det "
-	     "kan lade sig gøre");
-    
+    AddLines("Welcome to Yet Another arkaNOID");
+    AddLines("     ");
+    AddLines("On each level, control your paddle, using the left and right keys "
+	     "in such a way that the ball don't fall out in the bottom of the "
+	     "screen. Steer the ball by letting it hit the paddle on different "
+	     "places. Remove all bricks to complete a level");
+    AddLines("     ");
+    AddLines("Have fun!");
   };
 };
 
@@ -303,7 +306,18 @@ public:
 class TAboutMenu : public TDialogMenu {
 public:
   TAboutMenu() : TDialogMenu("Return") {
-    AddLines("Here is room for an about dialog");
+    AddLines("Yanoid was created for the 2001 SDL contest by");
+    AddLines("    ");
+    AddLines("Jonas Christian Drewsen <jcd@xspect.dk>");
+    AddLines("Programming");
+    AddLines("    ");
+    AddLines("Bjarke Soerensen <bs@wasd.dk>");
+    AddLines("Artist");
+    AddLines("      ");
+    AddLines("Mads Bondo Dydensborg <mads@dydensborg.dk>");
+    AddLines("Programming");
+    AddLines("    ");
+    AddLines("Visit the project homepage at http://www.sf.net/projects/yanoid/");
   };
 };
 
