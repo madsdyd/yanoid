@@ -17,14 +17,20 @@ The projects home page is at http://www.sf.net/projects/yanoid/
 ----------------------------------------------------------------------
 * NOTES FOR THE SDL CONTEST
 
-Prior to configuring and installing yanoid, please make sure that you
-have a dynamic version of the Python library.
+IMPORTANT: Prior to configuring and installing yanoid, please make
+sure that you have a dynamic version of the Python library.
 
-If you do not, the archive "dyn-python-lib.<date>.tgz" contains a
-minor project that will create and install such a beast, from a static
-version of the python libs.
+If you do not, the archive "dyn-python-lib.<date>.tgz" (which you
+should have received as part of the contest entry) contains a minor
+project that will create and install such a beast, from a static
+version of the python libs. This will only take a couple of minutes.
+Please read the README file that comes with this archive. Should the
+process fail, then please obtain the Python sources and configure and
+install the Python library as a dynamic library.
 
-Then, configure yanoid, with at least the following options:
+After you have succesfully created a dynamically loadable python library, proceed by configuring, building and installing yanoid. 
+
+Cnfigure yanoid, with at least the following options:
 ./configure --disable-debug --enable-optimize-size 
 and, make and install: 
 make install-strip
@@ -32,10 +38,15 @@ make install-strip
 This will ensure that yanoid is installed in its minimal form, fulfilling
 the 1 MB size requirement of the contest. 
 
+If you have any troubles, please look in the "Requirements" and "Building
+Yanoid" sections below for full information on building Yanoid.
+
 Thanks.
 
-(Yanoid will work with a standard static version of the Python
-library, but the yanoid binary will be approximately 800 KB larger.)
+(FYI: Yanoid will work with a standard static version of the Python
+library, but the yanoid binary will be approximately 800 KB larger,
+thereby breaking the 1MB limit. A purely technical problem, although
+a rather unfortunate one.)
 
 * Required information
 
@@ -69,10 +80,34 @@ Build instructions: Please see the section "BUILDING YANOID"
 Email address     : mads@dydensborg.dk
 Web site          : http://www.sf.net/projects/yanoid/
 Tools and libs    : Please see the section "REQUIREMENTS"
-License           : Please see the section "LICENSE"
+License           : GPL, please see the section "LICENSE"
 Time to compile   : Ppro 232: 157.19user 11.32system 3:28.01elapsed 
                     Cel 550 :  77.20user  5.82system 1:24.85elapsed
-            
+                    We are aware that Yanoid may break the 1 minute
+                    barrier but hope the judges will have mercy on 
+                    yanoid.
+Size              : Yanoid should stay well within the 1MB limit
+                    (When a dynamic Python library is used, please
+                    see above).
+                    To ease extending Yanoid, all data files are
+                    installed in their native format. No special
+                    actions have been taken to compress neither
+                    binaries or data files (beyond their native
+                    compression features).
+		    It is a bit unclear to us, how to mark the files
+                    used by Yanoid. The easiest way to determine
+                    the size of the files installed by yanoid is
+                    to install yanoid to some isolated area of the
+                    filesystem, e.g. /usr/tmp/yanoid, by using the
+                    --prefix=/usr/tmp/yanoid flag to the configure
+                    script. All files used by yanoid will then 
+                    be installed to this directory, and the size
+                    taken up by them, can easily be determined.
+Credits           : Please see the file CREDITS.
+                    A special "Thank You" goes to John Hall, 
+                    author of "Programming Linux Games", for
+                    answering a large number of questions about the
+                    contest.
 
 ----------------------------------------------------------------------
 * LICENSE
@@ -102,8 +137,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ----------------------------------------------------------------------
 * REQUIREMENTS
 
-Yanoid has only been tested under Linux, but should build on any
-platform that supports the necessary tools and libs. 
+Yanoid has only been tested under Linux with the intel line of CPU's,
+but should build on any platform that supports the necessary tools and
+libs.
 
 Yanoid uses the gnu autotools to (try to) auto configure it self, and
 automate the build and install procedure. Ideally the process should
@@ -112,6 +148,8 @@ needed to do to be able to build yanoid. However, this procedure has
 been tested only for a limited number of distributions and to make it
 easier to correct in case of errors, the following list of
 requirements are given.
+
+Yanoid is written in a combination of C++ (using STL) and Python. 
 
 * Tools
 
@@ -137,17 +175,19 @@ SDL >= 1.2.2, SDL_mixer >= 1.1, SDL_image >= 1.1,
 python<version > 2.0>, artsc, esd, audiofile, 
 vorbis, smpeg, jpeg, png, z, ogg & tiff.
 
-IMPORTANT NOTE: yanoid has failed to work with Python 2.2b1 on at least
-on occasion! If you get python errors in the terminal you started 
-yanoid in, please try and use Python version 2.1.1 which should work.
+NOTE: Yanoid has failed to work with Python 2.2b1 on at least on
+occasion! If you get python errors in the terminal you started yanoid
+in, please try and use Python version 2.1.1 (or the latest stable
+version of Python) which should work.
 
 SDL, SDL_mixer & SDL_image is in fact part of many distributions and
-if you have a "correct" installation of the SDL, SDL_mixer and
-SDL_image, the remaining libraries should be present. In other words,
-the dependencies are introduced by the SDL libraries, and not directly
-by yanoid. Depending on your installation you may need more or less of
-these libraries. The important thing to note is that in some cases
-you may need to install "devel" packages for these libraries as well.
+if you have a "correct" development installation of the SDL, SDL_mixer
+and SDL_image, the remaining libraries should be present. In other
+words, the dependencies are introduced by the SDL libraries, and not
+directly by yanoid. Depending on your installation you may need more
+or less of these libraries. The important thing to note is that in
+some cases you may need to install "devel" packages for these
+libraries as well.
 
 ----------------------------------------------------------------------
 * BUILDING YANOID
@@ -157,10 +197,10 @@ should be quite straightforward.
 
 * Bootstrapping (only relevant for cvs users)
 
-If you have checked out the sources from cvs, you should run the shell 
+If you have checked out the sources from cvs, you should run the shell
 script "bootstrap", which will create the script "configure" for you.
-For reasons not understood, it may be necessary to run this script
-twice to get the necessary files created.
+For reasons not understood by the development team, it may be
+necessary to run this script twice to get the necessary files created.
 
 * Configuration
 
@@ -182,7 +222,7 @@ libraries when run, and will let you know what is missing.
 After a successful configuration step, you can compile yanoid like
 this:
 
-$make
+$ make
 
 You will most likely get a number of warnings (mostly from compiling
 the SDL_console source, which is provided as part of yanoid).
@@ -251,27 +291,30 @@ have a 800x600 resolution defined for your X server.
 
 Adding your own maps and ressources is quite easy. When you configure
 yanoid (before compiling), you can provide a directory to put the
-yanoid data tree into. Default is /usr/local/share/games/yanoid. 
-Yanoid looks for its data in here, but before that, it looks for a 
-directory called "data" in the directory where it is run from.
-Any data in here overrides data in the installed data tree.
+yanoid data tree into (either by using the --prefix option, or the
+--data-dir option). Default is /usr/local/share/games/yanoid and this
+will be assumed for this explanation.  Yanoid looks for its data in
+here, but before that, it looks for a directory called "data" in the
+directory where it is run from.  Any data in here overrides data in
+the installed data tree.
 
 So, if you want to experiment with the layout for the first map - 
 which is called map1.py - you can issues the following commands
 
-mkdir data
-mkdir data/maps
-cp /usr/local/share/games/yanoid/maps/map1.py data/maps/map1.py
+$ mkdir data
+$ mkdir data/maps
+$ cp /usr/local/share/games/yanoid/maps/map1.py data/maps/map1.py
 
 You can now edit the file data/maps/map1.py with your favorite
 text editor.
 
-All maps in yanoid is defined as a python script. Have a look at the
+All maps in yanoid are defined as python scripts. Have a look at the
 different maps to get a feel for how you can construct them.  Here is
-a quick overview. All maps contains of a number of objects, called
-entities in yanoid. The most fundamental ones are "bricks", "statics"
-and the "paddle". How these are constructed, use graphics and trigger
-functions when hit, should be quite clear from the current maps.
+a quick overview: All maps contains of a number of objects, called
+entities<. The most fundamental ones are "bricks", "statics" and the
+"paddle". How these are constructed, use graphics and trigger
+functions when hit, should be quite clear from looking at the current
+maps.
 
 Every map also need a "RoundStart" function, most likely one that will
 add a ball.  To interface with the yanoid engine, you will use most of
@@ -304,14 +347,17 @@ you intended.
 Currently the exported functionality from the yanoid engine has not
 stabilized enough or matured enough to describe it further. Although
 you can make quite interesting maps with the current model, these
-possibilities have only been superficially explored in the current
-collection of maps for yanoid.
+possibilities have unfortunatly only been superficially explored in
+the current collection of maps for yanoid.
 
 Defining new and interesting behavior for powerups, etc, are limited
-currently, and will require you to hack the C++ sources of yanoid.
+currently, and will often require you to hack the C++ sources of
+yanoid.
 
-We invite you to submit your maps, graphics, sounds and music to us, 
-for future inclusion in yanoid.
+We invite you to submit your maps, code, graphics, sounds and music to
+us, for future inclusion in yanoid. See the project homepage at
+http://www.sf.net/projects/yanoid/ for information about the
+development mailing list.
 
 ----------------------------------------------------------------------
 * BUGS

@@ -29,24 +29,13 @@ Stuff that seems to be fixed:
 ** IMPORTANT (or possible easy - stuff that we probably should do)
 
 * no sounds from paddle when colliding with bricks (MBD)
-- Remove point for highscore "menu"? (JCD)
 - Should shots and powerups die, when the player dies?(MBD)
 - There are no background in menus (see above)... (MBD)
-- powerup display in bottom of screen?
-- bonus for time completed early?
 
 * Sounds (BS)
-- Menu sounds 
-- ball hits paddle sound (.)
-- ball hits wall sound
-- ball hits brick sound (.)
 - brick effect sounds (explosion, disappear, whatever)
-- powerup sounds
-- bad sounds
-- gem sounds
 
 * Pixel perfect collision detection?
-
 
 * Autotool (MBD)
 - Make sure that we fail when something essentiel is missing
