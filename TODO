@@ -13,6 +13,8 @@ yanoid before the game can be considered ready for the contest.
   menu. Related to the text effects? (MBD, JCD?)
 - More maps (BS,MBD...)?
 - Make fonts png and use colorkey (MBD)
+- Make pixmap and other ressourcehandling, use a default "thingy", 
+  when loads and such fails (MBD)
 
 
 **********************************************************************

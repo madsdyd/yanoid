@@ -22,4 +22,4 @@ def ball_hit():
 
 def power_up_add_ball_hit():
     print "in power_up_add_ball_hit()"
-    AddBall("graphics/objects/basic_ball.png")
+    AddBall("graphics/balls/red.png")

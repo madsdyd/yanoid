@@ -1,3 +1,10 @@
+2001-11-24  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Cleaning up
+	Moved a lot of the graphics data around
+	Added a "delayed" entity adding on TMap
+	Added "testing" powerup
+
 2001-11-23  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Various

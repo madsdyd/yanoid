@@ -15,7 +15,7 @@ SetPaddle(400, 400, "graphics/objects/paddle.png")
 
 # define a round start function
 def RoundStart():
-    AddBallDefault("graphics/objects/basic_ball.png")
+    AddBallDefault("graphics/balls/red.png")
 
 # And, call it - probably will go
 RoundStart();

@@ -339,7 +339,7 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
       // TODO, error handling.. 
       e->setMotion(new TFreeMotion);
       //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
-      dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 3);
+      dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
       dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed);
       e->setName("Default Ball");
       EntitiesToAddToMapState.push_back(e);
