@@ -95,10 +95,10 @@ void TClient::Run() {
     /* Load map names from maplist file */
     Interprenter->RunSimpleFile("maps/maplist.py");
     if (Game->HasMap(Game->GetState()->currentmap)) {
-      if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap).c_str())) {
-	CON_ConOut("Map maps/map1.py succesfully loaded");
+      if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap))) {
+	CON_ConOut("Map succesfully loaded");
       } else {
-	CON_ConOut("Error loading map maps/map1.py");
+	CON_ConOut("Error loading map");
       }
     }else{
       	CON_ConOut("Error loading maplist file");
@@ -204,7 +204,8 @@ void TClient::Run() {
        * *********************************************************************/
       case TGameState::MAPDONE: {
 	/* Maybe this should be handled differently */
-	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+	fonthandle_t * font 
+	  = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
 	if (!font) {
 	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
 	  exit(-1);
@@ -237,7 +238,7 @@ void TClient::Run() {
 	}
 
 	// load the next map
-	if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap).c_str())) {
+	if (Game->LoadMap(Game->GetMapName(Game->GetState()->currentmap))) {
 	  CON_ConOut("Map succesfully loaded");
 	} else {
 	  CON_ConOut("Error loading map");
