@@ -49,8 +49,13 @@ public:
 
 class TTextEffects : public TEffect {
 public:
-  typedef enum EffectType { SIMPLE_DISPLAY, CHARACTER_SPACED_ANIM } EffectType;
+  typedef enum EffectType { SIMPLE_DISPLAY, 
+			    CHARACTER_SPACED_ANIM,
+			    CHARACTER_JUMPING_ANIM,
+			    CHARACTER_SWIRLING_ANIM
+  } EffectType;
 protected:
+  std::vector<TPoint> char_points;
   EffectType type;
   SDL_Surface * surface;
   const char* str;
@@ -65,6 +70,9 @@ private:
   //
   void simpleDisplay(Uint32 currenttime);
   void characterSpacedAnim(Uint32 currenttime);
+  void characterJumpingAnim(Uint32 currenttime);
+  void characterSwirlingAnim(Uint32 currenttime);
 };
 
 #endif
+

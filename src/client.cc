@@ -126,9 +126,23 @@ void TClient::Run() {
       case TGameState::DEAD: {
 	/* Uh oh, game is over */
 	LogLine(LOG_TODO, "Display some info, update highscore?");
-	TGameOverMenu * GameOverMenu = new TGameOverMenu();
-	GameOverMenu->Run();
-	delete GameOverMenu;
+	fonthandle_t * font = FontManager->RequireRessource("graphics/fonts/LargeFont.bmp");
+	if (!font) {
+	  LogFatal("Unable to load highscore font graphics/fonts/LargeFont.bmp");
+	  exit(-1);
+	}
+	const char* str = "Game Over";
+	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_JUMPING_ANIM);
+	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
+	tfx.setDuration(1500);
+	tfx.start();
+	while(!tfx.isStopped()) {
+	  tfx.update(SDL_GetTicks());
+	  SDL_Flip(Screen);
+	}
+	//	TGameOverMenu * GameOverMenu = new TGameOverMenu();
+	//	GameOverMenu->Run();
+	//	delete GameOverMenu;
 	QuitCurrentGame = true;
 	break;
       }
@@ -146,7 +160,7 @@ void TClient::Run() {
 	  exit(-1);
 	}
 	const char* str = "You lost the ball..";
-	TTextEffects tfx(str, Screen, font, TTextEffects::SIMPLE_DISPLAY);
+	TTextEffects tfx(str, Screen, font, TTextEffects::CHARACTER_SWIRLING_ANIM);
 	tfx.setLocation(TPoint((Screen->w - strlen(str) * DT_FontWidth(*font))/2, Screen->h / 2));
 	tfx.setDuration(1500);
 	tfx.start();

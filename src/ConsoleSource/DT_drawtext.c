@@ -173,7 +173,7 @@ int DT_LoadFont(const char *BitmapName, int flags)
 		} else {
 		  //Uint32 *pix = (Uint32 *)((*CurrentFont)->FontSurface->pixels);
 			SDL_SetColorKey( (*CurrentFont)->FontSurface, SDL_SRCCOLORKEY|SDL_RLEACCEL, //*pix);
-				SDL_MapRGB((*CurrentFont)->FontSurface->format, 255, 0, 255) );
+				SDL_MapRGB((*CurrentFont)->FontSurface->format, 0, 0, 0) );
 				//(*CurrentFont)->FontSurface->format->Rmask |
 				//(*CurrentFont)->FontSurface->format->Bmask);
 			//printf("mine = %x, theirs = %x\n", *pix, (*CurrentFont)->FontSurface->format->Rmask |
