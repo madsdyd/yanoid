@@ -11,6 +11,10 @@ dnl PYTHON          - (/usr/bin/python) the Python executable
 dnl PYTHON_VERSION  - (x.y) the Python version
 dnl PYTHON_INCLUDES - (-I) the path to the Python include directory
 dnl PYTHON_LIBS     - (-l) libs required to link with the libpython lib
+dnl                   Note that this will add the options to link 
+dnl                   dynamic modules into the static python lib,
+dnl                   which is not required for the dynamic python lib
+dnl                   but apparently does not harm
 dnl PYTHON_LIBDIR   - dir with the libpython lib in
 dnl PYTHON_LDFLAGS  - -LPYTHON_LIBDIR
 dnl PYTHON_LIBNAME  - python<version> - the libpython lib
@@ -142,8 +146,9 @@ else:
     changequote(<<, >>)dnl
     PYTHON_LIBS=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"LIBS\")"`
     PYTHON_SYSLIBS=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"SYSLIBS\")"`
+    PYTHON_XLINKER=`$PYTHON -c "from distutils.sysconfig import get_config_var; print get_config_var(\"LINKFORSHARED\")"`
     changequote([, ])dnl
-    PYTHON_LIBS="$PYTHON_LIBS $PYTHON_SYSLIBS"
+    PYTHON_LIBS="$PYTHON_LIBS $PYTHON_SYSLIBS $PYTHON_XLINKER"
     AC_SUBST(PYTHON_LIBS)
     dnl Find the directory with the libpython file in
     dnl I do not know which of py_prefix and py_exec_prefix that is the correct to use

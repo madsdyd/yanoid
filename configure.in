@@ -271,6 +271,6 @@ dnl Set the final compiler and linker flags
 CPPFLAGS="$YANOID_CPPFLAGS"
 CFLAGS="$YANOID_CFLAGS"
 CXXFLAGS="$YANOID_CXXFLAGS"
-LIBS="$YANOID_LIBS -Xlinker -export-dynamic"
+LIBS="$YANOID_LIBS"
 
 AC_OUTPUT(src/Makefile src/ConsoleSource/Makefile data/Makefile data/graphics/Makefile data/graphics/fonts/Makefile data/graphics/objects/Makefile data/graphics/balls/Makefile data/graphics/paddles/Makefile data/graphics/bricks/Makefile data/graphics/powerups/Makefile data/graphics/shots/Makefile data/sounds/Makefile data/music/Makefile data/scripts/Makefile data/maps/Makefile data/objects/Makefile Makefile)
