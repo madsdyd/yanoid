@@ -116,9 +116,15 @@ void TGame::handleCollisions()
       
       /* LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
 	 " and " + (*i2)->getName()); */
+      /* Call the OnCollision events for both entities */
+      (*i1)->OnCollision(*(*i2));
+      (*i2)->OnCollision(*(*i1));
+
+
+
       // this section is for debugging only
       {
-
+	
 	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
 	if ((*i1)->getMotion()) {
 	  (*i1)->getMotion()->reverseDirection();

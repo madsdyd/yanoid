@@ -20,6 +20,9 @@ all fairness, we should check the output of sdl-config and check that
 each application is present or maybe we should try and build a small
 SDL application that uses SDL_mixer.
 
+* Python
+- Needs to figure out how we bind stuff more dynamically and
+  not so brittle. 
 
 * Implementation
 - Input system

@@ -1,4 +1,4 @@
-SUBDIRS = graphics sounds music scripts maps
+SUBDIRS = graphics sounds music scripts maps objects
 
 pkgdatadir = $(datadir)/games/@PACKAGE@
 

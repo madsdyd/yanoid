@@ -137,55 +137,7 @@ TMap::TMap() {
     LogFatal("TMap::TMap - unable to create mapstate");
   }
 
-#ifdef CODE_SOON_TO_GO
-  TEntity* e = new TPixmapEntity(100, 100, 0, "graphics/objects/red_oval_brick.png");
-  TOrientedPoint p1(350,100), p2(500,370);
-  e->setMotion(new TPathMotion(new TOrientedLinePath(p1,p2), 1.0));
-  dynamic_cast<TPathMotion*>(e->getMotion())->setVelocity(8.0);
-  MapState->Entities.push_back(e);
-  e->setName("Entity 1");
-
-  e = new TPixmapEntity(100, 100, 0, "graphics/objects/red_oval_brick.png");
-  TOrientedPoint p1b(250,100), p2b(20,370);
-  e->setMotion(new TPathMotion(new TOrientedLinePath(p1b,p2b), 1.0));
-  dynamic_cast<TPathMotion*>(e->getMotion())->setVelocity(8.0);
-  MapState->Entities.push_back(e);
-  e->setName("Entity 1");
-
-  /*
-  e = new TPixmapEntity(400, 100, 0, "graphics/objects/weird_brick.png");
-  TOrientedPoint bp1(400,100), bp2(0,50);
-  e->setMotion(new TPathMotion(new TOrientedLinePath(bp1,bp2), -1.0));
-  e->setName("Entity 2");
-  MapState->Entities.push_back(e);
-  */
-#ifdef NO_ANY_MORE
-  TEntity * paddle = 
-    new TPixmapEntity(300, 200, 0, "graphics/objects/weird_brick.png");
-  paddle->setMotion(new TFreeMotion);
-  paddle->getMotion()->setVelocity(0.0);
-  dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir(0);
-  paddle->setName("Paddle");
-  MapState->Entities.push_back(paddle);
-#endif
-
-  e = new TPixmapEntity(240, 50, 0, "graphics/objects/red_oval_brick.png");
-  e->setMotion(new TFreeMotion);
-  e->getMotion()->setVelocity(0.0);
-  dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(20.0);
-  MapState->Entities.push_back(e);
-  e->setName("Floater 1");
-
-  /*
-  for (int x = 0; x < 760; x += 60) {
-    for (int y = 0; y < 200; y += 20) {
-      MapState->Entities.push_back(new TEntity(x, y));
-    }
-  }
-  */
-#endif
-  
-  /* This is probably a stupid way to do it - but at least we make
+  /* This is a stupid way to do it - but at least we make
      sure that we have connected the map handling commands to the 
      interprenter */
   if (!ConnectedToInterprenter) {
@@ -193,6 +145,10 @@ TMap::TMap() {
       ConnectedToInterprenter = true;
       CurrentMap = this;
     }
+  }
+  /* TESTING: Load the basic_brick.py script */
+  if (!Interprenter->RunSimpleFile(PathManager->Resolve("objects/basic_brick.py"))) {
+    LogLine(LOG_ERROR, "Unable to run objects/basic_brick.py");
   }
 }
 /* **********************************************************************
@@ -236,7 +192,9 @@ bool TMap::AddEntity(string type, int x, int y, int w, int h,
   /* Do different things, according to type */
   if ("brick" == type ) {
     /* This is a pixmapentity */
-    MapState->Entities.push_back(new TPixmapEntity(x, y, 0, pixmap));
+    TPixmapEntity * e = new TPixmapEntity(x, y, 0, pixmap);
+    e->SetScriptHitCall("basic_brick_hit()");
+    MapState->Entities.push_back(e);
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */

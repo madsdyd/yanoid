@@ -4,7 +4,8 @@
 	Moved some stuff around in preparation for having the
 	client control the "session" more. 
 	Loads a default map.
-
+	Beginning to add support for scripted events on collisions.
+	
 2001-10-13  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* GameTime

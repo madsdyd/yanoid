@@ -53,6 +53,9 @@ protected:
   EntityType entity_type;
   TMotion * motion;
   unsigned char* mask;
+  /* Script stuff */
+  string ScriptHitCall;
+
 public:
   TEntity(int x_, int y_, Angle a_ = 0, 
 	  CollisionType c = BOX, EntityType e = STATIONARY);
@@ -79,6 +82,10 @@ public:
 
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
+
+  /* Stuff to do with calling scripts (Test) */
+  void SetScriptHitCall(string function);
+  void ExecuteScriptHitCall();
 
   /*
     Geometry functions of the entity

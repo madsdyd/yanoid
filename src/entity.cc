@@ -23,6 +23,7 @@
 #include "debug.hh"
 #include "surfacemanager.hh"
 #include "motion.hh"
+#include "interprenter.hh"
 
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
@@ -181,5 +182,22 @@ void TEntity::OnCollision(const TEntity& other) {
      yet-to-be-defined rules, and then forward time again. */
   if (getMotion()) {
     
+  } 
+  /* Call ScriptHandler */
+  ExecuteScriptHitCall();
+}
+
+/* **********************************************************************
+ * Script hit call operations
+ * *********************************************************************/
+void TEntity::SetScriptHitCall(string function) {
+  ScriptHitCall = function;
+}
+ 
+void TEntity::ExecuteScriptHitCall() {
+  if ("" != ScriptHitCall) {
+    if(!Interprenter->RunSimpleString(ScriptHitCall)) {
+      LogLine(LOG_WARNING, "TEntity::ExecuteScriptHitCall error");
+    }
   }
 }
