@@ -19,27 +19,28 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+/* Entities are the basic units that can be manipulated in the game */
 
-#ifndef __VELOCITY_HH__
-#define __VELOCITY_HH__
+#ifndef __PIXMAP_ENTITY_HH__
+#define __PIXMAP_ENTITY_HH__
 
-#include <iostream>
+#include "entity.hh"
 
-class TVelocity;
-
-std::ostream& operator<<(std::ostream& o, const TVelocity& v);
-
-class TVelocity {
+class TPixmapEntity : public TEntity {
 protected:
-  int _x;
-  int _y;
+  SDL_Surface * currentsurface; /* The current image to blit */
 public:
-  TVelocity(int x_, int y_) : _x(x_), _y(y_) {}
-  inline int x() const { return _x; }
-  inline int y() const { return _y; }
-  inline void setX(int x_) { _x = x_; }
-  inline void setY(int y_) { _y = y_; }
-  friend std::ostream& operator <<(std::ostream& o, const TVelocity& v);
+  TPixmapEntity(int x_, int y_, const std::string& pixmap_path,
+		CollisionType c = BOX, EntityType e = MOVING);
+  virtual ~TPixmapEntity();
+  
+  virtual void setPixmap(const std::string& pixmap_path);
+  virtual void Render(SDL_Surface * surface);
+  virtual bool pixelCollision(const TEntity&);
 };
+
+/* Define a list of pixmap entities */
+typedef std::list<TEntity *> TPixmapEntities;
+typedef TEntities::iterator TPixmapEntitiesIterator;
 
 #endif

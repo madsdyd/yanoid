@@ -41,7 +41,7 @@ protected:
   int fontHandle;
 public:
   THighscore(int x_, int y_);
-  ~THighscore();
+  virtual ~THighscore();
 
   bool isCandidate(const Score& s);
 
@@ -54,8 +54,8 @@ public:
   /* Num visible rankings */
   void setNumRankings(unsigned int n) { NumRankings = n; }
 
-  void Update(Uint32 currenttime);
-  void Render(SDL_Surface * surface);
+  virtual void Update(Uint32 currenttime);
+  virtual void Render(SDL_Surface * surface);
 };
 
 /* The global highscore variable */

@@ -18,18 +18,19 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
 #include "display.hh"
 #include "game.hh"
 #include "highscore.hh"
 #include "ConsoleSource/CON_console.h"
 #include "ConsoleSource/DT_drawtext.h"
+#include "motion.hh"
 
 /* **********************************************************************
  * The global display
  * *********************************************************************/
 
 TDisplay * Display;
-bool QuitGame = false;
 
 /* **********************************************************************
  * Render, gets the gamestate, render it.
@@ -48,6 +49,22 @@ void TDisplay::Render(SDL_Surface * surface) {
     switch (event.type) {
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
+      case SDLK_LEFT: {
+	TNullMotion * m = dynamic_cast<TNullMotion *>(paddle->getMotion());
+	m->setX(static_cast<int>(m->x() - m->getVelocity()));
+      }
+      break;
+      case SDLK_RIGHT: {
+	TNullMotion * m = dynamic_cast<TNullMotion *>(paddle->getMotion());
+	m->setX(static_cast<int>(m->x() + m->getVelocity()));
+      }
+      break;
+      case SDLK_UP:
+	paddle->getMotion()->setVelocity(paddle->getMotion()->getVelocity() + 2.0 );
+	break;
+      case SDLK_DOWN:
+	paddle->getMotion()->setVelocity(paddle->getMotion()->getVelocity() - 2.0 );
+	break;
       case SDLK_ESCAPE:	
 	QuitGame = true;
 	break;

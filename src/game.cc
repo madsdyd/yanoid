@@ -21,6 +21,7 @@
 
 #include "game.hh"
 #include "log.hh"
+#include "motion.hh"
 
 /* **********************************************************************
  * The global game 
@@ -109,21 +110,11 @@ void TGame::handleCollisions()
       // this section is for debugging only
       {
 
-	//	cout << (*i1)->getVelocity() << " / " << (*i2)->getVelocity() << endl;
-	
-	(*i1)->setVelocity(- (*i1)->getVelocity().x(),
-			   - (*i1)->getVelocity().y());
-	
-	(*i2)->setVelocity(- (*i2)->getVelocity().x(),
-			   - (*i2)->getVelocity().y());
-	
-	
-	//	cout << (*i1)->getVelocity() << " / " << (*i2)->getVelocity() << endl;
+	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
+	(*i1)->getMotion()->reverseDirection();
+	(*i2)->getMotion()->reverseDirection();
+	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
 
-	if ((*i1)->x() > (*i2)->x())
-	  (*i1)->setX((*i2)->x()+(*i2)->w()+1);
-	else
-	  (*i1)->setX((*i2)->x()-(*i1)->w()-1);
       }
 
       // If necessary make pixel perfect detection..

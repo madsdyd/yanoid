@@ -20,26 +20,29 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __VELOCITY_HH__
-#define __VELOCITY_HH__
+#ifndef __POINT_HH__
+#define __POINT_HH__
 
-#include <iostream>
-
-class TVelocity;
-
-std::ostream& operator<<(std::ostream& o, const TVelocity& v);
-
-class TVelocity {
+class TPoint {
 protected:
-  int _x;
-  int _y;
+  int _x, _y;
 public:
-  TVelocity(int x_, int y_) : _x(x_), _y(y_) {}
+  TPoint(int x_, int y_) : _x(x_), _y(y_) {}
+  virtual ~TPoint() {}
   inline int x() const { return _x; }
   inline int y() const { return _y; }
   inline void setX(int x_) { _x = x_; }
   inline void setY(int y_) { _y = y_; }
-  friend std::ostream& operator <<(std::ostream& o, const TVelocity& v);
+};
+
+class TOrientedPoint : public TPoint {
+protected:
+  double _angle;
+public:
+  TOrientedPoint(int x_, int y_, double angle_ = 0.0) : 
+    TPoint(x_, y_), _angle(angle_) {}
+  virtual ~TOrientedPoint() {}
+  inline double angle() const { return _angle; }
 };
 
 #endif

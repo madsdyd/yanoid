@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 
@@ -26,7 +27,9 @@
 #include <SDL/SDL.h>
 #include <list>
 #include <string>
-#include "velocity.hh"
+#include "point.hh"
+
+class TMotion;
 
 class TEntity {
 public:
@@ -34,36 +37,43 @@ public:
   typedef enum EntityType { MOVING, STATIONARY } EntityType;
 protected:
   // TODO: Some sort of fancy vector class? 
-  int _x, _y; /* The position of the entity */
   int _w, _h; /* The bounding box size */
-  TVelocity velocity;
+  TOrientedPoint position;
   std::string name;
   CollisionType collision_type;
   EntityType entity_type;
-  SDL_Surface * currentsurface; /* The current image to blit */
+  TMotion * motion;
 public:
   TEntity(int x_, int y_, CollisionType c = BOX, EntityType e = MOVING);
-  ~TEntity();
+  virtual ~TEntity();
   
-  void Update(Uint32 deltatime);
-  void Render(SDL_Surface * surface);
-  void setVelocity(int dx, int dy) { velocity.setX(dx); velocity.setY(dy); }
-  TVelocity getVelocity() const { return velocity; }
+  virtual void Update(Uint32 deltatime);
+
+  virtual void Render(SDL_Surface * surface);
+
   void setName(const std::string& n) { name = n; };
   std::string getName() const { return name; };
+
+  inline TMotion * getMotion() { return motion; }
+  void setMotion(TMotion* m);
+
   inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
-  inline int x() const { return _x; };
-  inline int y() const { return _y; };
+
+  inline int x() const { return position.x(); };
+  inline int y() const { return position.y(); };
+  inline double angle() const { return position.angle(); }
   inline int w() const { return _w; };
   inline int h() const { return _h; };
-  inline void setX(int x_) { _x = x_; }
-  inline void setY(int y_) { _y = y_; }
+
   inline bool boundingBoxCollision(const TEntity& obj) {
-    return ! ((obj._y+obj._h) < _y || (_y+_h) < obj._y || 
-	      (obj._x+obj._w) < _x || (_x+_w) < obj._x);
+    return ! ((obj.position.y()+obj._h) < position.y() || (position.y()+_h) < obj.position.y() || 
+	      (obj.position.x()+obj._w) < position.x() || (position.x()+_w) < obj.position.x());
   }
-  bool pixelCollision();
+  virtual bool pixelCollision(const TEntity& obj);
+  friend class TMotion;
+  friend class TNullMotion;
+  friend class TPathMotion;
 };
 
 /* Define a list of entities */
@@ -71,3 +81,5 @@ typedef std::list<TEntity *> TEntities;
 typedef TEntities::iterator TEntitiesIterator;
 
 #endif
+
+

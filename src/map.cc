@@ -19,6 +19,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "map.hh"
+#include "pixmap_entity.hh"
+#include "globals.hh"
+#include "motion.hh"
 
 /* **********************************************************************
  * TMapState destructor
@@ -37,25 +40,33 @@ TMapState::~TMapState() {
  * Currently builds a simple map.
  * *********************************************************************/
 TMap::TMap() {
-  TEntity* e = new TEntity(100, 100);
-  e->setVelocity(1,0);
+
+  TEntity* e = new TPixmapEntity(100, 100, "graphics/objects/red_oval_brick.png");
+  TOrientedPoint p1(100,100), p2(700,100);
+  e->setMotion(new TPathMotion(new TLinePath(p1,p2), 2.0));
   MapState.Entities.push_back(e);
   e->setName("Entity 1");
 
-  e = new TEntity(400, 100);
-  e->setVelocity(-1,0);
+  e = new TPixmapEntity(400, 100, "graphics/objects/weird_brick.png");
+  TOrientedPoint bp1(400,100), bp2(0,100);
+  e->setMotion(new TPathMotion(new TLinePath(bp1,bp2), 1.0));
   e->setName("Entity 2");
   MapState.Entities.push_back(e);
 
   e = new TEntity(0, 100);
-  e->setVelocity(0,0);
   e->setName("Wall 1");
   MapState.Entities.push_back(e);
 
   e = new TEntity(500, 100);
-  e->setVelocity(0,0);
   e->setName("Wall 2");
   MapState.Entities.push_back(e);
+
+  paddle = new TPixmapEntity(300, 200, "graphics/objects/weird_brick.png");
+  paddle->setName("Paddle");
+  MapState.Entities.push_back(paddle);
+
+
+
   /*
   for (int x = 0; x < 760; x += 60) {
     for (int y = 0; y < 200; y += 20) {
@@ -111,12 +122,16 @@ bool TMap::relocateHighEntities(TEntitiesIterator& i)
   ++nexti;
   TEntitiesIterator End = MapState.Entities.end();
   while(++newi != End) {
-    if ((*newi)->y() >= (*i)->y() && newi != nexti) {
-      TEntity* tmp = *i;
-      i = MapState.Entities.erase(i);
-      --i;
-      MapState.Entities.insert(newi,1,tmp);
-      return true;
+    if ((*newi)->y() >= (*i)->y()) {
+      if (*newi != *nexti) {
+	TEntity* tmp = *i;
+	i = MapState.Entities.erase(i);
+	--i;
+	MapState.Entities.insert(newi,1,tmp);
+	return true;
+      }else{
+	return false;
+      }
     }
   }
   return false;
@@ -131,12 +146,16 @@ bool TMap::relocateLowEntities(TEntitiesIterator& i)
   --previ;
   TEntitiesIterator Begin = MapState.Entities.begin();
   while(--newi != Begin) {
-    if ((*newi)->y() <= (*i)->y() && newi != previ) {
-      TEntity* tmp = *i;
-      i = MapState.Entities.erase(i);
-      --i;
-      MapState.Entities.insert(++newi,1,tmp);
-      return true;
+    if ((*newi)->y() <= (*i)->y()) {
+      if (*newi != *previ) {
+	TEntity* tmp = *i;
+	i = MapState.Entities.erase(i);
+	--i;
+	MapState.Entities.insert(++newi,1,tmp);
+	return true;
+      }else{
+	return false;
+      }
     }
   }
   return false;

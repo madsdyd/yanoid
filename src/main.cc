@@ -113,7 +113,9 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
   cout << "Yet Another Arkanoid (yanoid) version " << VERSION << endl
        << "Copyright (C) 2001 Mads Bondo Dydensborg "
-       << "<mads@dydensborg.dk> et al." << endl 
+       << "<mads@dydensborg.dk> " << endl 
+       << "Copyright (C) 2001 Jonas Christian Drewsen "
+       << "<jcd@xspect.dk> " << endl 
        << "Yet Another Arkanoid comes with ABSOLUTLY NO WARRANTY." << endl
        << "This is free software, and you are welcome to "
        << "redistribute it" << endl 
@@ -123,6 +125,9 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Initialize the ressource management system
    * *********************************************************************/
+
+  SDL_WM_SetCaption("-- Yanoid --", 0);
+
 
   PathManager = new TPathManager();
   Assert(PathManager != NULL, "Unable to create pathmanager");
@@ -166,7 +171,7 @@ int main(int argc, char ** argv) {
    * Colourdepth is 0 == use current
    * *********************************************************************/
   Screen = SDL_SetVideoMode(640, 480, 0, 
-			    SDL_HWSURFACE | SDL_DOUBLEBUF 
+			    SDL_HWSURFACE | SDL_DOUBLEBUF
 			    );
   // | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");

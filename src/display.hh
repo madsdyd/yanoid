@@ -23,8 +23,7 @@
 #define __DISPLAY_HH__
 
 #include <SDL/SDL.h>
-
-extern bool QuitGame;
+#include "globals.hh"
 
 /* The TDisplay class renders stuff */
 class TDisplay {

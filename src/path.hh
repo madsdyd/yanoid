@@ -20,26 +20,37 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __VELOCITY_HH__
-#define __VELOCITY_HH__
+#ifndef __PATH_HH__
+#define __PATH_HH__
 
-#include <iostream>
+#include "point.hh"
 
-class TVelocity;
+typedef double TPathPos;
 
-std::ostream& operator<<(std::ostream& o, const TVelocity& v);
-
-class TVelocity {
+/* Abstract base class for all path types */
+class TPath {
 protected:
-  int _x;
-  int _y;
+  TPathPos _max;
 public:
-  TVelocity(int x_, int y_) : _x(x_), _y(y_) {}
-  inline int x() const { return _x; }
-  inline int y() const { return _y; }
-  inline void setX(int x_) { _x = x_; }
-  inline void setY(int y_) { _y = y_; }
-  friend std::ostream& operator <<(std::ostream& o, const TVelocity& v);
+  TPath() : _max(0.0) {}
+  virtual ~TPath() {}
+  inline virtual TOrientedPoint getPoint(TPathPos i) const { 
+    return getPoint(static_cast<int>(_max/i)); }
+  virtual TOrientedPoint getPoint(int i) const = 0;
+  virtual inline TPathPos getMax() const { return _max; }
 };
+
+/* A simple path that follows a line */
+class TLinePath : public TPath {
+protected:
+  TOrientedPoint _begin;
+  TOrientedPoint _end;
+  int _w, _h;
+public:
+  TLinePath(const TOrientedPoint& begin, const TOrientedPoint& end);
+  virtual ~TLinePath() {}
+  virtual TOrientedPoint getPoint(int i) const;
+};
+
 
 #endif

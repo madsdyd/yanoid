@@ -1,6 +1,7 @@
 /*
     Yet Another Arkanoid
     Copyright (C) 2001 Mads Bondo Dydensborg <mads@dydensborg.dk>
+    Copyright (C) 2001 Jonas Christian Drewsen <jcd@xspect.dk>
     Copyright (C) 2001 contributers of the yanoid project
     Please see the file "AUTHORS" for a list of contributers
 
@@ -18,73 +19,70 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include "entity.hh"
+#include "pixmap_entity.hh"
 
 #include "debug.hh"
 #include "surfacemanager.hh"
-#include "motion.hh"
 
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
-TEntity::TEntity(int x_, int y_, CollisionType c, EntityType e): 
-  _w(24), _h(16), position(x_,y_,0.0), name("unknown"), 
-  collision_type(c), entity_type(e), motion(new TNullMotion(x_,y_)) {
+TPixmapEntity::TPixmapEntity(int x_, int y_, const std::string& path,
+			     CollisionType c, EntityType e): 
+  TEntity(x_, y_, c, e) {
+
+  currentsurface
+    = SurfaceManager->RequireRessource(path);
+  Assert(NULL != currentsurface, "Error loading graphics for entity");
+  _h = currentsurface->h;
+  _w = currentsurface->w;
 
 }
 
 /* **********************************************************************
  * The destructor just clears the surface
  * *********************************************************************/
-TEntity::~TEntity() {
-
+TPixmapEntity::~TPixmapEntity() {
+  SurfaceManager->ReleaseRessource(currentsurface);
 }
 
 
-
 /* **********************************************************************
- * setmotion set the motion of the entity
+ * SetPixmap changes the pixmap of the entity
  * *********************************************************************/
-void TEntity::setMotion(TMotion* m)
-{
-  if (motion)
-    delete motion;
-  motion = m;
-}
+void TPixmapEntity::setPixmap(const std::string& path) {
+  SurfaceManager->ReleaseRessource(currentsurface);
 
-/* **********************************************************************
- * The Update method simple moves the TEntity along with the velocity
- * *********************************************************************/
-void TEntity::Update(Uint32 deltatime) 
-{
-  motion->Update(deltatime,*this);
-  /*
-  position.setX((x() + static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.x())/10.0)) % 800);
-  position.setY((y() + static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.y())/10.0)) % 600);
-  */
-  /*  cout << "TEntity::Update - delta, x, y " << deltatime 
-      << ", " << x << ", " << y << endl; */
+  currentsurface
+    = SurfaceManager->RequireRessource(path);
+  Assert(NULL != currentsurface, "Error loading graphics for entity");
+  _h = currentsurface->h;
+  _w = currentsurface->w;
+  
 }
 
 /* **********************************************************************
  * The render method simply blit the entity to the surface provided
  * (This will probably change)
  * *********************************************************************/
-void TEntity::Render(SDL_Surface * surface) {
-  SDL_Rect dest;
+void TPixmapEntity::Render(SDL_Surface * surface) {
+  SDL_Rect src, dest;
+
+  src.x = 0; src.y = 0; 
+  src.w = currentsurface->w; src.h = currentsurface->h;
 
   dest.x = x(); dest.y = y();
-  dest.w = _w; dest.h = _h;
-  Uint32 color = SDL_MapRGB(surface->format, 0xFF, 0x00, 0x00);
-
-  SDL_FillRect(surface, &dest, color);
+  dest.w = src.w; dest.h = src.h;
+  
+  SDL_BlitSurface(currentsurface, &src, surface, &dest);
 }
 
 /* **********************************************************************
  * PixelCollision determines whether the TEntity obj, 
  * of obj collides with this TEntity using pixel perfection. 
  * *********************************************************************/
-bool TEntity::pixelCollision(const TEntity& o) {
-  return boundingBoxCollision(o);
+bool TPixmapEntity::pixelCollision(const TEntity& o) {
+  return false;
 }
+
 

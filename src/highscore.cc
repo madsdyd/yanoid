@@ -79,8 +79,8 @@ void THighscore::Render(SDL_Surface * surface)
   switch (DisplayMode) {
   case HIGHSCORE: {
     //    LogLine(LOG_VERBOSE, "Displaying highscore rankings");
-    int drawx=_x;
-    int drawy=_y;
+    int drawx=x();
+    int drawy=y();
     unsigned int count = 0;
     for(std::list<pair<std::string, Score> >::const_iterator i = 
 	  Rankings.begin(); 
