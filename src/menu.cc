@@ -61,18 +61,20 @@ bool TMenu::Run() {
   cancel = false; close = false;
   start_time = SDL_GetTicks();
   /* Copy the background, if neccesary */
+  /* This simply does not work on my system */
+#ifdef IEVERFIGUREOUTWHATISWRONG
   if (cap_back) {
-    LogLine(LOG_VERBOSE, "Capturing the screen");
+    // LogLine(LOG_VERBOSE, "Capturing the screen");
     /* Copy the screen - make it a background */
-    SDL_LockSurface(Screen);
+    SDL_LockSurface(Schreen);
     background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
 				      Screen->format->BitsPerPixel,
 				      Screen->format->Rmask,
 				      Screen->format->Gmask,
 				      Screen->format->Bmask,
-				      Screen->format->Amask);
+				      0); /* 0 == Pr. surface alpha */
     SDL_UnlockSurface(Screen);
-    LogLine(LOG_VERBOSE, "background created");
+    // LogLine(LOG_VERBOSE, "background created");
     if (background == NULL) {
       LogLine(LOG_ERROR, "TInGameMenu::Run - unable to create background");
     } else {
@@ -80,15 +82,19 @@ bool TMenu::Run() {
       d.x = 0; d.y = 0; 
       d.w = background->w;
       d.h = background->h;
-      LogLine(LOG_VERBOSE, "Blitting screen onto background");
-      SDL_LockSurface(Screen);
-      SDL_BlitSurface(Screen, &d, background, &d);
-      SDL_UnlockSurface(Screen);
-      LogLine(LOG_VERBOSE, "Screen blitted, setting alpha");
+      
+      /* Note, on my system (mads) blitting before setting the
+	 alpha is a no-no - it crashes... 
+	 Forget that. It just plain crashes on my system. Damn. */
+      // LogLine(LOG_VERBOSE, "Setting alpha");
       SDL_SetAlpha(background, SDL_SRCALPHA, 64);
-      LogLine(LOG_VERBOSE, "Alpha set");
+      // LogLine(LOG_VERBOSE, "Alpha set");
+      // LogLine(LOG_VERBOSE, "Blitting screen onto background");
+      SDL_BlitSurface(Screen, &d, background, &d);
+      // LogLine(LOG_VERBOSE, "Screen blitted");
     }
   }
+#endif
   /* While until the menu is done */
   while(!cancel && !close) {
     Render();
