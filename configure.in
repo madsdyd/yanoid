@@ -52,7 +52,7 @@ dnl NOTE - Messages to the user is deffered, such that the user
 dnl can have all messages at one time.
 
 dnl Check for SDL version.
-SDL_VERSION=1.1.8
+SDL_VERSION=1.2.2
 AM_PATH_SDL($SDL_VERSION, have_SDL=yes, have_SDL=no)
 dnl Should the -lSDL go in here? Maybe not.
 YANOID_CFLAGS="$YANOID_CFLAGS $SDL_CFLAGS"
