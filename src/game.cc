@@ -306,8 +306,15 @@ void TGame::handleCollisions(Uint32 currenttime)
       if (e2->getLastCollided() != currenttime)
 	e2->OnCollision(*e1);
       
-      e1->setCollideTime(currenttime);
-      e2->setCollideTime(currenttime);
+      if ((e1->getEntityType() == "BALL" && e2->getEntityType() == "POWERUP") ||
+	  (e2->getEntityType() == "BALL" && e1->getEntityType() == "POWERUP")) {
+	// Ball and powerup collides but should have the chance to respond to
+	// other collision. Hence we don't set their collision time yet
+      }else{
+	// Two normal colliding entities -> just go set collide time
+	e1->setCollideTime(currenttime);
+	e2->setCollideTime(currenttime);
+      }
 
       // If necessary make pixel perfect detection..
 #ifdef PIXELON

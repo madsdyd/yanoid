@@ -4,10 +4,12 @@
 	Fixed crashes for depths other that 16 bpp
 	Fixed messed up paddle during CUT and other
 	sequences
-
+	Fixed issue with ball going through paddle if
+	powerup was caugh while colliding with ball.
+	
 	* Features
 	Added --no-audio option flag
-	
+
 2002-02-18  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* CREDITS
