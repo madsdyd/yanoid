@@ -1,3 +1,11 @@
+2001-09-25  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
+
+	* Design
+	Added a couple of design documents. 
+	Added entity, game, display and client files.
+	Display a smooth moving logo on screen.
+	Tagging version 0.0.3
+
 2001-09-24  Mads Bondo Dydensborg  <madsdyd@dydensborg.dk>
 
 	* RessourceManager

@@ -35,7 +35,7 @@
    /usr/local/share/yanoid/graphics/fonts/menu_font.png).
    Paths added will override earlier mappings. This way we can
    experiment with new (or partially new) datasets */
-typedef map <string, string> TPathMap;
+typedef std::map <string, string> TPathMap;
 typedef TPathMap::iterator TPathMapIterator;
 
 class TPathManager {

@@ -36,12 +36,17 @@
 
 #include <iostream>
 
-#include "SDL/SDL.h"
+#include <SDL/SDL.h>
+
 #include "debug.hh"
 #include "log.hh"
 #include "screen.hh"
 #include "ressourcemanager.hh"
 #include "surfacemanager.hh"
+
+#include "game.hh"
+#include "display.hh"
+#include "client.hh"
 
 int main(int argc, char ** argv) {
   /* **********************************************************************
@@ -101,6 +106,14 @@ int main(int argc, char ** argv) {
   Assert(NULL != mysurf, "Error getting SDL_Surface *");
   
   /* **********************************************************************
+   * TEST - initialize game, display and client.
+   * *********************************************************************/
+  Game    = new TGame();
+  Display = new TDisplay();
+  TClient * Client = new TClient();
+  
+
+  /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -133,7 +146,10 @@ int main(int argc, char ** argv) {
   dest.w = src.w; dest.h = src.h;
   SDL_BlitSurface(mysurf, &src, Screen, &dest);
   SDL_UpdateRect(Screen, 0, 0, 0, 0);
-  SDL_Delay(3000);
+  SDL_Delay(2000);
+
+  // Test the client
+  Client->Run();
 
   // TODO: Freeing surface, etc.
   SurfaceManager->ReleaseRessource(mysurf);
