@@ -87,6 +87,8 @@ void THighscore::Update(Uint32 currenttime) {
  * Run - checks for events, renders the menu, decide it is time to leave.
  * *********************************************************************/
 bool THighscore::Run() {
+  cursorpos_x = 0;
+  cursorpos_y = 0;
   close = false;
   start_time = SDL_GetTicks();
 
@@ -231,14 +233,16 @@ bool THighscore::HandleEvent(SDL_Event * event) {
 	      name[1] = ' ';
 	    if (name[0] != '_')
 	      update(name,curscore);
+	    close = true;
+	    name[0] = '_';
+	    name[1] = '_';
+	    name[2] = '_';
+	    name[3] = 0x00;
+	    curchar = 0;
+	    return true;
+	  } else {
+	    return false;
 	  }
-	  close = true;
-	  name[0] = '_';
-	  name[1] = '_';
-	  name[2] = '_';
-	  name[3] = 0x00;
-	  curchar = 0;
-	  return false;
 	}
       }
       name[curchar] = static_cast<int>('A') + cursorpos_y * 10 + cursorpos_x;
