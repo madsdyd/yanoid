@@ -200,6 +200,16 @@ bool TMap::AddEntity(string type, string hitfunction,
     MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction));
     MapState->num_bricks++;
     return true;
+  } else if ("brick-stay-3" == type ) {
+    /* This is a pixmapentity */
+    MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction, 3));
+    MapState->num_bricks++;
+    return true;
+  } else if ("brick-stay" == type ) {
+    /* This is a pixmapentity */
+    MapState->Entities.push_back(new TBrick(x, y, pixmap, hitfunction, -1));
+    MapState->num_bricks++;
+    return true;
   } else if ("static" == type) {
     /* In lack of a better name */
     TEntity * e = new TEntity(x, y, w, h);

@@ -57,7 +57,8 @@ Email address     : mads@dydensborg.dk
 Web site          : http://www.sf.net/projects/yanoid/
 Tools and libs    : Please see the section "REQUIREMENTS"
 License           : Please see the section "LICENSE"
-Time to compile   : Ppro 232: 157.19user 11.32system 3:28.01elapsed 81%CPU
+Time to compile   : Ppro 232: 157.19user 11.32system 3:28.01elapsed 
+                    Cel 550 :  77.20user  5.82system 1:24.85elapsed
             
 
 ----------------------------------------------------------------------

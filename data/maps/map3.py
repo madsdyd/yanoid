@@ -2,23 +2,23 @@
 
 # Add a number of bricks
 for x in range(0, 9):
-        AddBrick(400-x*40, 50+x*20, "basic_brick_hit()",
+        AddBrick("brick", 400-x*40, 50+x*20, "basic_brick_hit()",
                  "graphics/objects/red_oval_brick.png")
-        AddBrick(400+x*40, 50+x*20, "basic_brick_hit()",
+        AddBrick("brick", 400+x*40, 50+x*20, "basic_brick_hit()",
                  "graphics/objects/red_oval_brick.png")
-        AddBrick(400-x*40, 150+x*20, "basic_brick_hit()",
+        AddBrick("brick", 400-x*40, 150+x*20, "basic_brick_hit()",
                  "graphics/objects/red_oval_brick.png")
-        AddBrick(400+x*40, 150+x*20, "basic_brick_hit()",
+        AddBrick("brick", 400+x*40, 150+x*20, "basic_brick_hit()",
                  "graphics/objects/red_oval_brick.png")
 
 for x in range(0, 3):
-        AddBrick(400-x*40, 250+x*20, "basic_brick_hit()",
+        AddBrick("brick", 400-x*40, 250+x*20, "basic_brick_hit()",
                  "graphics/objects/red_oval_brick.png")
-        AddBrick(400+x*40, 250+x*20, "basic_brick_hit()",
+        AddBrick("brick", 400+x*40, 250+x*20, "basic_brick_hit()",
                  "graphics/objects/red_oval_brick.png")
 
 for x in range(-3, 4):
-        AddBrick(400-x*40, 320, "basic_brick_hit()",
+        AddBrick("brick", 400-x*40, 320, "basic_brick_hit()",
                  "graphics/objects/weird_brick.png")
             
 # Add the walls

@@ -1,10 +1,10 @@
 # This file defines a number of helper functions to be used by map defining code
 
-# AddBrick(int x, int y, string hitfunction, string pixmap)
-# Adds a brick at x, y, with pixmap pixmap.
-def AddBrick(x, y, hitfunction, pixmap):
+# AddBrick(string type, int x, int y, string hitfunction, string pixmap)
+# Adds a brick of type type at x, y, with pixmap pixmap.
+def AddBrick(type, x, y, hitfunction, pixmap):
     "Add a brick to the current map"
-    yanoid_map.AddObject("brick", hitfunction, x, y, 0, 0, pixmap)
+    yanoid_map.AddObject(type, hitfunction, x, y, 0, 0, pixmap)
 
 # AddEntity(string type, int x, int y, int w, int h, string hitfunction)
 # Adds a static (simple object, no pixmap) at x,y having size w,h

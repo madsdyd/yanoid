@@ -1,7 +1,7 @@
 # Python file that defines a _very_ simple map
 
 # Add a number of bricks
-AddBrick(400, 50, "basic_brick_hit()",
+AddBrick("brick", 400, 50, "basic_brick_hit()",
          "graphics/objects/basic_brick.png")
             
 # Add the walls

@@ -27,8 +27,9 @@
 /* **********************************************************************
  * TBrick
  * *********************************************************************/
-TBrick::TBrick(int x_, int y_, string pixmap, string hitfunction)
-  : TPixmapEntity(x_, y_, 0, pixmap) {
+TBrick::TBrick(int x_, int y_, string pixmap, string hitfunction, 
+	       int _hitnum)
+  : TPixmapEntity(x_, y_, 0, pixmap), hitnum(_hitnum) {
   SetScriptHitCall(hitfunction);
   // HitSound = NULL;
   /* This _must_ go */
@@ -45,10 +46,12 @@ TBrick::~TBrick() {
  * OnCollision - most bricks simply die, when they are part of a collision
  * *********************************************************************/
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
-  removable = true;
   TPixmapEntity::OnCollision(other, currenttime);
   if (HitSound) {
     Mix_PlayChannel(-1, HitSound, 0);
+  }
+  if (hitnum > 0 && --hitnum == 0) {
+    removable = true;
   }
 }
 

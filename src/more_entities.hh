@@ -32,8 +32,9 @@ class TPixmapEntity;
 class TBrick : public TPixmapEntity {
 protected:
   Mix_Chunk * HitSound;
+  int hitnum;
 public:
-  TBrick(int x_, int y_, string pixmap, string hitfunction);
+  TBrick(int x_, int y_, string pixmap, string hitfunction, int _hitnum = 1);
   virtual ~TBrick();
   virtual void OnCollision(TEntity& other, Uint32 currenttime=0);
 };

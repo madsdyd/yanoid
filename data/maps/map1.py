@@ -4,13 +4,13 @@
 for x in range(60, 750, 50):
     for y in range(30, 120, 30):
         if (y == 30):
-            AddBrick(x, y, "basic_brick_hit()",
+            AddBrick("brick-stay", x, y, "basic_brick_hit()",
                      "graphics/objects/stay_brick16.png")
         elif (y == 60):
-            AddBrick(x, y, "basic_brick_hit()",
+            AddBrick("brick-stay-3", x, y, "basic_brick_hit()",
                      "graphics/objects/3hit_brick16.png")
         else:
-            AddBrick(x, y, "basic_brick_hit()",
+            AddBrick("brick", x, y, "basic_brick_hit()",
                      "graphics/objects/1hit_brick16.png")
 
             
