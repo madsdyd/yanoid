@@ -177,7 +177,7 @@ else:
     mbd_save_cflags="$CFLAGS"
     CFLAGS="$CFLAGS $PYTHON_INCLUDES"
     mbd_save_libs="$LIBS"
-    LIBS="$LIBS $PYTHON_LIBS $PYTHON_LIBRARY"
+    LIBS="$LIBS $PYTHON_LIBRARY $PYTHON_LIBS"
     mbd_save_ldflags="$LD_FLAGS"
     LDFLAGS="$LD_FLAGS $PYTHON_LDFLAGS"
     dnl Try the link
