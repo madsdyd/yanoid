@@ -1,3 +1,8 @@
+2001-12-08  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Statistics
+	Added a display of the framerate at the bottom, use F10 to trigger it.
+
 2001-12-08  Jonas Christian Drewsen  <jcd@diller.emdrupborg.dk>
 
 	* Collision:

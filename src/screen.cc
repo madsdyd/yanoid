@@ -22,3 +22,4 @@
 SDL_Surface * Screen = NULL;
 SDL_Surface * Splash = NULL;
 bool ConsoleDown = false;
+bool DisplayStat = false;

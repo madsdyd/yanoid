@@ -28,4 +28,5 @@
 extern SDL_Surface * Screen; /* The Sreen */
 extern SDL_Surface * Splash; /* The splash logo */
 extern bool ConsoleDown;
+extern bool DisplayStat; 
 #endif

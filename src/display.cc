@@ -34,6 +34,7 @@
 #include "ConsoleSource/CON_console.h"
 #include "ConsoleSource/DT_drawtext.h"
 #include "surfacemanager.hh"
+#include "statistics.hh"
 
 /* **********************************************************************
  * The global display
@@ -62,6 +63,7 @@ TDisplay::~TDisplay() {
 void TDisplay::Render(SDL_Surface * surface) {
 #ifdef DEBUG
   static int ticks = 0;
+  static TStatistics Stat(surface, 400);
 #endif
 
   TGameState * GameState = Client->GetGame()->GetState();
@@ -143,6 +145,11 @@ void TDisplay::Render(SDL_Surface * surface) {
   if (ticks != oldticks) {
     sprintf(buf, "%.2f", 1000.0 / (ticks - oldticks));
     DT_DrawText(buf, surface, 1, 1, surface->h-40);
+  }
+  // Register frametime, Draw stat
+  Stat.RegisterFrameTime(ticks - oldticks);
+  if (DisplayStat) {
+    Stat.Render(200, surface->h);
   }
 #endif
   /* **********************************************************************

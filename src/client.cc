@@ -458,6 +458,10 @@ bool TClient::HandleGlobalKeys(SDL_Event * event) {
     case SDLK_F3:
       ToggleConsole();
       return true;
+      /* Display Stat toggles on F10 */
+    case SDLK_F10:
+      DisplayStat = !DisplayStat;
+      return true;
       /* FullScreenToggle is bound to F11 */
     case SDLK_F11:
       SDL_WM_ToggleFullScreen(Screen);
