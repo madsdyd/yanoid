@@ -289,9 +289,16 @@ bool TMap::AddEntity(string type, string hitfunction,
 				    MapState->paddle->y() - 16,
 				    0, pixmap, TEntity::PIXEL, 
 				    TEntity::MOVING);*/
-    TEntity * e = new TPixmapEntity(300, 400, 0, pixmap, 
-				    "BALL", TEntity::MOVING,
-				    TEntity::PIXEL);
+    TEntity * e;
+    if (x == 0 && y == 0) {
+      e = new TPixmapEntity(300, 400, 0, pixmap, 
+			    "BALL", TEntity::MOVING,
+			    TEntity::PIXEL);
+    }else{
+      e = new TPixmapEntity(x, y, 0, pixmap, 
+			    "BALL", TEntity::MOVING,
+			    TEntity::PIXEL);
+    }
     e->SetScriptHitCall(hitfunction);
     // TODO, error handling.. 
     e->setMotion(new TFreeMotion);
