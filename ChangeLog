@@ -1,3 +1,11 @@
+2001-12-01  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Various
+	Removed some print stuff from various places
+	Adjusted the buffer mix size
+	Added a time bonus on level complete
+	Tagging version 0.2.2
+
 2001-11-30  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Sounds
