@@ -129,6 +129,21 @@ int main(int argc, char ** argv) {
 			    | SDL_FULLSCREEN);
   Assert(Screen != NULL, "Unable to set video mode");
   LogLine(LOG_VERBOSE, "Videomode set (800x600, fullscreen)");
+#ifdef DEBUG
+  cout << "Flags : ";
+  if (SDL_HWSURFACE & (Screen->flags)) {
+    cout << "SDL_HWSURFACE ";
+  }
+  if (SDL_DOUBLEBUF & Screen->flags) {
+    cout << "SDL_DOUBLEBUF ";
+  }
+  if (SDL_FULLSCREEN & Screen->flags) {
+    cout << "SDL_FULLSCREEN ";
+  }
+  cout << endl;
+#endif
+
+
 
   /* **********************************************************************
    * Initialize the surface manager (requires SDL to be initialized and 
