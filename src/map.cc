@@ -31,8 +31,9 @@
 
 /* **********************************************************************
  * Testing: A temporary TMap variable to use with some static functions
+ * Note: This is becomming semi permanent...
  * *********************************************************************/
-TMap * CurrentMap = NULL;
+static TMap * CurrentMap = NULL;
 
 /* **********************************************************************
  * These static methods are not so great, but for now, they will have to

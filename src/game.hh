@@ -54,10 +54,12 @@ protected:
   Uint32 pausetime;
   TMap * Map;
   TGameState GameState;
+  static bool ModuleAdded;
   void handleCollisions(Uint32 currenttime);
 public:
   TGame();
   ~TGame();
+  static bool AddModule();
   void Update(Uint32 currenttime);
   TGameState * GetState();
   bool LoadMap(string mapname);

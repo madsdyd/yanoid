@@ -2,3 +2,4 @@
 
 def basic_brick_hit():
     print "basic_brick_hit"
+    AdjustScore(10)

@@ -40,6 +40,7 @@ def help():
 # A list of python scripts to run
 # We collect them here
 default_scripts = [ "scripts/map_interface.py",
+                    "scripts/game_interface.py",
                     "objects/default.py"
                     ]
 

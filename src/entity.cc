@@ -232,146 +232,155 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
      yet-to-be-defined rules, and then forward time again. */
   TEntity* ball=0;
   TEntity* tother=0;
+
+  /* Mega if on this beeing a ball */
   if (getEntityType() == TEntity::BALL) {
     ball = this;
     tother = &other;
-  } else if (other.getEntityType() == TEntity::BALL) {
+
+    /*  } else if (other.getEntityType() == TEntity::BALL) {
     ball = &other;
     tother = this;
-  } 
+    } */
   
-  // set collision update time
-  // so that we won't calculate collisions
-  // 2 times on a entity
-  LastUpdate = currenttime;
-  other.LastUpdate = currenttime;
-
-  //
-  // If we have a ball in the collision
-  //
-  if (ball && ball->getMotion()) {
-    double colx = ball->x();
-    double coly = ball->y();
-    ball->getMotion()->rewind(*ball);
-    TFreeMotion* motion = dynamic_cast<TFreeMotion*>(ball->getMotion());
-    //    cerr << ball->getName() << motion->getDir() << " y: " << ball->y() << endl;
-    //    cerr << ball->y() << ", " << ball->collidepoint.y() << ", " << coly << ": " << ball->h() << " CORNER: " << tother->collidecorner;
-    double newangle = 0.0;
-
-
-    double ballwidth = 0;
-    double ballheight = 0;
-    switch(tother->collidecorner) {
-    case 1:
-      ballwidth = ball->w();
-      ballheight = ball->h();
-      break;
-    case 2:
-      ballwidth = ball->w();
-      break;
-    case 3:
-      break;
-    case 4:
-      ballheight = ball->h();
-      break;
-    }
-    double dx = ball->collidepoint.x() - (ball->x() + ballwidth);
-    double dy = ball->collidepoint.y() - (ball->y() + ballheight);
-
-    // Equation of two lines intersecting, knowing that one of 
-    // the lines is vertical. The taking only the y component of the 
-    // intersection point.
-    double lin_intersect_y = dy * ((tother->collidepoint.x() - (ball->x() + ballwidth) ) / dx) + ball->y() + ballheight; 
+    // set collision update time
+    // so that we won't calculate collisions
+    // 2 times on a entity
+    LastUpdate = currenttime;
+    other.LastUpdate = currenttime;
     
-    bool verticalhit = false;
-    switch(tother->collidecorner) {
-    case 1:
-      if ( lin_intersect_y > tother->collidepoint.y() && dx > 0) {
-	verticalhit = true;
+    //
+    // If we have a ball in the collision
+    //
+    if (ball && ball->getMotion()) {
+      double colx = ball->x();
+      double coly = ball->y();
+      ball->getMotion()->rewind(*ball);
+      TFreeMotion* motion = dynamic_cast<TFreeMotion*>(ball->getMotion());
+      //    cerr << ball->getName() << motion->getDir() << " y: " << ball->y() << endl;
+      //    cerr << ball->y() << ", " << ball->collidepoint.y() << ", " << coly << ": " << ball->h() << " CORNER: " << tother->collidecorner;
+      double newangle = 0.0;
+      
+      
+      double ballwidth = 0;
+      double ballheight = 0;
+      switch(tother->collidecorner) {
+      case 1:
+	ballwidth = ball->w();
+	ballheight = ball->h();
+	break;
+      case 2:
+	ballwidth = ball->w();
+	break;
+      case 3:
+	break;
+      case 4:
+	ballheight = ball->h();
+	break;
       }
-      break;
-    case 2:
-      if ( lin_intersect_y < tother->collidepoint.y() && dx > 0) {
-	verticalhit = true;
-      }
-      break;
-    case 3:
-      if ( lin_intersect_y < tother->collidepoint.y() && dx < 0) {
-	verticalhit = true;
-      }
-      break;
-    case 4:
-      if ( lin_intersect_y > tother->collidepoint.y() && dx < 0) {	
-	verticalhit = true;
-      }
-      break;
-    }
-
-    if ( verticalhit ) {	
-      // OK collision on the side
-      // a hit from the left
-      newangle = (dy < 0) ? 
-	M_PI - motion->getDir() :
-	3.0 * M_PI - motion->getDir(); 
+      double dx = ball->collidepoint.x() - (ball->x() + ballwidth);
+      double dy = ball->collidepoint.y() - (ball->y() + ballheight);
       
-      if (dx >= 0) {
-	/*	cerr << ">> " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
-	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	*/
-	ball->setX(colx - 2 * ( (colx + ballwidth) -  tother->collidepoint.x()));	
-      }else{
-	/*
-	cerr << "<< " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
-	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	*/
-	ball->setX(colx + 2 * ( tother->collidepoint.x() - colx ));
-      }
-      ball->setY(coly);
+      // Equation of two lines intersecting, knowing that one of 
+      // the lines is vertical. The taking only the y component of the 
+      // intersection point.
+      double lin_intersect_y = dy * ((tother->collidepoint.x() - (ball->x() + ballwidth) ) / dx) + ball->y() + ballheight; 
       
-      
-    }else{
-      // OK collision on the top
-      
-      // a hit from the top
-      newangle = (dx < 0) ? 
-	2.0 * M_PI - motion->getDir() :
-	2.0 * M_PI - motion->getDir();
-      
-      //      cerr << "vv" << newangle << endl;
-      
-      if (dy >= 0) {
-	/*
-	cerr << "vv " << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
-	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	*/
-	//		ball->setY(coly + 2 * ( ball->collidepoint.y() -  (coly + ballheight)) );
-	ball->setY(coly - 2 * ( (coly + ballheight) -  tother->collidepoint.y()) -1  );
-	// If the ball has hit the paddle from above we make some modifications to the angle
-	// depending where on the paddle the ball has hit.
-	if (tother->getEntityType() == TEntity::PADDLE) {
-	  double lx = (ball->x() + ball->w()/2) - tother->x();
-	  lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
-	  double modangle = (tother->w()/2 - lx) * tother->AngleModifier;
-	  cerr << "lx :" << lx << " modangle: " << modangle << endl;
-	  newangle += modangle;
+      bool verticalhit = false;
+      switch(tother->collidecorner) {
+      case 1:
+	if ( lin_intersect_y > tother->collidepoint.y() && dx > 0) {
+	  verticalhit = true;
 	}
-      }else{
-	/*
-	cerr << "^^ "  << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
-	     << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	     << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	*/
-	ball->setY(coly + 2 * ( tother->collidepoint.y() -  coly) + 1 );
+	break;
+      case 2:
+	if ( lin_intersect_y < tother->collidepoint.y() && dx > 0) {
+	  verticalhit = true;
+	}
+	break;
+      case 3:
+	if ( lin_intersect_y < tother->collidepoint.y() && dx < 0) {
+	  verticalhit = true;
+	}
+	break;
+      case 4:
+	if ( lin_intersect_y > tother->collidepoint.y() && dx < 0) {	
+	  verticalhit = true;
+	}
+	break;
       }
-
-      ball->setX(colx);
       
-    }
-    motion->setDir(newangle);
-  } /* If ball in collision */
+      if ( verticalhit ) {	
+	// OK collision on the side
+	// a hit from the left
+	newangle = (dy < 0) ? 
+	  M_PI - motion->getDir() :
+	  3.0 * M_PI - motion->getDir(); 
+	
+	if (dx >= 0) {
+	  /*	cerr << ">> " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
+		<< " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+		<< " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	  */
+	  ball->setX(colx - 2 * ( (colx + ballwidth) -  tother->collidepoint.x()));	
+	}else{
+	  /*
+	    cerr << "<< " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
+	    << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	    << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	  */
+	  ball->setX(colx + 2 * ( tother->collidepoint.x() - colx ));
+	}
+	ball->setY(coly);
+	
+	
+      }else{
+	// OK collision on the top
+	
+	// a hit from the top
+	newangle = (dx < 0) ? 
+	  2.0 * M_PI - motion->getDir() :
+	  2.0 * M_PI - motion->getDir();
+	
+	//      cerr << "vv" << newangle << endl;
+	
+	if (dy >= 0) {
+	  /*
+	    cerr << "vv " << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
+	    << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	    << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	  */
+	  //		ball->setY(coly + 2 * ( ball->collidepoint.y() -  (coly + ballheight)) );
+	  ball->setY(coly - 2 * ( (coly + ballheight) -  tother->collidepoint.y()) -1  );
+	  // If the ball has hit the paddle from above we make some modifications to the angle
+	  // depending where on the paddle the ball has hit.
+	  if (tother->getEntityType() == TEntity::PADDLE) {
+	    double lx = (ball->x() + ball->w()/2) - tother->x();
+	    lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
+	    double modangle = (tother->w()/2 - lx) * tother->AngleModifier;
+	    cerr << "lx :" << lx << " modangle: " << modangle << endl;
+	    newangle += modangle;
+	  }
+	}else{
+	  /*
+	    cerr << "^^ "  << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
+	    << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
+	    << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
+	  */
+	  ball->setY(coly + 2 * ( tother->collidepoint.y() -  coly) + 1 );
+	}
+	
+	ball->setX(colx);
+	
+      }
+      motion->setDir(newangle);
+    } /* If ball in collision */
+  }
+  
+  /* OK, This is for stuff that are not balls.. */
+
+  /* Execute the script associated with this entity */
+  ExecuteScriptHitCall();
 }
 
 /* **********************************************************************
@@ -386,5 +395,7 @@ void TEntity::ExecuteScriptHitCall() {
     if(!Interprenter->RunSimpleString(ScriptHitCall)) {
       LogLine(LOG_WARNING, "TEntity::ExecuteScriptHitCall error");
     }
+  } else {
+    LogLineExt(LOG_VERBOSE, ("No script for %s", name.c_str()));
   }
 }

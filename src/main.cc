@@ -311,6 +311,7 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
 
   TMap::AddModule();
+  TGame::AddModule();
   Interprenter->LoadDefaultScripts();
   /* Dump the Interprenter help to the console */
   Interprenter->RunSimpleString("help()");

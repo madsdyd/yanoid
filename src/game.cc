@@ -22,8 +22,32 @@
 #include "game.hh"
 #include "log.hh"
 #include "debug.hh"
+#include "interprenter.hh"
 #include "motion.hh"
 #include <vector>
+
+/* **********************************************************************
+ * These callbacks are used from the interprenter
+ * The CurrentGame variable is used by most of them.
+ * *********************************************************************/
+static TGame * CurrentGame = NULL;
+/* **********************************************************************
+ * Adjust the score - adds the value to the current score 
+ * *********************************************************************/
+static PyObject * AdjustScore(PyObject * self, PyObject * args) {
+  int dscore;
+  if (!CurrentGame || !PyArg_ParseTuple(args, "i", &dscore)) {
+    return NULL;
+  }
+  CurrentGame->GetState()->score += dscore;
+  return Py_BuildValue("");
+}
+
+static PyMethodDef game_methods[] = {
+  {"AdjustScore", AdjustScore, METH_VARARGS},
+  {NULL, NULL}
+};
+
 
 /* **********************************************************************
  * The constructor currently constructs a single entity
@@ -37,6 +61,8 @@ TGame::TGame() : lastupdate(0) {
   
   /* Set up the gamestate "pointer class" */
   GameState.MapState = Map->GetState();
+  /* We only really use a single map at a time */
+  CurrentGame = this;
 }
 
 /* **********************************************************************
@@ -49,6 +75,19 @@ TGame::~TGame() {
   LogLine(LOG_TODO, "Clean up TGame destructor and GameState");
 }
 
+/* **********************************************************************
+ * The stuff to handle the modules
+ * *********************************************************************/
+bool TGame::ModuleAdded = false;
+
+bool TGame::AddModule() {
+  if (!ModuleAdded) {
+    if (Interprenter->AddModule("yanoid_game", game_methods)) {
+      ModuleAdded = true;
+    }
+  }    
+  return ModuleAdded;
+}
 
 /* **********************************************************************
  * Update calculates difference, calls entities.
@@ -165,7 +204,7 @@ void TGame::handleCollisions(Uint32 currenttime)
       //      cerr << "i1: " << (*i1)->getName() << ", " << (*i1)->y() << " h: " << (*i1)->h()
       //	   << " i2: " << (*i2)->getName() << ", " << (*i2)->y() << " h: " << (*i2)->h() << endl;
       (*i1)->OnCollision(*(*i2),currenttime);
-      //            (*i2)->OnCollision(*(*i1),currenttime);
+      (*i2)->OnCollision(*(*i1),currenttime);
 
 
 
