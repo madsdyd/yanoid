@@ -22,6 +22,7 @@
 #include "game.hh"
 #include "log.hh"
 #include "debug.hh"
+#include "interprenter.hh"
 #include "motion.hh"
 #include <vector>
 
@@ -43,7 +44,9 @@ TGame::TGame() : lastupdate(0) {
  * Destructor, clean up... 
  * *********************************************************************/
 TGame::~TGame() {
-  delete Map;
+  if (Map) {
+    delete Map;
+  }
   LogLine(LOG_TODO, "Clean up TGame destructor and GameState");
 }
 
@@ -52,6 +55,7 @@ TGame::~TGame() {
  * Update calculates difference, calls entities.
  * *********************************************************************/
 void TGame::Update(Uint32 currenttime) {
+  
   Uint32 deltatime = currenttime - lastupdate;
   /* Update all objects in game */
   Map->Update(deltatime);
@@ -60,15 +64,19 @@ void TGame::Update(Uint32 currenttime) {
 
   /* Check game state */
   if (Map->GetState()->num_balls == 0) {
-    LogLine(LOG_VERBOSE, "Player must loose a life!");
-    LogLine(LOG_VERBOSE, "Ups, need to add a ball here");
-    // Map->AddEntity, "default-ball", 
-    GameState.lives--;
-    if (GameState.lives == 0) {
+    /* There are no balls. Player must loose a life, and we need to add 
+       a ball */
+    if (GameState.lives <= 1) {
       LogLine(LOG_VERBOSE, "Player has no more lives");
       GameState.status = TGameState::DEAD;
+    } else {
+      GameState.lives--;
+      /* Adding a ball is done by calling the RoundStart function */
+      /* We should probably use cut here, or something */
+      if (!Interprenter->RunSimpleString("RoundStart()")) {
+	LogLine(LOG_ERROR, "Error running interprenter -RoundStart()-");
+      }
     }
-    
   }
 }
 

@@ -64,4 +64,12 @@ void TDisplay::Render(SDL_Surface * surface) {
     DT_DrawText(framerate, surface, 1, 1, surface->h - 40);
   }
 
+  // Draw lives
+  sprintf(framerate, "lives %i", GameState->lives);
+  DT_DrawText(framerate, surface, 1, 300, surface->h - 40);
+
+  // Draw score
+  sprintf(framerate, "score %i", GameState->score);
+  DT_DrawText(framerate, surface, 1, 600, surface->h - 40);
+
 }

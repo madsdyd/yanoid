@@ -109,8 +109,16 @@ void TClient::Run() {
       Render();
       /* Handle SDL events */
       HandleEvents();
+
+      /* Check for Game Over, display menu */
+      if (TGameState::DEAD == Game->GetState()->status) {
+	/* Uh oh, game is over */
+	LogLine(LOG_TODO, "Display some info, update highscore?");
+	QuitCurrentGame = true;
+      }
     }
     delete Game;
+    Game = NULL;
     
     QuitClient = !MyPre->Run();    
   }
