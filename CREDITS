@@ -1,0 +1,29 @@
+This file contains credits for code and artworks that was reused from
+other projects.
+
+----------------------------------------------------------------------
+* CODE
+
+* Console
+The console sources and console font was taken from the SDL_console code. 
+Author  : ???
+Homepage: ???
+
+* Pixel collision code
+The code in entity.cc that does pixel perfect collision detection was
+taken from ???
+Author  : ???
+Homepage: ???
+
+----------------------------------------------------------------------
+* MUSIC
+
+The yanoid.mod music file was taken from www.modarchive.???
+Composer: ???
+
+----------------------------------------------------------------------
+* Graphics
+
+The fonts used for the menus was taken from ???
+Creator : ???
+
