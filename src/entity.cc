@@ -243,13 +243,13 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
   // set collision update time
   // so that we won't calculate collisions
   // 2 times on a entity
-  ball->LastUpdate = currenttime;
-  tother->LastUpdate = currenttime;
+  LastUpdate = currenttime;
+  other.LastUpdate = currenttime;
 
   //
   // If we have a ball in the collision
   //
-  if (ball->getMotion() && ball ) {
+  if (ball && ball->getMotion()) {
     double colx = ball->x();
     double coly = ball->y();
     ball->getMotion()->rewind(*ball);
@@ -370,9 +370,8 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
       ball->setX(colx);
       
     }
-    
-  motion->setDir(newangle);
-  }
+    motion->setDir(newangle);
+  } /* If ball in collision */
 }
 
 /* **********************************************************************
