@@ -39,7 +39,7 @@ TEntity::TEntity(double x_, double y_, Angle a,
   name("unknown"), 
   entity_type(e), collision_granularity(c), move_type(m),
   motion(0), 
-  mask(0),
+  mask(0),changed(true),
   collidecorner(0), removable(false), AngleModifier(0.05), 
   MovementAngleModifier(1.55), is_dying(false)
 {
@@ -52,8 +52,8 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
   name("unknown"), 
   entity_type(e), collision_granularity(c), move_type(m),
   motion(0), mask(0),
-  changed(true),  collidecorner(0), removable(false), AngleModifier(0.05)
-  , MovementAngleModifier(1.55), is_dying(false)
+  changed(true), collidecorner(0), removable(false), 
+  AngleModifier(0.05), MovementAngleModifier(1.55), is_dying(false)
 {
 
 }
@@ -62,9 +62,9 @@ TEntity::TEntity(const TOrientedPoint& p,
 		 EntityType e, MoveType m, CollisionGranularity c) :
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
   entity_type(e), collision_granularity(c), move_type(m),
-  motion(0), mask(0), changed(true),
-  collidecorner(0), removable(false), AngleModifier(0.05), 
-  MovementAngleModifier(1.55), is_dying(false)
+  motion(0), mask(0), 
+  changed(true), collidecorner(0), removable(false), 
+  AngleModifier(0.05), MovementAngleModifier(1.55), is_dying(false)
 {
 }
 

@@ -82,7 +82,6 @@ private:
   void blitChars();
   void saveCharsBackground();
   void blitCharsBackground();
-  void initializeBackground();
 };
 
 

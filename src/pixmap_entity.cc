@@ -105,6 +105,9 @@ void TPixmapEntity::setPixmap(const std::string& path) {
 void TPixmapEntity::Render(SDL_Surface * surface) {
   SDL_Rect src, dest;
 
+  //  if (!changed)
+  //    return;
+
   src.x = 0; src.y = 0; 
   src.w = currentsurface->w; src.h = currentsurface->h;
 
