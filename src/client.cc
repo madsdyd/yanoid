@@ -23,6 +23,7 @@
 #include "log.hh"
 #include "debug.hh"
 #include "screen.hh"
+#include "interprenter.hh"
 #include "ConsoleSource/CON_console.h"
 #include "game.hh"
 #include "display.hh"
@@ -30,7 +31,6 @@
 #include "menu.hh"
 
 #include "motion.hh"
-#include "ConsoleSource/CON_console.h"
 
 /* **********************************************************************
  * The global client
@@ -100,6 +100,8 @@ void TClient::Run() {
     game_start      = SDL_GetTicks();
     game_lastupdate = 0;
     LogLine(LOG_VERBOSE, "Game->Update(0)");
+    /* Set the game status ... hmm. may not be appropiate */
+    Game->GetState()->status = TGameState::PLAYING;
     Game->Update(0);
     QuitCurrentGame = false; /* May be changed by the in game menu */
     while(!QuitCurrentGame) {
@@ -119,7 +121,22 @@ void TClient::Run() {
 	delete GameOverMenu;
 	QuitCurrentGame = true;
       }
-    }
+      if (TGameState::CUT == Game->GetState()->status) {
+	LogLine(LOG_VERBOSE, "Game is in CUT state");
+	PauseGame();
+	TRoundOverMenu * RoundOverMenu = new TRoundOverMenu();
+	RoundOverMenu->Run();
+	delete RoundOverMenu;
+	ContinueGame();
+	/* Adding a ball is done by calling the RoundStart function */
+	if (!Interprenter->RunSimpleString("RoundStart()")) {
+	  LogLine(LOG_ERROR, "Error running interprenter -RoundStart()-");
+	}
+	/* Set the game status ... hmm. may not be appropiate */
+	LogLine(LOG_VERBOSE, "Setting game to PLAYING state");
+	Game->GetState()->status = TGameState::PLAYING;
+      }
+    } /* While !QuitCurrentGame */
     delete Game;
     Game = NULL;
     

@@ -22,7 +22,6 @@
 #include "game.hh"
 #include "log.hh"
 #include "debug.hh"
-#include "interprenter.hh"
 #include "motion.hh"
 #include <vector>
 
@@ -70,11 +69,10 @@ void TGame::Update(Uint32 currenttime) {
       LogLine(LOG_VERBOSE, "Player has no more lives");
       GameState.status = TGameState::DEAD;
     } else {
-      GameState.lives--;
-      /* Adding a ball is done by calling the RoundStart function */
-      /* We should probably use cut here, or something */
-      if (!Interprenter->RunSimpleString("RoundStart()")) {
-	LogLine(LOG_ERROR, "Error running interprenter -RoundStart()-");
+      if (GameState.status != TGameState::CUT) {
+	LogLine(LOG_VERBOSE, "Going into CUT state");
+	GameState.lives--;
+	GameState.status = TGameState::CUT;
       }
     }
   }

@@ -60,6 +60,7 @@ bool TMenu::Run() {
   cancel = false; close = false;
   /* Copy the background, if neccesary */
   if (cap_back) {
+    LogLine(LOG_VERBOSE, "Capturing the screen");
     /* Copy the screen - make it a background */
     background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
 				      Screen->format->BitsPerPixel,
@@ -191,59 +192,66 @@ bool TMenu::HandleEvent(SDL_Event * event) {
 };
 
 /* **********************************************************************
+ * The DialogMenu
+ * *********************************************************************/
+void TDialogMenu::Render() {
+  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+  RenderSplash();
+  RenderLines();
+  /*
+  string text = "Here is room for a help text";
+  int drawx = (Screen->w - text.size()*16) / 2;
+  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
+  */
+  RenderItems(0, 300, Screen->w, Screen->h);
+  SDL_Flip(Screen);
+};
+
+void TDialogMenu::SelectFocused() {
+  cancel = true;
+};
+
+TDialogMenu::TDialogMenu(string caption,
+			 bool capture_background = false, 
+			 bool display_splash = true) 
+  : TMenu(capture_background, display_splash) {
+  items.push_back(caption);
+};
+
+/* **********************************************************************
  * These menus are used internally.
  * *********************************************************************/
 
 /* **********************************************************************
  * The Help Menu
  * *********************************************************************/
-class THelpMenu : public TMenu {
+class THelpMenu : public TDialogMenu {
 protected:
-  void SelectFocused() { cancel = true; };
-  void Render();
+  void RenderLines();
 public:
-  THelpMenu();
+  THelpMenu() : TDialogMenu("Return") {};
 };
 
-THelpMenu::THelpMenu() : TMenu(false) {
-  items.push_back("Return");
-}
-
-void THelpMenu::Render() {
-  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-  RenderSplash();
+void THelpMenu::RenderLines() {
   string text = "Here is room for a help text";
   int drawx = (Screen->w - text.size()*16) / 2;
   DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-
-  RenderItems(0, 300, Screen->w, Screen->h);
-  SDL_Flip(Screen);
 }
 
 /* **********************************************************************
  * The About Menu
  * *********************************************************************/
-class TAboutMenu : public TMenu {
+class TAboutMenu : public TDialogMenu {
 protected:
-  void SelectFocused() { cancel = true; };
-  void Render();
+  void RenderLines();
 public:
-  TAboutMenu();
+  TAboutMenu() : TDialogMenu("Return") {};
 };
 
-TAboutMenu::TAboutMenu() : TMenu(false) {
-  items.push_back("Return");
-}
-
-void TAboutMenu::Render() {
-  SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
-  RenderSplash();
+void TAboutMenu::RenderLines() {
   string text = "Here is room for an about text";
   int drawx = (Screen->w - text.size()*16) / 2;
   DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-
-  RenderItems(0, 300, Screen->w, Screen->h);
-  SDL_Flip(Screen);
 }
 
 /* **********************************************************************
@@ -319,19 +327,17 @@ void TInGameMenu::SelectFocused() {
 /* **********************************************************************
  * TGameOver menu
  * *********************************************************************/
-TGameOverMenu::TGameOverMenu() : TMenu(true, false) {
-  items.push_back("OK");
-}
-
-void TGameOverMenu::SelectFocused() { 
-  cancel = true; 
-};
-
-void TGameOverMenu::Render() {
-  RenderBackground();
+void TGameOverMenu::RenderLines() {
   string text = "Game over";
   int drawx = (Screen->w - text.size()*16) / 2;
   DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
-  RenderItems(0, 300, Screen->w, Screen->h);
-  SDL_Flip(Screen);
+}
+
+/* **********************************************************************
+ * TRoundOverMenu
+ * *********************************************************************/
+void TRoundOverMenu::RenderLines() {
+  string text = "You loose a life";
+  int drawx = (Screen->w - text.size()*16) / 2;
+  DT_DrawText(text.c_str(), Screen, *font, drawx, 250);
 }

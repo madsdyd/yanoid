@@ -87,10 +87,30 @@ public:
   TInGameMenu(TClient * client);
 };
 
-class TGameOverMenu : public TMenu {
-protected: 
+/* TDialogMenu only contains a single menu item, 
+   that is a string, and cancels when enter is
+   pressed */
+class TDialogMenu : public TMenu {
+protected:
+  virtual void RenderLines() = 0; /* Overridden by subclasses */
   void SelectFocused();
   void Render();
 public:
-  TGameOverMenu();
+  TDialogMenu(string caption, 
+	      bool capture_background = false, bool display_splash = true);
+};
+
+
+class TGameOverMenu : public TDialogMenu {
+protected: 
+  void RenderLines();
+public:
+  TGameOverMenu() : TDialogMenu("OK", true, false) {};
+};
+
+class TRoundOverMenu : public TDialogMenu {
+protected:
+  void RenderLines();
+public:
+  TRoundOverMenu() : TDialogMenu("OK", true, false) {};
 };
