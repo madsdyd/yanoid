@@ -30,6 +30,7 @@ protected:
   Uint32 game_start;
   Uint32 game_lastupdate;
   Uint32 pausetime;
+  bool QuitCurrentGame;
   int paused;
   /* Splitting stuff up, to make it easier to handle */
   void UpdateGame();

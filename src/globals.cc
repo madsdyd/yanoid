@@ -21,7 +21,6 @@
 
 #include "globals.hh"
 
-bool QuitClient = false;
 
 
 

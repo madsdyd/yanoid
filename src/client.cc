@@ -82,44 +82,38 @@ void TClient::Run() {
      The client represents the session. As long as it is running, 
      something will go onto the screen, input will be handled, etc.
      However, when the client is exicted, the game ends. */
-
   TPreGameMenu * MyPre = new TPreGameMenu();
 
-  QuitClient = !MyPre->Run();
+  bool QuitClient = !MyPre->Run();
   
   while(!QuitClient) {
-
-    /* Make sure we have a valid game (This will go, when
-       the menu system and such is in place -- I think. Hmm. */
-    if (!Game) {
-      Game = new TGame();
-      Assert(Game != NULL, "Could not create a default game");
-      /* Load a default map for now */
-      if (Game->LoadMap("maps/map1.py")) {
-	CON_ConOut("Map maps/map1.py succesfully loaded");
-      } else {
-	CON_ConOut("Error loading map maps/map1.py");
-      }
-      /* Initialize the timer stuff */
-      game_start      = SDL_GetTicks();
-      game_lastupdate = 0;
-      LogLine(LOG_VERBOSE, "Game->Update(0)");
-      Game->Update(0);
+    /* A new game was started */
+    Game = new TGame();
+    Assert(Game != NULL, "Could not create a default game");
+    /* Load a default map for now */
+    if (Game->LoadMap("maps/map1.py")) {
+      CON_ConOut("Map maps/map1.py succesfully loaded");
+    } else {
+      CON_ConOut("Error loading map maps/map1.py");
     }
-
-    /* Update the game state */
-    UpdateGame();
+    /* Initialize the timer stuff */
+    game_start      = SDL_GetTicks();
+    game_lastupdate = 0;
+    LogLine(LOG_VERBOSE, "Game->Update(0)");
+    Game->Update(0);
+    QuitCurrentGame = false;
+    while(!QuitCurrentGame) {
+      /* Update the game state */
+      UpdateGame();
+      /* Get the system to display the game state */
+      Render();
+      /* Handle SDL events */
+      HandleEvents();
+    }
+    delete Game;
     
-    /* Get the system to display the game state */
-    Render();
-
-    /* Handle SDL events */
-    HandleEvents();
-
-    /* If we are not in a game, show the menu, or something ... */
-
+    QuitClient = !MyPre->Run();    
   }
-
   delete MyPre;
 }
 
@@ -163,7 +157,7 @@ bool TClient::HandleGlobalKeys(SDL_Event * event) {
     case SDLK_ESCAPE: {	
       TInGameMenu * InGameMenu = new TInGameMenu(this);
       PauseGame();
-      QuitClient = InGameMenu->Run();
+      QuitCurrentGame = InGameMenu->Run();
       ContinueGame();
       delete InGameMenu;
       return true;

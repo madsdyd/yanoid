@@ -8,10 +8,11 @@ a game that can be considered ready for the SDL contest.
 
 For more specific "TODO" items, look in the bottom.
 
+* Menu
+- Add help and about texts
 
 * Autotool
 - Fix Python autoconf
-  - version checking
   - libs and such for 1.5.2?
 - Make sure that we fail when something essentiel is missing
 - need to add libvorbisfile (-lvorbis -lvorbisfile) to configure.in

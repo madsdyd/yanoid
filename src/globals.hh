@@ -24,7 +24,5 @@
 
 #include "entity.hh"
 
-extern bool QuitClient;
-
 #endif
 

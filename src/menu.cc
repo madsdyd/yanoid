@@ -213,7 +213,7 @@ TPreGameMenu::TPreGameMenu() : TMenu() {
   items.push_back("Start Game");
   items.push_back("Help");
   items.push_back("About");
-  items.push_back("Exit");
+  items.push_back("Exit yanoid");
 }
 
 TPreGameMenu::~TPreGameMenu() {
@@ -248,6 +248,7 @@ void TPreGameMenu::SelectFocused() {
 TInGameMenu::TInGameMenu(TClient * client) : TMenu(), Client(client) {
   items.push_back("Resume game");
   items.push_back("Toggle console");
+  items.push_back("Toggle fullscreen");
   items.push_back("End game");
 }
 
@@ -260,7 +261,10 @@ void TInGameMenu::SelectFocused() {
     Client->ToggleConsole();
     cancel = true;
     return;
-  case 2: /* Exit is close */
+  case 2:
+    SDL_WM_ToggleFullScreen(Screen);
+    return;
+  case 3: /* Exit is close */
     close = true;
     return;
   default:
