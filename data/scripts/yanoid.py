@@ -28,7 +28,7 @@ def help():
     put_console("yanoid.yreload() - reloads scripts/yanoid.py")
     put_console("                   note the _y_")
     put_console("examples:")
-    put_console("  i a = [ 'smart', 'i', 'en', 'fart' ]")
+    put_console("  i a = [ 'this', 'is', 'a', 'list' ]")
     put_console("  i put_console(a)")
     put_console("  i yanoid.yreload()")
 
