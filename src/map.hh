@@ -49,6 +49,7 @@ public:
 class TMap {
 protected:
   TMapState * MapState;
+  TEntities EntitiesToAddToMapState;
   bool relocateHighEntities(TEntitiesIterator& i);
   bool relocateLowEntities(TEntitiesIterator& i);
   /* Keep track of wheter or not the modules have been loaded */

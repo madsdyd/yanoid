@@ -173,6 +173,11 @@ TMap::~TMap() {
   if (MapState) {
     delete MapState;
   }
+  TEntitiesIterator End = EntitiesToAddToMapState.end();
+  TEntitiesIterator i;
+  for (i = EntitiesToAddToMapState.begin(); i != End; i++) {
+    delete(*i);
+  }  
 }
 /* **********************************************************************
  * Add the modules
@@ -337,8 +342,8 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
       dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 3);
       dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed);
       e->setName("Default Ball");
-      MapState->Entities.push_back(e);
-      MapState->num_balls++;
+      EntitiesToAddToMapState.push_back(e);
+      // MapState->num_balls++;
       return true;
     } else {
       LogLine(LOG_WARNING, "no current_script_entity");
@@ -353,9 +358,26 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
  * Update - update all entities
  * *********************************************************************/
 void TMap::Update(Uint32 deltatime) {
-  TEntitiesIterator i;
+  /* Iterate through entities that needs to be added, add them */
+  TEntitiesIterator i, tmpi;
+  TEntitiesIterator End = EntitiesToAddToMapState.end();
+  for (i = EntitiesToAddToMapState.begin(); i != End;) {
+    /* Add this entity, remove it from this list */
+    MapState->Entities.push_back(*i);
+    /* If we add a ball, remember to increase the number of balls */
+    if (TEntity::BALL == (*i)->getEntityType()) {
+      MapState->num_balls++;
+      LogLine(LOG_VERBOSE, "Ball added");
+    }
+    tmpi = i;
+    i++;
+    EntitiesToAddToMapState.erase(tmpi);
+  }  
+  
+  /* Do the update of all entities in the map */
   TEntitiesIterator candi;
-  for (i = MapState->Entities.begin(); i != MapState->Entities.end(); i++) {
+  End = MapState->Entities.end();
+  for (i = MapState->Entities.begin(); i != End; i++) {
     (*i)->Update(deltatime);
 
     // Now in order to ensure that the entity list is ordered by
@@ -381,7 +403,8 @@ void TMap::Update(Uint32 deltatime) {
   }
   /* Clean out entities that are no longer alive */
   TEntity * tmp;
-  for (i = MapState->Entities.begin(); i != MapState->Entities.end();) {
+  // Note, End should be unchanged from above. */
+  for (i = MapState->Entities.begin(); i != End;) {
     candi = i;
     i++;
     if ((*candi)->IsRemovable()) {
@@ -389,13 +412,15 @@ void TMap::Update(Uint32 deltatime) {
       if (TEntity::BALL == tmp->getEntityType()) {
 	MapState->num_balls--;
 	LogLine(LOG_VERBOSE, "Ball removed");
-	Assert(MapState->num_balls >= 0, "Cant have a negative number of balls");
+	Assert(MapState->num_balls >= 0, 
+	       "Cant have a negative number of balls");
       }
       /* The only stationary entities that are removed are bricks */
       if (TEntity::STATIONARY == tmp->getEntityType()) {
 	MapState->num_bricks--;
 	LogLine(LOG_VERBOSE, "Brick removed");
-	Assert(MapState->num_bricks >= 0, "Can't have a negative number of bricks");
+	Assert(MapState->num_bricks >= 0, 
+	       "Can't have a negative number of bricks");
       }
 
       MapState->Entities.erase(candi);
