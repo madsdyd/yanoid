@@ -60,7 +60,7 @@ AC_DEFUN([MBD_CHECK_PYTHON],
   mbd_check_python_msg="OK"
 
   dnl Locate python in the users path
-  AC_PATH_PROG(PYTHON, python python2.1 python2.0)
+  AC_PATH_PROG(PYTHON, python2.1 python2.0 python)
 
   dnl The version check is taken verbatim from pygtk/"GED",
   dnl except that we do not error
