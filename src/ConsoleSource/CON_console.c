@@ -15,6 +15,8 @@
 
 static char **ConsoleLines = NULL;
 static char **CommandLines = NULL;
+static int CommandScrollBack = 0;	/* How much the users scrolled back in the command lines */
+static int StringLocation = 0;	/* Current character location in the current string */
 static int TotalConsoleLines = 0;	/* Total number of lines in the console */
 static int ConsoleScrollBack = 0;	/* How much the users scrolled back in the console */
 static int TotalCommands = 0;	/* Number of commands in the Back Commands */
@@ -27,17 +29,17 @@ static SDL_Surface *BackgroundImage = NULL;	/* Background image for the console 
 static SDL_Surface *InputBackground;	/* Dirty rectangle to draw over behind the users background */
 static int DispX, DispY;	/* The top left x and y coords of the console on the display screen */
 static unsigned char consoleAlpha = SDL_ALPHA_OPAQUE;
+static Uint32 LastBlinkTime = 0;
+static int Blink = 0;
 
 static void DrawCommandLine();
 
 /* Takes keys from the keyboard and inputs them to the console */
 void CON_ConsoleEvents(SDL_Event * event)
 {
-
-	static int StringLocation = 0;	/* Current character location in the current string */
-	static int CommandScrollBack = 0;	/* How much the users scrolled back in the command lines */
 	SDL_Rect inputbackground;
-
+	int movesize = 0;
+	Uint32 tmp;
 
 	if (event->type == SDL_KEYDOWN)
 	{
@@ -73,7 +75,7 @@ void CON_ConsoleEvents(SDL_Event * event)
 				}
 				break;
 			case SDLK_DOWN:
-				if (CommandScrollBack > 0)
+			        if (CommandScrollBack > 0)
 				{
 					/* move forward a line in the command strings and copy the command to the current input string */
 					CommandScrollBack--;
@@ -83,10 +85,40 @@ void CON_ConsoleEvents(SDL_Event * event)
 					CON_UpdateConsole();
 				}
 				break;
+			case SDLK_LEFT:
+			        if (StringLocation > 0) {
+				  /* move the cursor to the left */
+				  StringLocation--;
+				  tmp = LastBlinkTime;
+				  LastBlinkTime = 0x00000000;
+				  Blink = 1;
+				  DrawCommandLine();
+				  Blink = 1;
+				  LastBlinkTime = 0xFFFFFFFF;
+				  DrawCommandLine();
+				  LastBlinkTime = tmp;
+				  //				  CON_UpdateConsole();
+			        }
+				break;
+			case SDLK_RIGHT:
+			        if (StringLocation < strlen(ConsoleLines[CommandScrollBack])) {
+				  /* move the cursor to the right */
+				  StringLocation++;
+				  tmp = LastBlinkTime;
+				  LastBlinkTime = 0x00000000;
+				  Blink = 1;
+				  DrawCommandLine();
+				  Blink = 1;
+				  LastBlinkTime = 0xFFFFFFFF;
+				  DrawCommandLine();
+				  LastBlinkTime = tmp;
+			        }
+				break;
 			case SDLK_BACKSPACE:
 				if (StringLocation > 0)
 				{
-					ConsoleLines[0][StringLocation - 1] = '\0';
+				  strcpy(ConsoleLines[0] + StringLocation - 1,ConsoleLines[0] + StringLocation);
+				  //					ConsoleLines[0][StringLocation - 1] = '\0';
 					StringLocation--;
 					inputbackground.x = 0;
 					inputbackground.y = ConsoleSurface->h - DT_FontHeight(FontNumber);
@@ -116,6 +148,11 @@ void CON_ConsoleEvents(SDL_Event * event)
 			default:
 				if (StringLocation < CON_CHARS_PER_LINE - 1 && event->key.keysym.unicode)
 				{
+				        movesize = strlen(ConsoleLines[0] + StringLocation);
+				        if (movesize > 0) { 
+					  memmove(ConsoleLines[0] + StringLocation + 1, 
+						  ConsoleLines[0] + StringLocation, movesize);
+					}
 					ConsoleLines[0][StringLocation] = (char)event->key.keysym.unicode;
 					StringLocation++;
 					inputbackground.x = 0;
@@ -431,9 +468,7 @@ void CON_NewLineCommand()
 /* Draws the command line the user is typing in to the screen */
 static void DrawCommandLine()
 {
-	static Uint32 LastBlinkTime = 0;
-	static int Blink = 0;
-	SDL_Rect rect, rect2;
+	SDL_Rect rect, rect2, curdest;
 	char temp[CON_CHARS_PER_LINE];
 	BitFont *CurrentFont = DT_FontPointer(FontNumber);
 
@@ -447,9 +482,11 @@ static void DrawCommandLine()
 		{
 			Blink = 0;
 			/* The line was being drawn before, now it must be blacked out. */
-			rect.x = strlen(ConsoleLines[0]) * DT_FontWidth(FontNumber) + CON_CHAR_BORDER;
+			rect.x = CON_CHAR_BORDER;
+			//			rect.x = strlen(ConsoleLines[0]) * DT_FontWidth(FontNumber) + CON_CHAR_BORDER;
 			rect.y = ConsoleSurface->h - DT_FontHeight(FontNumber);
-			rect.w = DT_FontWidth(FontNumber);
+			rect.w = (strlen(ConsoleLines[0]) + 1) * DT_FontWidth(FontNumber);
+			//			rect.w = DT_FontWidth(FontNumber);
 			rect.h = DT_FontHeight(FontNumber);
 			SDL_FillRect(ConsoleSurface, &rect, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, consoleAlpha));
 			/* Now draw the background image if applicable */
@@ -480,8 +517,14 @@ static void DrawCommandLine()
 	if (Blink && strlen(ConsoleLines[0]) + 1 < CON_CHARS_PER_LINE)
 	{
 		strcpy(temp, ConsoleLines[0]);
-		temp[strlen(ConsoleLines[0])] = '_';
-		temp[strlen(ConsoleLines[0]) + 1] = '\0';
+		// temp[strlen(ConsoleLines[0])] = '_';
+		//		temp[strlen(ConsoleLines[0]) + 1] = '\0';
+		//		temp[strlen(ConsoleLines[0])] = '\0';
+		curdest.x = DT_FontWidth(FontNumber) * StringLocation + CON_CHAR_BORDER;
+		curdest.y = ConsoleSurface->h - DT_FontHeight(FontNumber);
+		curdest.w = DT_FontWidth(FontNumber);
+		curdest.h = DT_FontHeight(FontNumber);
+		SDL_FillRect(ConsoleSurface, &curdest, 0xAAAAAAAA);
 		DT_DrawText(temp, ConsoleSurface, FontNumber, CON_CHAR_BORDER, ConsoleSurface->h - DT_FontHeight(FontNumber));
 	}
 	else			/* Not time to blink or the strings too long, just draw it. */
