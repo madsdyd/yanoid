@@ -1,3 +1,10 @@
+2001-11-30  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Fixes
+	A lot of minor fixes
+	Updated makefiles to only install files that are used
+	Tagging version 0.2.0
+
 2001-11-27  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* Powerups
