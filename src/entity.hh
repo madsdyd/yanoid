@@ -55,6 +55,7 @@ protected:
   unsigned char* mask;
 public:
   TEntity(int x_, int y_, Angle a_ = 0, CollisionType c = BOX, EntityType e = MOVING);
+  TEntity(int x_, int y_, int w_, int h_, Angle a_ = 0, CollisionType c = BOX, EntityType e = MOVING);
   TEntity(const TOrientedPoint& p, CollisionType c = BOX, EntityType e = MOVING);
   virtual ~TEntity();
 

@@ -293,7 +293,7 @@ int main(int argc, char ** argv) {
 
   // Test the MOD music
   if ( ! Mix_PlayingMusic() ) {
-    //    Mix_PlayMusic(modmusic, 0);
+        Mix_PlayMusic(modmusic, 0);
   }
 
   // Test the ogg vorbis music

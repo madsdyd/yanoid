@@ -40,17 +40,22 @@ TMap * CurrentMap = NULL;
 /* **********************************************************************
  * Add a brick to the current map
  * *********************************************************************/
-static PyObject * AddBrick(PyObject * self, PyObject * args) {
-  int x; int y; char * type; char * pixmap;
-  if (!CurrentMap || !PyArg_ParseTuple(args, "iiss", &x, &y, &type, &pixmap)) {
+static PyObject * AddObject(PyObject * self, PyObject * args) {
+  int x; int y; int w; int h; 
+  char * type; char * pixmap;
+  if (!CurrentMap || !PyArg_ParseTuple(args, "siiiis", 
+				       &type, &x, &y, &w, &h, &pixmap)) {
     return NULL;
   }
-  CurrentMap->AddBrick(x, y, type, pixmap);
-  return Py_None;
+  if (CurrentMap->AddEntity(type, x, y, w, h, pixmap)) {
+    return Py_None;
+  } else {
+    return NULL;
+  }
 }
 
 static PyMethodDef map_methods[] = {
-  {"AddBrick", AddBrick, 4},
+  {"AddObject", AddObject, 6},
   {NULL, NULL}
 };
 
@@ -102,7 +107,7 @@ TMap::TMap() {
   e->setName("Entity 2");
   MapState.Entities.push_back(e);
   */
-
+  /*
   e = new TEntity(0, 0);
   e->setName("Roof");
   e->setW(10);
@@ -126,7 +131,7 @@ TMap::TMap() {
   e->setW(640);
   e->setH(100);
   MapState.Entities.push_back(e);
-
+  */
   paddle = new TPixmapEntity(300, 200, 0, "graphics/objects/weird_brick.png");
   paddle->setMotion(new TFreeMotion);
   paddle->getMotion()->setVelocity(0.0);
@@ -171,11 +176,21 @@ TMap::~TMap() {
  * AddBrick 
  * This will need to be refined to allow for different types, etc.
  * *********************************************************************/
-void TMap::AddBrick(int x, int y, string type, string pixmap) {
-  /* Note, type is ignored for now ... */
-  TEntity * e = new TPixmapEntity(x, y, 0, pixmap);
-  e->setName("whadaumean I need a name?");
-  MapState.Entities.push_back(e);
+bool TMap::AddEntity(string type, int x, int y, int w, int h, 
+		     string pixmap) {
+  /* Do different things, according to type */
+  if ("brick" == type ) {
+    /* This is a pixmapentity */
+    MapState.Entities.push_back(new TPixmapEntity(x, y, 0, pixmap));
+    return true;
+  } else if ("static" == type) {
+    /* In lack of a better name */
+    MapState.Entities.push_back(new TEntity(x, y, w, h));
+    return true;
+  } else {
+    LogLine(LOG_WARNING, "TMap::AddEntity - unknown type " + type);
+    return false;
+  }
 }
 
 /* **********************************************************************

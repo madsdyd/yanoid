@@ -41,8 +41,10 @@ protected:
 public:
   TMap();
   ~TMap();
-  /* Add a brick, initialize with parameters (will change). */
-  void AddBrick(int x, int y, string type, string pixmap);
+  /* Add an entity, mostly bricks, walls, etc.
+     , initialize with parameters (will change). 
+     returns true on succes */
+  bool AddEntity(string type, int x, int y, int w, int h, string pixmap);
   /* Temporary loading function */
   bool LoadMap(string mapname);
   inline TMapState * GetState() { return &MapState; }
