@@ -115,7 +115,7 @@ static PyMethodDef map_methods[] = {
  * TMapState constructor
  * *********************************************************************/
 TMapState::TMapState() : paddle(NULL), num_balls(0), num_bricks(0),
-ballspeed(0.19), ballbirth(0), ballacceleration(0.00001) {
+ballspeed(0.19), ballbirth(0), ballacceleration(0.000001) {
 
 }
 /* **********************************************************************

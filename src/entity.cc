@@ -121,7 +121,7 @@ void TEntity::Update(Uint32 deltatime)
 void TEntity::Render(SDL_Surface * surface) {
   SDL_Rect dest;
 
-  if (!changed && false)
+  if (!changed)
     return;
 
   dest.x = static_cast<int>(x()); 
@@ -377,6 +377,13 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 	      modangle2 = -(tother->MovementAngleModifier * tother->getMotion()->getCurrentVelocity());
 
 	    newangle += modangle * tother->AngleModifier + modangle2;
+
+	    // make some adjustment so the ball doesn't move horizontal ever
+	    if (newangle < (M_PI / 7)) {
+	      newangle = M_PI / 7;
+	    } else if (newangle > (6 *M_PI / 7)) {
+	      newangle = 6 * M_PI / 7;
+	    }
 	  }
 	}else{
 	  ball->setY(coly + 2 * ( tother->collidepoint.y() -  coly) + 1 );

@@ -28,7 +28,7 @@ AddEntity("static", 1, -10, 798, 11, "static_hit()")
 AddEntity("hole", 1, 550, 798, 50, "")
 
 # Add a paddle
-SetPaddle(400, 500, "graphics/objects/basic_paddle.png")
+SetPaddle(400, 500, "graphics/paddles/square_75.png")
 
 # define a round start function
 def RoundStart():

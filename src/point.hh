@@ -32,7 +32,7 @@ class TPoint {
 protected:
   double _x, _y;
 public:
-  TPoint(double x_, double y_) : _x(x_), _y(y_) {}
+  TPoint(double x_ = 0.0, double y_ = 0.0) : _x(x_), _y(y_) {}
   virtual ~TPoint() {}
   inline double x() const { return _x; }
   inline double y() const { return _y; }

@@ -31,11 +31,14 @@ class TEffect {
 protected:
   TPoint Location;
   Uint32 last_update;
+  Uint32 begin_time;
   typedef enum State { RUNNING, PAUSED, STOPPED } State;
   State state;
   Uint32 Duration;
+  bool no_erase;
+  SDL_Surface * background;
 public:
-  TEffect() : Location(0,0), last_update(0), Duration(1000) {}
+  TEffect() : Location(0,0), last_update(0),begin_time(0),Duration(1000),no_erase(true) {}
   void start() { state = RUNNING; } 
   void pause() { state = PAUSED; }
   void stop() { state = STOPPED; }
@@ -72,7 +75,22 @@ private:
   void characterSpacedAnim(Uint32 currenttime);
   void characterJumpingAnim(Uint32 currenttime);
   void characterSwirlingAnim(Uint32 currenttime);
+
+  //
+  // Helper functions
+  //
+  void blitChars();
+  void saveCharsBackground();
+  void blitCharsBackground();
+  void initializeBackground();
 };
 
+
 #endif
+
+
+
+
+
+
 

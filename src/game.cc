@@ -169,33 +169,10 @@ void TGame::handleCollisions(Uint32 currenttime)
   TMapState* themap = GameState.MapState;
   TEntitiesIterator end = themap->Entities.end();
 
-  int screenw = 800; /* screen width, a hack */
-
-  // take special care of our paddle
-  TEntity * paddle = GameState.MapState->GetPaddle();
-  if (paddle->x() <= 1 ) {
-    paddle->getMotion()->setVelocity( 0.0 );
-    paddle->getMotion()->setCurrentVelocity( 0.0 );
-    paddle->getMotion()->setAccel( 0.0 );
-    paddle->setX(2);
-  } else if ((paddle->x()+paddle->w()) >= (screenw-1) ) {
-    paddle->getMotion()->setVelocity( 0.0 );
-    paddle->getMotion()->setCurrentVelocity( 0.0 );
-    paddle->getMotion()->setAccel( 0.0 );
-    paddle->setX(screenw-2-paddle->w());
-  }
-
-  // std::vector<TEntity*> resetEntityList;
   // uhh O(n^2). But not quite soo, because we can skip
   // alot of cycles..
   for (TEntitiesIterator i1 = themap->Entities.begin() ; 
        i1 != end ; ++i1) {
-    /* **********************************************************************
-     * Only check moving against other. Skip Stationaries
-     * *********************************************************************/
-    if (TEntity::STATIONARY == (*i1)->getMoveType()) {
-      continue;
-    }
     /* **********************************************************************
      * Adjust the ball speed. (Why does it go in here?)
      * *********************************************************************/
@@ -224,6 +201,7 @@ void TGame::handleCollisions(Uint32 currenttime)
       if (i1 == i2) {
 	continue;
       }
+
       // Check to see if the y for the i2 iterator is
       // bigger than maxy. If so we know that the rest
       // of the objects in the list must be located at a
@@ -232,39 +210,40 @@ void TGame::handleCollisions(Uint32 currenttime)
 	break;
       }
       
-      //
-      // To make sure we doesn't check two objects against eachother 2 times
-      // we only check if i1->y > i2-> or if they are equal i1->x > i2->x
-      //
-#ifdef WHATGIVES
-      if ((*i1)->y() <= (*i2)->y()) {
-	if ((*i1)->y() == (*i2)->y()) {
-	  if ((*i1)->x() < (*i2)->x()) {
-	    continue;
-	  }else{
-	    //proceed
-	  }
-	}else{
-	  continue;
-	}  
-      }
-
-      /*
-	If its a ball and it allready has collided
-	just ignore it.
-       */
-      if ((i1type == "BALL" && (*i1)->getLastUpdate() == currenttime) || 
-	  ((*i2)->getEntityType() == "BALL" && (*i2)->getLastUpdate() == currenttime))
+      /* **********************************************************************
+       * Only check moving against other. Skip Stationaries.
+       * We have to have the check here, and not in the outer loop, because
+       * we must know if one of the parts is moving.
+       * No two entities are checked agains each other twice, except if they
+       * they collide (bounding box). Therefore both must be STATIONARY before
+       * we can skip the collision test.
+       * *********************************************************************/
+      if (TEntity::STATIONARY == (*i1)->getMoveType() && TEntity::STATIONARY == (*i2)->getMoveType()) {
 	continue;
-#endif
+      }
 
       /* If there are no collision between the current two entities, 
 	 continue */
       if (! (*i1)->boundingBoxCollision(*(*i2)))
 	continue;
       
+      // Take special care of paddle collisions 
+      // (Must be handled in special Paddle class derived from TEntity later)
+      if (i1type == "PADDLE" && (*i2)->getMoveType() == TEntity::STATIONARY) {
+	TEntity * paddle = GameState.MapState->GetPaddle();
+	if (paddle->getCollideCorner() < 3) {
+	  paddle->getMotion()->setCurrentVelocity( 0.0 );
+	  paddle->getMotion()->setAccel( 0.0 );
+	  paddle->setX((*i2)->x() + (*i2)->w());
+	}else{
+	  paddle->getMotion()->setCurrentVelocity( 0.0 );
+	  paddle->getMotion()->setAccel( 0.0 );
+	  paddle->setX((*i2)->x() - paddle->w());
+	}
+      }
+	
       /* Call the OnCollision events for both entities 
-	 This ensure that STATIONARY can react to collisions. */
+	 This ensures that STATIONARY can react to collisions. */
       (*i1)->OnCollision(*(*i2),currenttime);
       (*i2)->OnCollision(*(*i1),currenttime);
 
