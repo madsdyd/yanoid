@@ -134,6 +134,8 @@ void TPixmapEntity::MakeMask()
   memset(mask, 0x00, offs+2);
   
   i=0;
+  // Hmm. Dont really understand this
+  tmask = mask;
   for(y=0; y < _h; y++){
     for(x=0; x < _w; x++){
       if(i>7){i=0;tmask++;}
