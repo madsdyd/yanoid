@@ -159,11 +159,25 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
     tmp = *i;
      /* Mark the focused one */
     if (count == focused) {
-      tmp = ">>> " + tmp + " <<<";
+      string left  = "      ";
+      string right = "      ";
+      left[0]  = 0x1F;
+      left[1]  = 0x1F;
+      left[2]  = 0x1F;
+      left[3]  = 0x1F;
+      left[4]  = 0x1F;
+      right[1] = 0x1E;
+      right[2] = 0x1E;
+      right[3] = 0x1E;
+      right[4] = 0x1E;
+      right[5] = 0x1E;
+      tmp = left + tmp + right;
       /* Toogle x times pr second */
-      int offset = ((SDL_GetTicks() - start_time) / 225) % 3;
-      tmp[offset] = 0x1F;
-      tmp[tmp.size()-1-offset] = 0x1E;
+      int offset = ((SDL_GetTicks() - start_time) / 225) % 5;
+      tmp[offset] = '>';
+      tmp[tmp.size()-1-offset] = '<';
+      // tmp[offset] = 0x1F;
+      // tmp[tmp.size()-1-offset] = 0x1E;
     }
     drawx = (w - tmp.size()*16) / 2 + xlow;
     DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
@@ -229,7 +243,7 @@ TDialogMenu::TDialogMenu(string caption,
 };
 
 void TDialogMenu::AddLines(string _lines) {
-  int width = 700;
+  int width = 760;
   /* Scan through lines, build lines from _lines */
   string newline = "";
   unsigned int currentleft = width;
@@ -304,9 +318,16 @@ public:
     AddLines("Welcome to Yet Another arkaNOID");
     AddLines("     ");
     AddLines("On each level, control your paddle, using the left and right keys "
-	     "in such a way that the ball don't fall out in the bottom of the "
-	     "screen. Steer the ball by letting it hit the paddle on different "
-	     "places. Remove all bricks to complete a level");
+	     "such that the ball don't fall out of the bottom of the "
+	     "screen.");
+    AddLines("     ");
+    AddLines("Steer the ball by letting it hit the paddle on different "
+	     "spots and with varying paddle speeds.");
+    AddLines("     ");
+    AddLines("Catch powerups with the paddle to gain shots, balls, etc. "
+	     "Use the space key to fire.");
+    AddLines("     ");
+    AddLines("Remove all bricks to complete a level.");
     AddLines("     ");
     AddLines("Have fun!");
   };
