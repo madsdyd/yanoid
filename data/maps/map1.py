@@ -2,7 +2,6 @@
 
 SetMapName("Classic 1 - by MBD")
 
-
 # Add a number of bricks
 for x in range(6, 750, 79):
     for y in range(91, 250, 29):
