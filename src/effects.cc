@@ -61,9 +61,10 @@ void TEffect::update(SDL_Surface * surf, Uint32 currenttime) {
     begin_time = 0;
     return;
 
-  } else if ( (currenttime - begin_time) > (Duration - post_hold_time)) {
-    return;
-  }
+  } 
+  //else if ( (currenttime - begin_time) > (Duration - post_hold_time)) {
+  //  return;
+  //}
 
   if (!no_erase) {
     blitBackground();
