@@ -192,3 +192,13 @@ Contracts:
     issues with relation to the current game super state as well - 
     if we are in the game, changing the settings for the current 
     game is probably not a good idea.
+    
+**********************************************************************
+Class       : TClient
+Description : TClient is mostly a wrapper for the gameloop.
+
+Contracts:
+
+- void Run()
+
+    This method starts the game, and exits when the game is done
