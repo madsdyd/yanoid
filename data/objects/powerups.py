@@ -53,6 +53,7 @@ def RandomlySpawnPowerup():
 # Here comes the actual functions - this could be done smarter, I guess
 # but for now, it will have to do...
 
+######################################################################
 # Extra ball
 def powerup_spawn_ball():
     yanoid_map.PowerUp("powerup", "graphics/powerups/red_b.png",
@@ -64,7 +65,7 @@ def powerup_ball_hit():
                        "ball_hit()")
 
 ######################################################################
-# Extra life
+# Life
 def powerup_spawn_life():
     yanoid_map.PowerUp("powerup", "graphics/powerups/blue_1UP.png",
                        "powerup_life_hit()")
@@ -74,8 +75,7 @@ def powerup_life_hit():
     AdjustLives(1)
 
 ######################################################################
-
-
+# Shots
 
 # Shot (simple)
 def powerup_spawn_shot():
@@ -112,7 +112,10 @@ def powerup_spawn_narrow_paddle():
                        "powerup_size_paddle_hit('narrow', 10)")
 
 def powerup_size_paddle_hit(size, seconds):
-    PlaySound("sounds/powerup_collect.wav")
+    if ("narrow" == size):
+        PlaySound("sounds/powerup_bad.wav")
+    else:
+        PlaySound("sounds/powerup_collect.wav")
     yanoid_map.PowerUp("size-paddle", size, str(seconds))
     
 ######################################################################
