@@ -21,4 +21,11 @@ AddStatic(0, 400, 640, 100)
 # Add a paddle
 SetPaddle(300, 300, "graphics/objects/basic_paddle.png")
 
+# define a round start function
+def RoundStart():
+    AddBallDefault("graphics/objects/basic_ball.png")
+
+# And, call it - probably will go
+RoundStart();
+
 print("Loaded map1")

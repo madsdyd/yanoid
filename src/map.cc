@@ -242,6 +242,27 @@ bool TMap::AddEntity(string type, int x, int y, int w, int h,
     /* In lack of a better name */
     MapState->Entities.push_back(new TEntity(x, y, w, h));
     return true;
+  } else if ("default-ball" == type) {
+    if (!MapState->paddle) {
+      LogLine(LOG_ERROR, "Can't add default ball, with no paddle");
+      return false;
+    }
+    /* Note, the placement is ... well, off, since we do not 
+       know the size of the entity. Never mind for now */
+    /*TEntity * e = new TPixmapEntity(MapState->paddle->x() 
+				    + (MapState->paddle->w()/2),
+				    MapState->paddle->y() - 16,
+				    0, pixmap, TEntity::PIXEL, 
+				    TEntity::MOVING);*/
+    TEntity * e = new TPixmapEntity(250, 250, 0, pixmap, 
+				    TEntity::PIXEL, TEntity::MOVING);
+    // TODO, error handling.. 
+    e->setMotion(new TFreeMotion);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(45);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.08);
+    e->setName("Default Ball");
+    MapState->Entities.push_back(e);
+    return true;
   } else {
     LogLine(LOG_WARNING, "TMap::AddEntity - unknown type " + type);
     return false;

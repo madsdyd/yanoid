@@ -12,6 +12,12 @@ def AddStatic(x, y, w, h):
     "Add a static (simple object, no pixmap) to the current map"
     yanoid_map.AddObject("static", x, y, w, h, "")
 
+# AddBallDefault(string pixmap)
+# Adds a ball at a default position
+def AddBallDefault(pixmap):
+    "Adds a ball at a default position"
+    yanoid_map.AddObject("default-ball", 0, 0, 0, 0, pixmap)
+
 # SetPaddle(int x, int y, string pixmap)
 # Creates and sets the paddle for the current map
 # Will expose more attributes later
