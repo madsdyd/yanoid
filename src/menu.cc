@@ -67,7 +67,7 @@ bool TMenu::Run() {
   if (cap_back) {
     // LogLine(LOG_VERBOSE, "Capturing the screen");
     /* Copy the screen - make it a background */
-    SDL_LockSurface(Schreen);
+    SDL_LockSurface(Screen);
     background = SDL_CreateRGBSurface(SDL_SRCALPHA, Screen->w, Screen->h, 
 				      Screen->format->BitsPerPixel,
 				      Screen->format->Rmask,
