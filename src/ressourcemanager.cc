@@ -187,7 +187,7 @@ void TPathManager::AddPathRecursivly(size_t base_size, string path) {
  * Returns the empty
  * *********************************************************************/
 
-string TPathManager::Resolve(string filepath) {
-  LogLine(LOG_TODO, "Resolve not implemented");
-  return "";
+string TPathManager::Resolve(string name) {
+  return pathmap[name];
 };
+

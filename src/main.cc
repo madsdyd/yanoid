@@ -41,6 +41,7 @@
 #include "log.hh"
 #include "screen.hh"
 #include "ressourcemanager.hh"
+#include "surfacemanager.hh"
 
 int main(int argc, char ** argv) {
   /* **********************************************************************
@@ -72,9 +73,27 @@ int main(int argc, char ** argv) {
   Assert(PathManager != NULL, "Unable to create pathmanager");
   LogLine(LOG_VERBOSE, "PathManager created");
 
-  /* Add out datapath */
+  /* Add default datapaths */
   PathManager->AddPath(YANOID_DATADIR);
   PathManager->AddPath("data");
+  
+  /* A small test */
+  /*
+    LogLine(LOG_INFO, "Makefile == " + PathManager->Resolve("Makefile"));
+    LogLine(LOG_INFO, "foobar == " + PathManager->Resolve("foobar"));
+    LogLine(LOG_INFO, "/graphics/foobar == " 
+    + PathManager->Resolve("/graphics/foobar"));
+    LogLine(LOG_INFO, "graphics/foobar == " 
+    + PathManager->Resolve("graphics/foobar"));
+  */
+
+  /* **********************************************************************
+   * Initialize the surface manager
+   * *********************************************************************/
+
+  SurfaceManager = new TSurfaceManager();
+  Assert(PathManager != NULL, "Unable to create SurfaceManager");
+  LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
 
   /* **********************************************************************
    * Initialize SDL
@@ -109,6 +128,8 @@ int main(int argc, char ** argv) {
    * Exit gracefully
    * *********************************************************************/
 
+  LogLine(LOG_VERBOSE, "Deleting SurfaceManager");
+  delete(SurfaceManager);
   LogLine(LOG_VERBOSE, "Deleting PathManager");
   delete(PathManager);
 #ifdef DEBUG
