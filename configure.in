@@ -16,7 +16,9 @@ dnl Enable --maintainer-mode
 AM_MAINTAINER_MODE
 dnl Put config.h in src
 AM_CONFIG_HEADER(src/config.h)
-
+dnl Interestingly enough, the SDL check fails if we say that we are 
+dnl doing stuff in C++.
+dnl AC_LANG_CPLUSPLUS
 
 dnl ------------------------------------------------------------
 dnl Make sure all flags are blank
@@ -49,6 +51,12 @@ dnl Checks for libraries.
 dnl ------------------------------------------------------------
 dnl NOTE - Messages to the user is deffered, such that the user
 dnl can have all messages at one time.
+
+dnl Check for the math lib
+AC_CHECK_LIB(m, sin, have_m=yes, have_m=no)
+if test "x$have_m" = "xyes" ; then
+    YANOID_LIBS="$YANOID_LIBS -lm"
+fi
 
 dnl Check for SDL version.
 SDL_VERSION=1.2.2
@@ -204,6 +212,17 @@ dnl ------------------------------------------------------------
 AC_MSG_CHECKING(if there were any problems with the environment)
 
 have_trouble=no
+
+if test "x$have_m" = "xno" ; then
+    have_trouble=yes
+    AC_MSG_WARN([
+*** PROBLEM:
+*** Unable to find the math library.
+*** This is required for yanoid to work.
+*** This is most probably a problem with your compiler installation
+])
+fi
+
 if test "x$have_SDL" = "xno" ; then
     have_trouble=yes
     AC_MSG_WARN([
@@ -268,7 +287,7 @@ dnl ------------------------------------------------------------
 dnl Set the final compiler and linker flags
 
 CPPFLAGS="$YANOID_CPPFLAGS"
-CFLAGS="$YANOID_CFLAGS"
+CFLAGS="NOTUSEDIRECKON $YANOID_CFLAGS"
 CXXFLAGS="$YANOID_CXXFLAGS"
 LIBS="$YANOID_LIBS"
 
