@@ -23,6 +23,7 @@
 #include "log.hh"
 #include "debug.hh"
 #include "motion.hh"
+#include <vector>
 
 /* **********************************************************************
  * The constructor currently constructs a single entity
@@ -77,6 +78,7 @@ void TGame::handleCollisions()
   TMapState* themap = GameState.MapState;
   TEntitiesIterator end = themap->Entities.end();
 
+  std::vector<TEntity*> resetEntityList;
   // uhh O(n^2). But not quite soo, because we can skip
   // alot of cycles..
   for (TEntitiesIterator i1 = themap->Entities.begin() ; 
@@ -124,6 +126,14 @@ void TGame::handleCollisions()
 	}  
       }
 
+      /*
+	If its a ball and it allready has collided
+	just ignore it.
+       */
+      if ((i1type == TEntity::BALL && (*i1)->getCollideCorner()) || 
+	  ((*i2)->getEntityType() == TEntity::BALL && (*i2)->getCollideCorner()))
+	continue;
+
       /* If there are no collision between the current two entities, 
 	 continue */
       if (! (*i1)->boundingBoxCollision(*(*i2)))
@@ -132,6 +142,12 @@ void TGame::handleCollisions()
       /* LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
 	 " and " + (*i2)->getName()); */
       /* Call the OnCollision events for both entities */
+      if ((*i1)->getEntityType() == TEntity::BALL)
+	resetEntityList.push_back(*i1);
+
+      if ((*i2)->getEntityType() == TEntity::BALL)
+	resetEntityList.push_back(*i2);
+
       (*i1)->OnCollision(*(*i2));
       (*i2)->OnCollision(*(*i1));
 
@@ -161,6 +177,9 @@ void TGame::handleCollisions()
 	// cout << "Making pixel perfect detection" << endl;
       }
     }
+  }
+  for(std::vector<TEntity*>::iterator i = resetEntityList.begin() ; i != resetEntityList.end() ; i++) {
+    (*i)->resetCollideCorner();
   }
 }
 

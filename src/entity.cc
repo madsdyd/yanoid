@@ -30,7 +30,8 @@
  * *********************************************************************/
 TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
-  name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0)
+  name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
+  collidecorner(0)
 {
 
 }
@@ -39,14 +40,16 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
 		 Angle a, CollisionType c, EntityType e):
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  changed(true)
+  changed(true),  collidecorner(0)
 {
 
 }
 
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
-  collision_type(c), entity_type(e), motion(0), mask(0), changed(true) {
+  collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
+  collidecorner(0)
+{
 
 }
 
@@ -140,6 +143,7 @@ bool TEntity::boundingBoxCollision(TEntity& o)
 	  o.collidepoint.setX(x2);
 	  o.collidepoint.setY(y2);
 	  o.collidecorner = 1;
+	  collidecorner = 3;
 	  return true;
 	}
       }
@@ -150,6 +154,7 @@ bool TEntity::boundingBoxCollision(TEntity& o)
 	  o.collidepoint.setX(x2);
 	  o.collidepoint.setY(y1);
 	  o.collidecorner = 2;
+	  collidecorner = 4;
 	  return true;
 	}
       }
@@ -164,6 +169,7 @@ bool TEntity::boundingBoxCollision(TEntity& o)
 	  o.collidepoint.setX(x1);
 	  o.collidepoint.setY(y1);
 	  o.collidecorner = 3;
+	  collidecorner = 1;
 	  return true;
 	}
       }
@@ -174,6 +180,7 @@ bool TEntity::boundingBoxCollision(TEntity& o)
 	  o.collidepoint.setX(x1);
 	  o.collidepoint.setY(y2);
 	  o.collidecorner = 4;
+	  collidecorner = 2;
 	  return true;
 	}
       }
@@ -250,12 +257,12 @@ void TEntity::OnCollision(TEntity& other) {
     bool verticalhit = false;
     switch(tother->collidecorner) {
     case 1:
-      if ( lin_intersect_y < ball->collidepoint.y() ) {
+      if ( lin_intersect_y > ball->collidepoint.y() ) {
 	verticalhit = true;
       }
       break;
     case 2:
-      if ( lin_intersect_y > ball->collidepoint.y() ) {
+      if ( lin_intersect_y < ball->collidepoint.y() ) {
 	verticalhit = true;
       }
       break;
@@ -297,11 +304,14 @@ void TEntity::OnCollision(TEntity& other) {
 	2.0 * M_PI - motion->getDir() :
 	2.0 * M_PI - motion->getDir();
       
-      cerr << "vv" << newangle << endl;
+      //      cerr << "vv" << newangle << endl;
       
-      if (dx >= 0) {
+      if (dy >= 0) {
+	cerr << "vv1 " << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight << " coly: " << coly << " collidepoint " << ball->collidepoint.y() << "corner: " << tother->collidecorner << " name: " << ball->getName() << endl;
+	//	ball->setY(coly + 2 * ( ball->collidepoint.y() -  (coly + ballheight)) );
 	ball->setY(coly - 2 * ( (coly + ballheight) -  ball->collidepoint.y()) );
       }else{
+	cerr << "vv2 "  << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight << " coly: " << coly << " collidepoint " << ball->collidepoint.y() << "corner: " << tother->collidecorner << " name: " << ball->getName() << endl;
 	ball->setY(coly - 2 * ( ball->collidepoint.y() -  coly) );
       }
 

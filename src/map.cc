@@ -219,8 +219,9 @@ bool TMap::AddEntity(string type, string hitfunction,
     e->SetScriptHitCall(hitfunction);
     // TODO, error handling.. 
     e->setMotion(new TFreeMotion);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.01);
+    //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(2 * M_PI / 5);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.05);
     e->setName("Default Ball");
     MapState->Entities.push_back(e);
     return true;

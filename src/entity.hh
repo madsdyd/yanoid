@@ -101,6 +101,8 @@ public:
   inline void setW(int w_) { _w = w_; }
   inline void setH(int h_) { _h = h_; }
   inline bool boundingBoxCollision(TEntity& obj);
+  inline int getCollideCorner() { return collidecorner; }
+  inline void resetCollideCorner() { collidecorner = 0; }
   /*
     return ! ((obj.position.y()+obj._h) < position.y() || 
 	      (position.y()+_h) < obj.position.y() || 
