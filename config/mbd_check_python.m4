@@ -92,7 +92,7 @@ else:
     else
       AC_MSG_RESULT(too old)
       mbd_check_python_failure=yes
-      mbd_check_python_msg="Python version was to old"
+      mbd_check_python_msg="Python version was too old"
     fi
   ])
 

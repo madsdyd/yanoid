@@ -250,7 +250,7 @@ if test "x$mbd_check_python_failure" != "xno"; then
 *** in your path. If you use a package based system, you may need to
 *** install a "python-devel" package or similar.
 *** Fixing this problem is required for yanoid to work.
-*** Most Linux distributions include at least Python 2.0 - never
+*** Most Linux distributions include at least Python 2.0 - newer
 *** version may be found at http://www.python.org
 ])
 fi
