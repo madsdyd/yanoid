@@ -17,18 +17,24 @@ from random import randrange
 # The powerups are defined in here. The first number in each sublist
 # is the "weight" of the powerup.
 powerups = [ [9, "powerup_spawn_ball()"],
+
              [2, "powerup_spawn_life()"],
+             [2, "powerup_spawn_remove_life()"],
+
              [6, "powerup_spawn_shot()"],
              [3, "powerup_spawn_super_shot()"],
+
              [2, "powerup_spawn_normal_paddle()"],
              [4, "powerup_spawn_wide_paddle()"],
              [3, "powerup_spawn_narrow_paddle()"],
+
              [1, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-1000.png", "-1000")'],
              [2, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-500.png", "-500")'],
              [3, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-100.png", "-100")'],
              [3, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_100.png", "100")'],
              [2, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_500.png", "500")'],
              [1, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_1000.png", "1000")']
+
              ]
 
 # Calculate the total weights, when loaded
@@ -73,6 +79,14 @@ def powerup_spawn_life():
 def powerup_life_hit():
     PlaySound("sounds/powerup_collect.wav")
     AdjustLives(1)
+
+def powerup_spawn_remove_life():
+    yanoid_map.PowerUp("powerup", "graphics/powerups/yellow_steallife.png",
+                       "powerup_remove_life_hit()")
+    
+def powerup_remove_life_hit():
+    PlaySound("sounds/powerup_bad.wav")
+    AdjustLives(-1)
 
 ######################################################################
 # Shots
