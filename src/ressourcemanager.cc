@@ -81,12 +81,12 @@ int SelectFile(const struct dirent * ent) {
   /* We do not want ".", ".." or things that we can not read */
   if (0 == strcmp(ent->d_name, ".")
       || 0 == strcmp(ent->d_name, "..")) {
-    LogLine(LOG_VER_2, "NOT OK for ");
-    LogLine(LOG_VER_2, ent->d_name);
+    //LogLine(LOG_VER_2, "NOT OK for ");
+    //LogLine(LOG_VER_2, ent->d_name);
     return 0;
   } else {
-    LogLine(LOG_VER_2, "OK for ");
-    LogLine(LOG_VER_2, ent->d_name);
+    //LogLine(LOG_VER_2, "OK for ");
+    //LogLine(LOG_VER_2, ent->d_name);
     return 1;
   };
 }

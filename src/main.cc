@@ -96,9 +96,8 @@ int main(int argc, char ** argv) {
   LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
 
   /* A small test */
-  THandle tmp = SurfaceManager->RequireHandle("graphics/yanoid.png");
-  Assert(0 != tmp, "Error getting handle to surface");
-  SDL_Surface * mysurf = SurfaceManager->RequireRessource(tmp);
+  SDL_Surface * mysurf 
+    = SurfaceManager->RequireRessource("graphics/yanoid.png");
   Assert(NULL != mysurf, "Error getting SDL_Surface *");
   
 
