@@ -35,6 +35,7 @@
 #endif
 
 #include <iostream>
+#include <signal.h>
 
 #include <SDL/SDL.h>
 
@@ -52,6 +53,7 @@
  * A handler for segmentation errors 
  * *********************************************************************/
 void SignalHandler(int signal) {
+  cerr << "Received signal " << signal << endl; 
   BackTrace();
   exit(-1);
 }

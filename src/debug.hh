@@ -42,5 +42,6 @@ extern bool CustomAssert( bool expr, char * description ,
 
 #else /* DEBUG */
 #define Assert( exp, description )
+#define BackTrace()
 #endif /*DEBUG */
 #endif /* __DEBUG_HH__ */

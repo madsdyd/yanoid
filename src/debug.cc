@@ -51,7 +51,6 @@ bool CustomAssert(bool expr, char * description, int linenum, char * filename) {
   if (!expr) {
     cerr << "CustomAssert failed at " << filename << ":" << linenum << " \""
 	 << description << "\"" << endl;
-    BackTrace();
     return true;
   } 
   return false;
