@@ -505,7 +505,7 @@ void TClient::HandleEvents() {
 	  if (!paddle) break;
 	  TEntity * shot = new TShot(static_cast<int>(paddle->x()),
 				     static_cast<int>(paddle->y()), 
-				     "graphics/balls/red.png", 
+				     "graphics/shots/penetrating.png", 
 				     "", "REMOVEALL");
 	  Game->GetState()->MapState->Entities.push_back(shot);
 	  break;}
