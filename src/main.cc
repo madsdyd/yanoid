@@ -295,6 +295,19 @@ int main(int argc, char ** argv) {
   LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
 
   /* **********************************************************************
+   * Try and load the yanoid.png file - if this fails, assume that the 
+   * user did not install yanoid and changed dirs before running yanoid.
+   * *********************************************************************/
+  Splash = SurfaceManager->RequireRessource("graphics/yanoid.png");
+  if (!Splash) {
+    cerr << "There was a problem loading the yanoid logo. This could indicate "
+	 << "that yanoid was not installed properly and you changed directories "
+	 << "before running yanoid. If you have choosen not to install yanoid, "
+	 << "then please run yanoid from the top level directory of the source "
+	 << "distribution, like this: \"src/yanoid\". Thanks. " << endl;
+    exit(-1);
+  }
+  /* **********************************************************************
    * Initialize the music manager (requires SDL to be initialized and 
    * the audio mode to be set!)
    * *********************************************************************/
@@ -368,9 +381,8 @@ int main(int argc, char ** argv) {
   Highscore = new THighscore(Screen->w / 2  - 160, Screen->h / 2 - 150);
 
   /* **********************************************************************
-   * Load and display a splash screen.
+   * Display a splash screen.
    * *********************************************************************/
-  Splash = SurfaceManager->RequireRessource("graphics/yanoid.png");
   Assert(NULL != Splash, "Error getting SDL_Surface for splash screen");
   SDL_Rect src, dest, erasedest;
   src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
