@@ -20,6 +20,17 @@ TODO: Clean up this file, assign priorities and tasks...
 * Do not reset paddle, allow first ball to be "fired"
 
 **********************************************************************
+** CONSOLE
+- Test performance
+- Make page up/down keys work
+- up key misses last line?
+- Convert the old font?
+- Strip start of currentline, before tab completion
+- Don't allow the result of a tab completion to be shorter than the line
+  already in place.
+- Fix the speedy down go, slow up go thingy (if needed)
+
+**********************************************************************
 ** SHOWSTOPPERS - MUST BE FIXED
 
 - Make pixmap and other ressourcehandling, use a default "thingy", 

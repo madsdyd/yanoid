@@ -1,3 +1,31 @@
+2001-12-30  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Console
+	Added a black background when console is down.
+
+2001-12-22  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* TabCompletion
+	Added tab completion code to the console.
+
+2001-12-18  Mads Bondo Dydensborg  <madsdyd@ripley>
+
+	* Removing
+	Removed a lot of files not used anymore. Version is 0.3.4 -
+	tagging.
+
+	* DrawText
+	Removed all usage of the DrawText API. Bumped version number to
+	0.3.3. Still needs to remove a number of files from the cvs.
+
+	* Version
+	Bumped the version number to 0.3.2.
+
+	* Console
+	Removed the old console code. Still uses the DT_DrawText stuff,
+	but not for long. 7 files added. Console is not as functional as
+	the old one, but a lot faster.
+
 2001-12-22  Mads Bondo Dydensborg  <madsdyd@ripley>
 
 	* TabCompletion
