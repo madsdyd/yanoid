@@ -11,7 +11,7 @@ dnl Setup initial stuff
 dnl ------------------------------------------------------------
 
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE(yanoid, "0.0.7")
+AM_INIT_AUTOMAKE(yanoid, "0.0.8")
 dnl Enable --maintainer-mode
 AM_MAINTAINER_MODE
 dnl Put config.h in src
