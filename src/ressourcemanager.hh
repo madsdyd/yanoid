@@ -84,15 +84,20 @@ protected:
 		   index into the storage */
     string name; /* Ressource name */
     res_t * ressource;
-    int refs; 
-    storage_t(string _name, res_t * _ressource) {
-      name = _name; ressource = _ressource;
-      refs = 0;
-    };
+    int hrefs, rrefs; 
   public:
+    storage_t(THandle _handle, string _name, res_t * _ressource) {
+      handle    = _handle;
+      name      = _name; 
+      ressource = _ressource;
+      hrefs     = 0;
+      rrefs     = 0;
+    };
     string GetName() { return name; };
-    void TakeHandle() { ++ref; }
-    void ReleaseHandle() { --ref; };
+    THandle TakeHandle() { ++hrefs; return handle; };
+    void ReleaseHandle() { --hrefs; };
+    res_t * TakeRessource() { ++rrefs; return ressource; };
+    void ReleaseRessource() { --rrefs; };
     
   }; /* storage_t */
 
@@ -174,7 +179,7 @@ THandle TRessourceManager <res_t>::RequireHandle(string name) {
     return 0;
   };
 
-  storage_t storage = new storage_t(name, ressource);
+  storage_t * storage = new storage_t(NextHandle, name, ressource);
   if (NULL == storage) {
     LogLine(LOG_ERROR, "Unable to allocate storage_t");
     return 0;
@@ -183,8 +188,15 @@ THandle TRessourceManager <res_t>::RequireHandle(string name) {
   result = NextHandle++;
   LogLine(LOG_VERBOSE, "Inserting storage for " + name);
   NameToHandleMap[name] = result;
-  HandleToRessouceMap[result] = storage;
-  return result;
+  HandleToRessourceMap[result] = storage;
+  return storage->TakeHandle();
+};
+
+
+template <typename res_t>
+res_t * TRessourceManager <res_t>::RequireRessource(THandle handle) {
+  LogLine(LOG_TODO, "Check the handle");
+  return HandleToRessourceMap[handle]->TakeRessource();
 }
 
 

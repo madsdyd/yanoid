@@ -35,5 +35,5 @@ SDL_Surface * TSurfaceManager::LoadRessource(string filename) {
 }
 
 void TSurfaceManager::UnloadRessource(SDL_Surface * surface) {
-  LogLine(LOG_TODO, "Implement TSurfaceManager::UnloadRessource");
+  SDL_FreeSurface(surface);
 }

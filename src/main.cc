@@ -95,6 +95,12 @@ int main(int argc, char ** argv) {
   Assert(PathManager != NULL, "Unable to create SurfaceManager");
   LogLine(LOG_VERBOSE, "SurfaceManager Initialized");
 
+  /* A small test */
+  THandle tmp = SurfaceManager->RequireHandle("graphics/yanoid.png");
+  SDL_Surface * mysurf = SurfaceManager->RequireRessource(tmp);
+  Assert(NULL != mysurf, "Error getting SDL_Surface *");
+  
+
   /* **********************************************************************
    * Initialize SDL
    * *********************************************************************/
@@ -121,7 +127,16 @@ int main(int argc, char ** argv) {
   /* **********************************************************************
    * Do nothing for at very short time
    * *********************************************************************/
-  
+  /* More testing */
+  SDL_Rect src, dest;
+  src.x = 0; src.y = 0; src.w = mysurf->w; src.h = mysurf->h;
+  dest.x = (Screen->w-src.w)/2; dest.y = (Screen->h-src.h)/2;
+  dest.w = src.w; dest.h = src.h;
+  SDL_BlitSurface(mysurf, &src, Screen, &dest);
+  SDL_UpdateRect(Screen, 0, 0, 0, 0);
+  SDL_Delay(3000);
+
+  // TODO: Freeing surface, etc.
 
 
   /* **********************************************************************
