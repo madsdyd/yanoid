@@ -186,7 +186,7 @@ else:
     else
       AC_MSG_RESULT(no)
       mbd_check_python_failure=yes
-      mbd_check_msg="Unable to link against Python"
+      mbd_check_python_msg="Unable to link against Python"
     fi
  fi
  ]
