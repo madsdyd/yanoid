@@ -23,6 +23,7 @@
 #include "highscore.hh"
 #include "log.hh"
 #include "debug.hh"
+#include "ressourcemanager.hh"
 #include "ConsoleSource/DT_drawtext.h"
 #include <sstream>
 #include <iomanip.h>
@@ -46,7 +47,8 @@ THighscore::THighscore(int x_, int y_):
     Rankings.push_back(make_pair(string("Julemanden"),s--)); 
   }
   // load font transparent 1, or solid 0
-  fontHandle = DT_LoadFont("../data/graphics/fonts/LargeFont.bmp", 0);
+  fontHandle 
+     = DT_LoadFont(PathManager->Resolve("graphics/fonts/LargeFont.bmp").c_str(), 0);
   Assert(fontHandle != -1, "Unable to load highscore fontmap.");
 }
 
