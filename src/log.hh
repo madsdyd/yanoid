@@ -40,7 +40,8 @@
 #define LOG_INFO    (1+LOG_TODO)
 #define LOG_TRACE   (1+LOG_INFO)
 #define LOG_VERBOSE (1+LOG_TRACE)
-#define LOG_MAX     (1+LOG_VERBOSE)
+#define LOG_VER_2   (1+LOG_VERBOSE)
+#define LOG_MAX     (1+LOG_VER_2)
 
 
 
@@ -50,7 +51,7 @@
 class TLog {
   int level; /* Only stuff lower than this level is logged */
 public:
-  TLog() { level = LOG_VERBOSE; };
+  TLog() { level = LOG_MAX; };
   ~TLog() {};
   void SetLevel(int nlevel);
   void AddLine(int level_, char * filename, int lineno, string line);

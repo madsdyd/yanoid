@@ -74,6 +74,7 @@ int main(int argc, char ** argv) {
 
   /* Add out datapath */
   PathManager->AddPath(YANOID_DATADIR);
+  PathManager->AddPath("data");
 
   /* **********************************************************************
    * Initialize SDL

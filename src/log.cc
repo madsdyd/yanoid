@@ -32,6 +32,7 @@ static char * loglevel_to_name [] =
   "INFO   ",
   "TRACE  ",
   "VERBOSE",
+  "VER 2  ",
   "MAX    "
 };
 

@@ -39,6 +39,8 @@ typedef TPathMap::iterator TPathMapIterator;
 class TPathManager {
 protected:
   TPathMap pathmap;
+  void AddPathRecursivly(size_t base_size, string path);
+  void AddMapping(string name, string absolute);
 public:
   TPathManager() {};
   ~TPathManager();
