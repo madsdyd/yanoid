@@ -22,7 +22,14 @@ powerups = [ [9, "powerup_spawn_ball()"],
              [3, "powerup_spawn_super_shot()"],
              [2, "powerup_spawn_normal_paddle()"],
              [4, "powerup_spawn_wide_paddle()"],
-             [3, "powerup_spawn_narrow_paddle()"] ]
+             [3, "powerup_spawn_narrow_paddle()"],
+             [1, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-1000.png", "-1000")'],
+             [2, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-500.png", "-500")'],
+             [3, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_-100.png", "-100")'],
+             [3, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_100.png", "100")'],
+             [2, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_500.png", "500")'],
+             [1, 'powerup_spawn_point_adjust("graphics/powerups/lightblue_1000.png", "1000")']
+             ]
 
 # Calculate the total weights, when loaded
 totalweights = 0
@@ -56,6 +63,7 @@ def powerup_ball_hit():
     yanoid_map.PowerUp("spawn-ball", "graphics/balls/red.png",
                        "ball_hit()")
 
+######################################################################
 # Extra life
 def powerup_spawn_life():
     yanoid_map.PowerUp("powerup", "graphics/powerups/blue_1UP.png",
@@ -64,6 +72,9 @@ def powerup_spawn_life():
 def powerup_life_hit():
     PlaySound("sounds/powerup_collect.wav")
     AdjustLives(1)
+
+######################################################################
+
 
 
 # Shot (simple)
@@ -86,6 +97,7 @@ def powerup_super_shot_hit():
     EnableShot("REMOVEALL", "graphics/shots/penetrating.png",
                "", 12, 3)
 
+######################################################################
 # Normal, wide and narrow paddle
 def powerup_spawn_normal_paddle():
     yanoid_map.PowerUp("powerup", "graphics/powerups/powerup_normal.png",
@@ -103,3 +115,17 @@ def powerup_size_paddle_hit(size, seconds):
     PlaySound("sounds/powerup_collect.wav")
     yanoid_map.PowerUp("size-paddle", size, str(seconds))
     
+######################################################################
+# Point powerups
+# Not, both pixmap and point are strings
+def powerup_spawn_point_adjust(pixmap, point):
+    yanoid_map.PowerUp("powerup", pixmap,
+                       "powerup_point_adjust_hit("+point+")")
+
+def powerup_point_adjust_hit(point):
+    if (point < 0):
+        PlaySound("sounds/powerup_bad.wav")
+    else:
+        PlaySound("sounds/powerup_collect.wav")
+    AdjustScore(point)
+        
