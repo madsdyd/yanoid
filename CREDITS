@@ -6,20 +6,22 @@ other projects.
 
 * Console
 The console sources and console font was taken from the SDL_console code. 
-Author  : ???
-Homepage: ???
+Author  : Garrett Banuk
+Homepage: http://www.mongeese.org/SDL_Console/
 
 * Pixel collision code
 The code in entity.cc that does pixel perfect collision detection was
-taken from ???
-Author  : ???
-Homepage: ???
+taken from libsge
+Author  : Anders Lindström
+Homepage: http://www.etek.chalmers.se/~e8cal1/sge/
 
 ----------------------------------------------------------------------
 * MUSIC
 
-The yanoid.mod music file was taken from www.modarchive.???
-Composer: ???
+The yanoid.mod music file was taken from www.modarchive.com, and
+the original title was rondevil.mod
+Composer: unknown
+
 
 ----------------------------------------------------------------------
 * SOUNDS
@@ -36,6 +38,7 @@ blip.wav - taken from the game defendguin (GPL, renamed from select.wav)
 ----------------------------------------------------------------------
 * GRAPHICS
 
-The fonts used for the menus was taken from ???
-Creator : ???
+The fonts used for the menus was the ones that came with the 
+SDL_Console code.
+
 

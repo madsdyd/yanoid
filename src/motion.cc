@@ -67,6 +67,8 @@ void TFreeMotion::Update(Uint32 deltatime, TEntity& e)
   if (e.x() != oldx || e.y() != oldy)
     e.changed = true;
 
+  //  if (e.getEntityType() == TEntity::PADDLE)
+  //    cerr << "CURVEL: " << _cur_vel << " TARGETVEL: " << _vel << endl;
   //  cerr << " " << e.x() << ", " << e.y() << endl;
 }
 

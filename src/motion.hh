@@ -49,6 +49,8 @@ public:
   virtual double getAccel() { return _acc; }
   virtual void setVelocity(double vel) { _vel = vel; _acc = _vel; }
   virtual double getVelocity() { return _vel; }
+  virtual void setCurrentVelocity(double curvel) { _cur_vel = curvel; }
+  virtual double getCurrentVelocity() { return _cur_vel; }
   virtual void Update(Uint32 deltatime, TEntity& e) = 0;
   void setDirection(bool forward) { _vel = (forward) ? fabs(_vel): -fabs(_vel); }
   bool getDirection() const { return (_cur_vel >= 0.0); }

@@ -33,6 +33,9 @@ public:
 		    and a ball is added if there is lives left */
   int num_bricks; /* Number of bricks in play. When zero, the map has
 		     been completed */
+  double ballspeed; /* The speed of all balls in map */
+  double ballbirth;
+  double ballacceleration;
   TMapState();
   ~TMapState();
   TEntities Entities;

@@ -120,6 +120,7 @@ void TGame::Update(Uint32 currenttime) {
   /* If we are not in PLAYING state, no need to check for state changes, 
      as changing to PLAYING state always is initiated from the outside */
   if (TGameState::PLAYING != GameState.status) {
+    // speed up ball if necessary
     return;
   }
 
@@ -159,13 +160,29 @@ TGameState * TGame::GetState() {
 }
 
 /* **********************************************************************
- * HandleCollisions
+ * HandleCollisions and speed up ball if necessary
  * *********************************************************************/
 
 void TGame::handleCollisions(Uint32 currenttime) 
 {
   TMapState* themap = GameState.MapState;
   TEntitiesIterator end = themap->Entities.end();
+
+  int screenw = 800; /* screen width, a hack */
+
+  // take special care of our paddle
+  TEntity * paddle = GameState.MapState->GetPaddle();
+  if (paddle->x() <= 1 ) {
+    paddle->getMotion()->setVelocity( 0.0 );
+    paddle->getMotion()->setCurrentVelocity( 0.0 );
+    paddle->getMotion()->setAccel( 0.0 );
+    paddle->setX(2);
+  } else if ((paddle->x()+paddle->w()) >= (screenw-1) ) {
+    paddle->getMotion()->setVelocity( 0.0 );
+    paddle->getMotion()->setCurrentVelocity( 0.0 );
+    paddle->getMotion()->setAccel( 0.0 );
+    paddle->setX(screenw-2-paddle->w());
+  }
 
   std::vector<TEntity*> resetEntityList;
   // uhh O(n^2). But not quite soo, because we can skip
@@ -177,13 +194,18 @@ void TGame::handleCollisions(Uint32 currenttime)
     if (i1type == TEntity::STATIONARY) {
       //      continue;
     }
-    // LogLine(LOG_VER_2, "Checking " + (*i1)->getName());
+    // speed up ball
+    if (i1type == TEntity::BALL) {
+      if (GameState.MapState->ballbirth == 0)
+	GameState.MapState->ballbirth = currenttime;
+      (*i1)->getMotion()->setVelocity(GameState.MapState->ballspeed
+				      + (currenttime - GameState.MapState->ballbirth) * 
+				      GameState.MapState->ballacceleration);
+    }
+
     double maxy = (*i1)->y() + static_cast<double>((*i1)->h());
-    /*cout << "max y " << maxy << ", y() " << (*i1)->y() 
-      << ", h() " << (*i1)->h() << endl; */
+
     TEntity::CollisionType i1coll = (*i1)->getCollisionType();
-    // TEntitiesIterator i2 = i1;xb
-    // i2++;
     TEntitiesIterator i2 = themap->Entities.begin();
 
     for ( ; *i2 != *i1 && i2 != end ; ++i2) {
@@ -195,7 +217,6 @@ void TGame::handleCollisions(Uint32 currenttime)
       // of the objects in the list must be located at a
       // too high y to bee colliding and we can skip the tests
       if (maxy < (*i2)->y()) {
-	// LogLine(LOG_VER_2, "Checking " + (*i1)->getName() + " is beyond maxy");
 	break;
       }
       
@@ -228,35 +249,9 @@ void TGame::handleCollisions(Uint32 currenttime)
       if (! (*i1)->boundingBoxCollision(*(*i2)))
 	continue;
       
-      /* LogLine(LOG_INFO, "Bounding Box Collision between " + (*i1)->getName() +
-	 " and " + (*i2)->getName()); */
       /* Call the OnCollision events for both entities */
-
-      //      cerr << "i1: " << (*i1)->getName() << ", " << (*i1)->y() << " h: " << (*i1)->h()
-      //	   << " i2: " << (*i2)->getName() << ", " << (*i2)->y() << " h: " << (*i2)->h() << endl;
       (*i1)->OnCollision(*(*i2),currenttime);
       (*i2)->OnCollision(*(*i1),currenttime);
-
-
-
-      // this section is for debugging only
-      {
-	
-	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
-	/*
-	if ((*i1)->getMotion()) {
-	  (*i1)->getMotion()->reverseDirection();
-	  (*i1)->getMotion()->rewind();
-	}
-	if ((*i2)->getMotion()) {
-	  (*i2)->getMotion()->reverseDirection();
-	  (*i2)->getMotion()->rewind();
-	}
-	*/
-
-	//	cout << "dir1 " << (*i1)->getMotion()->getDirection() << " dir2 " << (*i2)->getMotion()->getDirection() << endl;
-
-      }
 
       // If necessary make pixel perfect detection..
       if (i1coll == TEntity::PIXEL || (*i2)->getCollisionType() == TEntity::PIXEL) {

@@ -145,6 +145,7 @@ void TClient::Run() {
     Game->GetState()->status = TGameState::PLAYING;
     Game->Update(0);
     QuitCurrentGame = false; /* May be changed by the in game menu */
+    Game->GetState()->MapState->ballbirth = 0;
 
     /* **********************************************************************
      * Main game loop.
@@ -190,6 +191,7 @@ void TClient::Run() {
 	//	GameOverMenu->Run();
 	//	delete GameOverMenu;
 	QuitCurrentGame = true;
+	Game->GetState()->MapState->ballbirth = 0;
 	break;
       }
       /* **********************************************************************
@@ -214,6 +216,7 @@ void TClient::Run() {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
+	Game->GetState()->MapState->ballbirth = 0;
 	ContinueGame();
 	/* Adding a ball is done by calling the RoundStart function */
 	if (!Interprenter->RunSimpleString("RoundStart()")) {
@@ -253,7 +256,7 @@ void TClient::Run() {
 	  tfx.update(SDL_GetTicks());
 	  SDL_Flip(Screen);
 	}
-
+	Game->GetState()->MapState->ballbirth = 0;
 	//	TMapDoneMenu * MapDoneMenu = new TMapDoneMenu();
 	//	MapDoneMenu->Run();
 	//	delete MapDoneMenu;
@@ -385,7 +388,7 @@ void TClient::HandleEvents() {
 	case SDLK_RIGHT:
 	  if (!paddle) break;
 	  paddle->getMotion()->setVelocity( 0.4 );
-	  paddle->getMotion()->setAccel( 0.002 );
+	  paddle->getMotion()->setAccel( 0.002 );	 
 	  // dynamic_cast<TFreeMotion*>(paddle->getMotion())->setDir( 0 );
 	  break;
 	case SDLK_UP:

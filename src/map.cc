@@ -94,7 +94,8 @@ static PyMethodDef map_methods[] = {
 /* **********************************************************************
  * TMapState constructor
  * *********************************************************************/
-TMapState::TMapState() : paddle(NULL), num_balls(0), num_bricks(0) {
+TMapState::TMapState() : paddle(NULL), num_balls(0), num_bricks(0),
+ballspeed(0.19), ballbirth(0), ballacceleration(0.00001) {
 
 }
 /* **********************************************************************
@@ -241,7 +242,7 @@ bool TMap::AddEntity(string type, string hitfunction,
     e->setMotion(new TFreeMotion);
     //    dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(1 * M_PI / 5);
     dynamic_cast<TFreeMotion*>(e->getMotion())->setDir(2 * M_PI / 5);
-    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(0.19);
+    dynamic_cast<TFreeMotion*>(e->getMotion())->setVelocity(MapState->ballspeed);
     e->setName("Default Ball");
     MapState->Entities.push_back(e);
     MapState->num_balls++;
@@ -284,6 +285,8 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
   
   /* Set standard parameters */
   paddle->getMotion()->setVelocity(velocity);
+  paddle->getMotion()->setAccel(-0.03);
+  paddle->getMotion()->setCurrentVelocity(2.0);
   paddle->setName("Paddle");
   MapState->Entities.push_back(paddle);
   MapState->paddle = paddle;

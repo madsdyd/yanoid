@@ -31,7 +31,8 @@
 TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
-  collidecorner(0), removable(false), AngleModifier(0.05), is_dying(false)
+  collidecorner(0), removable(false), AngleModifier(0.05), 
+  MovementAngleModifier(1.55), is_dying(false)
 {
 }
 
@@ -40,7 +41,7 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
   name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
   changed(true),  collidecorner(0), removable(false), AngleModifier(0.05)
-  , is_dying(false)
+  , MovementAngleModifier(1.55), is_dying(false)
 {
 
 }
@@ -48,7 +49,8 @@ TEntity::TEntity(double x_, double y_, int w_, int h_,
 TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
   collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
-  collidecorner(0), removable(false), AngleModifier(0.05), is_dying(false)
+  collidecorner(0), removable(false), AngleModifier(0.05), 
+  MovementAngleModifier(1.55), is_dying(false)
 {
 }
 
@@ -88,12 +90,6 @@ void TEntity::Update(Uint32 deltatime)
 
   if (motion)
     motion->Update(deltatime,*this);
-  /*
-  position.setX((x() + static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.x())/10.0)) % 800);
-  position.setY((y() + static_cast<int>(static_cast<float>(static_cast<int>(deltatime)*velocity.y())/10.0)) % 600);
-  */
-  /*  cout << "TEntity::Update - delta, x, y " << deltatime 
-      << ", " << x << ", " << y << endl; */
 }
 
 /* **********************************************************************
@@ -116,11 +112,6 @@ void TEntity::Render(SDL_Surface * surface) {
   changed = false;
 }
 
-
-
-
-
-
 /* **********************************************************************
  * Marking dying and removable is to have a way to remove entities 
  * - balls and bricks, mostly - from a map.
@@ -133,9 +124,6 @@ void TEntity::MarkDying() {
 bool TEntity::IsRemovable() {
   return removable;
 }
-
-
-
 
 /* **********************************************************************
  * boundingBoxCollision determines if the entity o's boundingBox, 
@@ -236,11 +224,6 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
     ball = this;
     tother = &other;
 
-    /*  } else if (other.getEntityType() == TEntity::BALL) {
-    ball = &other;
-    tother = this;
-    } */
-  
     // set collision update time
     // so that we won't calculate collisions
     // 2 times on a entity
@@ -255,8 +238,6 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
       double coly = ball->y();
       ball->getMotion()->rewind(*ball);
       TFreeMotion* motion = dynamic_cast<TFreeMotion*>(ball->getMotion());
-      //    cerr << ball->getName() << motion->getDir() << " y: " << ball->y() << endl;
-      //    cerr << ball->y() << ", " << ball->collidepoint.y() << ", " << coly << ": " << ball->h() << " CORNER: " << tother->collidecorner;
       double newangle = 0.0;
       
       
@@ -333,40 +314,24 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 	  3.0 * M_PI - motion->getDir(); 
 	
 	if (dx >= 0) {
-	  /*	cerr << ">> " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
-		<< " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-		<< " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	  */
 	  ball->setX(colx - 2 * ( (colx + ballwidth) -  tother->collidepoint.x()));	
 	}else{
-	  /*
-	    cerr << "<< " << " lin.intersect: " << lin_intersect_y << newangle << "ballwidth: " << ballwidth
-	    << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	    << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	  */
 	  ball->setX(colx + 2 * ( tother->collidepoint.x() - colx ));
 	}
 	ball->setY(coly);
 	
 	
       }else{
-	// OK collision on the top
+	// OK collision on the top/bottom
 	
-	// a hit from the top
 	newangle = (dx < 0) ? 
 	  2.0 * M_PI - motion->getDir() :
 	  2.0 * M_PI - motion->getDir();
 	
-	//      cerr << "vv" << newangle << endl;
-	
 	if (dy >= 0) {
-	  /*
-	    cerr << "vv " << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
-	    << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	    << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	  */
-	  //		ball->setY(coly + 2 * ( ball->collidepoint.y() -  (coly + ballheight)) );
+
 	  ball->setY(coly - 2 * ( (coly + ballheight) -  tother->collidepoint.y()) -1  );
+
 	  // If the ball has hit the paddle from above we make some modifications to the angle
 	  // depending where on the paddle the ball has hit.
 	  if (tother->getEntityType() == TEntity::PADDLE) {
@@ -374,17 +339,19 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 	    lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
 	    double modangle = ( (tother->w()/2) < lx) ? -log(lx - tother->w()/2) : log(tother->w()/2 - lx);
 	    modangle = ( (tother->w()/2) == lx) ? 0 : modangle;
+
 	    // if the ball hits the middle of the bat no angle modifier is applied
 	    modangle = (fabs(tother->w()/2 - lx) < (tother->w() * 0.3)) ? 0 : modangle;
-	    newangle += modangle * tother->AngleModifier;
-	    //	    cerr << "lx :" << lx << " modangle: " << modangle << " tother->w(): " << tother->w() << endl;
+
+	    // OK now we see if the paddle is moving and make the appropriate changes to 
+	    // the angle of the ball.
+	    double modangle2 = 0;
+	    if (motion->getCurrentVelocity() != 0)
+	      modangle2 = -(tother->MovementAngleModifier * tother->getMotion()->getCurrentVelocity());
+
+	    newangle += modangle * tother->AngleModifier + modangle2;
 	  }
 	}else{
-	  /*
-	    cerr << "^^ "  << " lin.intersect: " << lin_intersect_y << newangle << "ballheight: " << ballheight 
-	    << " coly: " << coly << " collidepoint " << tother->collidepoint.y() << "corner: " << tother->collidecorner 
-	    << " name: " << tother->getName() << " dx,dy: " << dx << "," << dy <<endl;
-	  */
 	  ball->setY(coly + 2 * ( tother->collidepoint.y() -  coly) + 1 );
 	}
 	
