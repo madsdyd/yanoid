@@ -32,5 +32,15 @@ def AddBall(pixmap):
     "Adds a ball at the position of the current entity"
     yanoid_map.PowerUp("spawn-ball", pixmap, "ball_hit()")
     
-    
+# This creates a "standard" playfield.
+
+def StandardPlayField():
+    # Left wall
+    AddEntity("static", -50, -50, 51, 700, "static_hit()")
+    # Right wall
+    AddEntity("static", 799, -50, 51, 700, "static_hit()")
+    # Top
+    AddEntity("static", 1, -10, 798, 11, "static_hit()")
+    # Bottom
+    AddEntity("hole", 1, 550, 798, 50, "")    
     
