@@ -66,7 +66,8 @@ public:
   /* Add an entity, mostly bricks, walls, etc.
      , initialize with parameters (will probably change). 
      returns true on succes */
-  bool AddEntity(string type, string hitfunction, int x, int y, int w, int h, string pixmap);
+  bool AddEntity(string type, string hitfunction, int x, int y, 
+		 int w, int h, string pixmap, int animspeed);
   /* Set the paddle for the map */
   bool SetPaddle(int x, int y, string pathtype, double velocity,
 		 double angle, string pixmap);

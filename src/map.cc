@@ -59,14 +59,15 @@ static PyObject * MapName(PyObject * self, PyObject * args) {
  * Add a brick or similar object to the current map
  * *********************************************************************/
 static PyObject * AddObject(PyObject * self, PyObject * args) {
-  int x; int y; int w; int h; 
+  int x, y, w, h, animspeed;  
   char * type; char * hitfunction; char * pixmap;
-  if (!CurrentMap || !PyArg_ParseTuple(args, "ssiiiis", 
+  if (!CurrentMap || !PyArg_ParseTuple(args, "ssiiiisi", 
 				       &type, &hitfunction,
-				       &x, &y, &w, &h, &pixmap)) {
+				       &x, &y, &w, &h, &pixmap,&animspeed)) {
     return NULL;
   }
-  if (CurrentMap->AddEntity(type, hitfunction, x, y, w, h, pixmap)) {
+  if (CurrentMap->AddEntity(type, hitfunction, x, y, w, h, 
+			    pixmap, animspeed)) {
     return Py_BuildValue("");
   } else {
     return NULL;
@@ -251,7 +252,7 @@ bool TMap::SetMapName(string name) {
  * *********************************************************************/
 bool TMap::AddEntity(string type, string hitfunction, 
 		     int x, int y, int w, int h, 
-		     string pixmap) {
+		     string pixmap, int animspeed) {
   /* Do different things, according to type */
   if ("brick" == type ) {
     /* This is a pixmapentity */
@@ -261,13 +262,17 @@ bool TMap::AddEntity(string type, string hitfunction,
     return true;
   } else if ("brick-stay-3" == type ) {
     /* This is a pixmapentity */
-    MapState->StationaryEntities.push_back(new TBrick(x, y, pixmap, hitfunction, 3));
+    TBrick * b = new TBrick(x, y, pixmap, hitfunction, 3);
+    b->setDimensions(75,25);
+    b->setAnimIntervalRandom(3000, 15000); // 3 to 15 secs.
+    MapState->StationaryEntities.push_back(b);
     MapState->num_bricks++;
     sortEntities(MapState->StationaryEntities);
     return true;
   } else if ("brick-stay" == type ) {
     /* This is a pixmapentity */
-    MapState->StationaryEntities.push_back(new TBrick(x, y, pixmap, hitfunction, -1));
+    TBrick * b = new TBrick(x, y, pixmap, hitfunction, -1);
+    MapState->StationaryEntities.push_back(b);
     // Obviously, do not increase the number of bricks, if the brick
     // can not be removed... *douh*
     // MapState->num_bricks++;

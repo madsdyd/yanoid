@@ -28,7 +28,23 @@
 
 class TPixmapEntity : public TEntity {
 protected:
-  SDL_Surface * currentsurface; /* The current image to blit */
+  // The surface consists of several frames in an animation
+  SDL_Surface * currentsurface; 
+  int surface_width, surface_height;
+  // The frame in the currentsurface to blit next time
+  int currentframe;
+  // Number of ticks to show currentframe
+  int ticks_per_frame;
+  // Number of ticks the currentframe has been shown
+  int ticks_in_current_frame;
+  // Number if ticks to wait between to runs of the animation
+  int anim_interval;
+  // Min and max time for random anim_interval when random 
+  // generated
+  int anim_random_min_time;
+  int anim_random_max_time;
+  // Is animation pause interval random
+  bool anim_random;
 public:
   TPixmapEntity(int x_, int y_, Angle a_, 
 		const std::string& pixmap_path,
@@ -47,8 +63,16 @@ public:
   /* This is assumes to be a ressource, and it is duplicated */
   virtual void setPixmap(SDL_Surface * pixmap);
   void MakeMask();
+  virtual void Update(Uint32 deltatime);
   virtual void Render(SDL_Surface * surface);
   virtual bool pixelCollision(TEntity&);
+
+  /* If the loaded surface represents an animation
+     we must tell the dimension of a frame */
+  void setDimensions(int w, int h) { setW(w); setH(h); }
+  void setAnimSpeed(int tpf) { ticks_per_frame = tpf; }
+  void setAnimInterval(int ticks);
+  void setAnimIntervalRandom(int min, int max);
 private:
   int memand(unsigned char *s1, unsigned char *s2, 
 	     int shift1, int shift2, int N);

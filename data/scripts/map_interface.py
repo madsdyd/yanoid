@@ -8,27 +8,27 @@ def SetMapName(name):
 
 # AddBrick(string type, int x, int y, string hitfunction, string pixmap)
 # Adds a brick of type type at x, y, with pixmap pixmap.
-def AddBrick(type, x, y, hitfunction, pixmap):
+def AddBrick(type, x, y, hitfunction, pixmap,animspeed=0):
     "Add a brick to the current map"
-    yanoid_map.AddObject(type, hitfunction, x, y, 0, 0, pixmap)
+    yanoid_map.AddObject(type, hitfunction, x, y, 0, 0, pixmap,animspeed)
 
 # AddEntity(string type, int x, int y, int w, int h, string hitfunction)
 # Adds a static (simple object, no pixmap) at x,y having size w,h
-def AddEntity(type, x, y, w, h, hitfunction):
+def AddEntity(type, x, y, w, h, hitfunction,animspeed=0):
     "Add a static (simple object, no pixmap) to the current map"
-    yanoid_map.AddObject(type, hitfunction, x, y, w, h, "")
+    yanoid_map.AddObject(type, hitfunction, x, y, w, h, "",animspeed)
 
 # AddBallDefault(string pixmap)
 # Adds a ball at a default position
-def AddBallDefault(pixmap):
+def AddBallDefault(pixmap,animspeed=0):
     "Adds a ball at a default position"
-    yanoid_map.AddObject("default-ball", "ball_hit()", 0, 0, 0, 0, pixmap)
+    yanoid_map.AddObject("default-ball", "ball_hit()", 0, 0, 0, 0, pixmap,animspeed)
 
 # AddBallDefault(string pixmap)
 # Adds a ball at a default position
-def AddBallDefaultAtPos(x, y, pixmap):
+def AddBallDefaultAtPos(x, y, pixmap,animspeed=0):
     "Adds a ball at a default position"
-    yanoid_map.AddObject("default-ball", "ball_hit()", x, y, 0, 0, pixmap)
+    yanoid_map.AddObject("default-ball", "ball_hit()", x, y, 0, 0, pixmap,animspeed)
 
 # SetPaddle(int x, int y, string pixmap)
 # Creates and sets the paddle for the current map

@@ -72,6 +72,14 @@ void TPixmapEntity::init(const std::string& path,
   Assert(NULL != e.currentsurface, "Error loading graphics for entity");
   e._h = e.currentsurface->h;
   e._w = e.currentsurface->w;
+  e.surface_width = e._w;
+  e.surface_height = e._h;
+  e.currentframe = 0;
+  e.ticks_in_current_frame = 0;
+  e.anim_interval = 0;
+  e.anim_random_min_time = 3000;
+  e.anim_random_max_time = 15000;
+  e.ticks_per_frame = 70;
   e.MakeMask();
 }
 
@@ -93,8 +101,13 @@ void TPixmapEntity::setPixmap(const std::string& path) {
   currentsurface
     = SurfaceManager->RequireRessource(path);
   Assert(NULL != currentsurface, "Error loading graphics for entity");
-  _h = currentsurface->h;
-  _w = currentsurface->w;
+
+  surface_height = currentsurface->h;
+  _h = surface_height;
+  surface_width = currentsurface->w;
+  _w = surface_width;
+
+  currentframe = 0;
 
   MakeMask();
 }
@@ -106,9 +119,54 @@ void TPixmapEntity::setPixmap(SDL_Surface * pixmap) {
   if (currentsurface != pixmap) {
     SurfaceManager->ReleaseRessource(currentsurface);
     currentsurface = SurfaceManager->DuplicateRessource(pixmap);
-    _h = currentsurface->h;
-    _w = currentsurface->w;
+
+    surface_height = currentsurface->h;
+    _h = surface_height;
+    surface_width = currentsurface->w;
+    _w = surface_width;
+
+    currentframe = 0;
+
     MakeMask();
+  }
+}
+
+
+/* **********************************************************************
+ * The Update method simple chooses the frame to display
+ * *********************************************************************/
+void TPixmapEntity::Update(Uint32 deltatime) 
+{
+  // Do the usual update stuff
+  TEntity::Update(deltatime);
+
+  ticks_in_current_frame += deltatime;
+
+  // Make a pause in playing if in frame 0
+  if (currentframe == 0) {
+    if (anim_interval >= ticks_in_current_frame) {
+      // We are pausing playback and not enough time has passed
+      return;
+    }else{
+      // Pause time has passed. Adjust time counter.
+      currentframe++;
+      currentframe = ((currentframe*_w) >= surface_width) ? 0 : currentframe;
+      ticks_in_current_frame -= anim_interval;
+
+      // Assign next random pausing interval if requested
+      if (anim_random) {
+	anim_interval = rand() % anim_random_max_time;
+	if (anim_interval < anim_random_min_time) 
+	  anim_interval = anim_random_min_time;
+      }
+    }
+  }else{
+    // Choose the next frame if enough time has passed
+    if (ticks_in_current_frame >= ticks_per_frame) {
+      currentframe++;
+      currentframe = ((currentframe*_w) >= surface_width) ? 0 : currentframe;
+      ticks_in_current_frame -= ticks_per_frame;
+    }
   }
 }
 
@@ -122,8 +180,9 @@ void TPixmapEntity::Render(SDL_Surface * surface) {
   //  if (!changed)
   //    return;
 
-  src.x = 0; src.y = 0; 
-  src.w = currentsurface->w; src.h = currentsurface->h;
+  src.x = w() * currentframe; 
+  src.y = 0; 
+  src.w = _w; src.h = _h;
 
   dest.x = static_cast<int>(floor(x() + 0.5)); 
   dest.y = static_cast<int>(floor(y() + 0.5));
@@ -351,4 +410,17 @@ Uint32 GetPixel(SDL_Surface *surface, Sint16 x, Sint16 y)
 	}
 	return 0;
 #endif
+}
+
+void TPixmapEntity::setAnimIntervalRandom(int min, int max) 
+{
+  anim_random_min_time = min;
+  anim_random_max_time = max;
+  anim_random = true;
+}
+
+void TPixmapEntity::setAnimInterval(int ticks)
+{
+  anim_interval = ticks;
+  anim_random = false;
 }
