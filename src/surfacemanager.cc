@@ -47,7 +47,7 @@ SDL_Surface * TSurfaceManager::LoadRessource(string filename) {
     return NULL;
   } else {
     // LogLine(LOG_VERBOSE, "Converting display format");
-    SDL_SetColorKey(tmp1, SDL_SRCCOLORKEY, ColorKey);
+    SDL_SetColorKey(tmp1, SDL_SRCCOLORKEY | SDL_RLEACCEL, ColorKey);
     SDL_Surface * res = SDL_DisplayFormat(tmp1);
     SDL_FreeSurface(tmp1);
     return res;

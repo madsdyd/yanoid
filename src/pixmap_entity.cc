@@ -125,6 +125,8 @@ void TPixmapEntity::Render(SDL_Surface * surface) {
  * *********************************************************************/
 void TPixmapEntity::MakeMask() 
 {
+  return;
+#ifdef SOMEDAYWEMAYFIXPIXELS
   if (!currentsurface)
     return;
   
@@ -153,6 +155,7 @@ void TPixmapEntity::MakeMask()
       i++;
     }	
   }
+#endif
 }
 
 /* **********************************************************************
@@ -161,6 +164,8 @@ void TPixmapEntity::MakeMask()
  * Much of this code is taken from sgelib
  * *********************************************************************/
 bool TPixmapEntity::pixelCollision(TEntity& o) {
+  return false;
+#ifdef SOMEDAYWEMAYFIXPIXELS
   LogLine(LOG_TODO,"check o for NULL pointer also");
   if (!mask | !o.mask)
     return boundingBoxCollision(o);
@@ -262,6 +267,7 @@ bool TPixmapEntity::pixelCollision(TEntity& o) {
     i2=offs%8;
   }
   return false;
+#endif
 }
 
 // pixelCollision helper
@@ -270,7 +276,9 @@ bool TPixmapEntity::pixelCollision(TEntity& o) {
 int TPixmapEntity::memand(unsigned char *s1, unsigned char *s2, 
 			  int shift1, int shift2, int N)
 {
-  
+  return 0;
+#ifdef SOMEDAYWEMAYFIXPIXELS
+
   int b,i1=shift1,i2=shift2;
 
   for(b=0; b<N; b++){
@@ -281,6 +289,7 @@ int TPixmapEntity::memand(unsigned char *s1, unsigned char *s2,
   	i1++; i2++;	
   }
   return 0;
+#endif
 }
 
 
@@ -289,6 +298,9 @@ int TPixmapEntity::memand(unsigned char *s1, unsigned char *s2,
 //==================================================================================
 Uint32 GetPixel(SDL_Surface *surface, Sint16 x, Sint16 y)
 {
+  return 0;
+#ifdef SOMEDAYWEMAYFIXPIXELS
+  
 	switch (surface->format->BytesPerPixel) {
 		case 1: { /* Assuming 8-bpp */
 			return *((Uint8 *)surface->pixels + y*surface->pitch + x);
@@ -324,4 +336,5 @@ Uint32 GetPixel(SDL_Surface *surface, Sint16 x, Sint16 y)
 		break;
 	}
 	return 0;
+#endif
 }
