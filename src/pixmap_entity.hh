@@ -30,10 +30,16 @@ class TPixmapEntity : public TEntity {
 protected:
   SDL_Surface * currentsurface; /* The current image to blit */
 public:
-  TPixmapEntity(int x_, int y_, Angle a_, const std::string& pixmap_path,
-		CollisionType c = BOX, EntityType e = STATIONARY);
-  TPixmapEntity(const TOrientedPoint& p, const std::string& pixmap_path,
-		CollisionType c = BOX, EntityType e = STATIONARY);
+  TPixmapEntity(int x_, int y_, Angle a_, 
+		const std::string& pixmap_path,
+		EntityType e = "BRICK", 
+		MoveType m = STATIONARY, 
+		CollisionGranularity c = BOX);
+  TPixmapEntity(const TOrientedPoint& p, 
+		const std::string& pixmap_path,
+		EntityType e = "BRICK", 
+		MoveType m = STATIONARY, 
+		CollisionGranularity c = BOX);
   static void init(const std::string& path, TPixmapEntity& e);
   virtual ~TPixmapEntity();
   

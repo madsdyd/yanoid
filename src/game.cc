@@ -185,18 +185,22 @@ void TGame::handleCollisions(Uint32 currenttime)
     paddle->setX(screenw-2-paddle->w());
   }
 
-  std::vector<TEntity*> resetEntityList;
+  // std::vector<TEntity*> resetEntityList;
   // uhh O(n^2). But not quite soo, because we can skip
   // alot of cycles..
   for (TEntitiesIterator i1 = themap->Entities.begin() ; 
        i1 != end ; ++i1) {
-    /* We only check moving stuff against stationary objects */
-    TEntity::EntityType i1type = (*i1)->getEntityType();
-    if (i1type == TEntity::STATIONARY) {
-      //      continue;
+    /* **********************************************************************
+     * Only check moving against other. Skip Stationaries
+     * *********************************************************************/
+    if (TEntity::STATIONARY == (*i1)->getMoveType()) {
+      continue;
     }
-    // speed up ball
-    if (i1type == TEntity::BALL) {
+    /* **********************************************************************
+     * Adjust the ball speed. (Why does it go in here?)
+     * *********************************************************************/
+    TEntity::EntityType i1type = (*i1)->getEntityType();
+    if (i1type == "BALL") {
       if (GameState.MapState->ballbirth == 0)
 	GameState.MapState->ballbirth = currenttime;
       (*i1)->getMotion()->setVelocity(GameState.MapState->ballspeed
@@ -204,9 +208,16 @@ void TGame::handleCollisions(Uint32 currenttime)
 				      GameState.MapState->ballacceleration);
     }
 
+
+#ifdef PIXELON
+    TEntity::CollisionGranularity i1coll = (*i1)->getCollisionGranularity();
+#endif
+    /* **********************************************************************
+     * Check against all the other entities
+     * *********************************************************************/
+
     double maxy = (*i1)->y() + static_cast<double>((*i1)->h());
 
-    TEntity::CollisionType i1coll = (*i1)->getCollisionType();
     TEntitiesIterator i2 = themap->Entities.begin();
 
     for ( ; *i2 != *i1 && i2 != end ; ++i2) {
@@ -225,6 +236,7 @@ void TGame::handleCollisions(Uint32 currenttime)
       // To make sure we doesn't check two objects against eachother 2 times
       // we only check if i1->y > i2-> or if they are equal i1->x > i2->x
       //
+#ifdef WHATGIVES
       if ((*i1)->y() <= (*i2)->y()) {
 	if ((*i1)->y() == (*i2)->y()) {
 	  if ((*i1)->x() < (*i2)->x()) {
@@ -241,23 +253,28 @@ void TGame::handleCollisions(Uint32 currenttime)
 	If its a ball and it allready has collided
 	just ignore it.
        */
-      if ((i1type == TEntity::BALL && (*i1)->getLastUpdate() == currenttime) || 
-	  ((*i2)->getEntityType() == TEntity::BALL && (*i2)->getLastUpdate() == currenttime))
+      if ((i1type == "BALL" && (*i1)->getLastUpdate() == currenttime) || 
+	  ((*i2)->getEntityType() == "BALL" && (*i2)->getLastUpdate() == currenttime))
 	continue;
+#endif
 
       /* If there are no collision between the current two entities, 
 	 continue */
       if (! (*i1)->boundingBoxCollision(*(*i2)))
 	continue;
       
-      /* Call the OnCollision events for both entities */
+      /* Call the OnCollision events for both entities 
+	 This ensure that STATIONARY can react to collisions. */
       (*i1)->OnCollision(*(*i2),currenttime);
       (*i2)->OnCollision(*(*i1),currenttime);
 
       // If necessary make pixel perfect detection..
-      if (i1coll == TEntity::PIXEL || (*i2)->getCollisionType() == TEntity::PIXEL) {
+#ifdef PIXELON
+      if (i1coll == TEntity::PIXEL || 
+	  (*i2)->getCollisionGranularity() == TEntity::PIXEL) {
 	// cout << "Making pixel perfect detection" << endl;
       }
+#endif
     }
   }
 }

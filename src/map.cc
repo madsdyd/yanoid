@@ -240,12 +240,13 @@ bool TMap::AddEntity(string type, string hitfunction,
     return true;
   } else if ("static" == type) {
     /* In lack of a better name */
-    TEntity * e = new TEntity(x, y, w, h);
+    TEntity * e = new TEntity(x, y, w, h, 0, "STATIC");
     e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
     return true;
   } else if ("hole" == type) {
     TEntity * e = new THole(x, y, w, h);
+    // TEntity * e = new TEntity(x, y, w, h);
     e->SetScriptHitCall(hitfunction);
     MapState->Entities.push_back(e);
     LogLine(LOG_VERBOSE, "hole created");
@@ -263,7 +264,8 @@ bool TMap::AddEntity(string type, string hitfunction,
 				    0, pixmap, TEntity::PIXEL, 
 				    TEntity::MOVING);*/
     TEntity * e = new TPixmapEntity(300, 400, 0, pixmap, 
-				    TEntity::PIXEL, TEntity::BALL);
+				    "BALL", TEntity::MOVING,
+				    TEntity::PIXEL);
     e->SetScriptHitCall(hitfunction);
     // TODO, error handling.. 
     e->setMotion(new TFreeMotion);
@@ -297,7 +299,8 @@ bool TMap::SetPaddle(int x, int y, string pathtype, double velocity,
 
   /* First, try and make things work */
   TEntity * paddle = 
-    new TPixmapEntity(x, y, 0, pixmap, TEntity::BOX, TEntity::PADDLE);
+    new TPixmapEntity(x, y, 0, pixmap, "PADDLE", 
+		      TEntity::MOVING, TEntity::PIXEL);
   paddle->setName("Paddle");
   paddle->SetScriptHitCall("paddle_hit()");
   if ("FreeMotion" == pathtype) {
@@ -336,7 +339,7 @@ bool TMap::PowerUp(string action, string arg1, string arg2) {
 	TPixmapEntity(static_cast<int>(current_script_entity->x()), 
 		      static_cast<int>(current_script_entity->y()), 
 		      0, arg1, 
-		      TEntity::PIXEL, TEntity::BALL);
+		      "BALL", TEntity::MOVING, TEntity::PIXEL);
       e->SetScriptHitCall(arg2);
       // TODO, error handling.. 
       e->setMotion(new TFreeMotion);
@@ -367,7 +370,7 @@ void TMap::Update(Uint32 deltatime) {
     /* Add this entity, remove it from this list */
     MapState->Entities.push_back(*i);
     /* If we add a ball, remember to increase the number of balls */
-    if (TEntity::BALL == (*i)->getEntityType()) {
+    if ("BALL" == (*i)->getEntityType()) {
       MapState->num_balls++;
       LogLine(LOG_VERBOSE, "Ball added");
     }
@@ -411,14 +414,14 @@ void TMap::Update(Uint32 deltatime) {
     i++;
     if ((*candi)->IsRemovable()) {
       tmp = (*candi);
-      if (TEntity::BALL == tmp->getEntityType()) {
+      if ("BALL" == tmp->getEntityType()) {
 	MapState->num_balls--;
 	LogLine(LOG_VERBOSE, "Ball removed");
 	Assert(MapState->num_balls >= 0, 
 	       "Cant have a negative number of balls");
       }
-      /* The only stationary entities that are removed are bricks */
-      if (TEntity::STATIONARY == tmp->getEntityType()) {
+      /* If we remove a BRICK, reduce the number of brics */
+      if ("BRICK" == tmp->getEntityType()) {
 	MapState->num_bricks--;
 	LogLine(LOG_VERBOSE, "Brick removed");
 	Assert(MapState->num_bricks >= 0, 

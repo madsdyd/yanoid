@@ -36,7 +36,7 @@ bool hole_bounces = false;
  * *********************************************************************/
 TBrick::TBrick(int x_, int y_, string pixmap, string hitfunction, 
 	       int _hitnum)
-  : TPixmapEntity(x_, y_, 0, pixmap), hitnum(_hitnum) {
+  : TPixmapEntity(x_, y_, 0, pixmap, "BRICK"), hitnum(_hitnum) {
   SetScriptHitCall(hitfunction);
 };
 /* **********************************************************************
@@ -49,6 +49,7 @@ TBrick::~TBrick() {
  * OnCollision - most bricks simply die, when they are part of a collision
  * *********************************************************************/
 void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
+  /* Calling our ancestors onCollision gives us scripts, etc. */
   TPixmapEntity::OnCollision(other, currenttime);
   if (hitnum > 0 && --hitnum == 0) {
     removable = true;
@@ -59,8 +60,8 @@ void TBrick::OnCollision(TEntity& other, Uint32 currenttime=0) {
 /* **********************************************************************
  * THole constructor
  * *********************************************************************/
-THole::THole(double x_, double y_, int w_, int h_) : TEntity(x_, y_, w_, h_) {
-
+THole::THole(double x_, double y_, int w_, int h_) : 
+  TEntity(x_, y_, w_, h_, 0, "HOLE") {
 };
 
 /* **********************************************************************
@@ -74,12 +75,15 @@ THole::~THole() {
  * *********************************************************************/
 void THole::OnCollision(TEntity& other,Uint32 t) {
   LogLine(LOG_VERBOSE, "THole::OnCollision called");
-  if (TEntity::BALL == other.getEntityType()) {
+  if ("BALL" == other.getEntityType()) {
     /* Ah, hit by a ball */
     if (!hole_bounces) {
       other.MarkDying();
     } else {
-      TEntity::OnCollision(other, t);
+      /* To cheat the ball into collision reflection, we
+	 have to swap the order... */
+      // TEntity::OnCollision(other, t);
+      other.OnCollision(*this, t);
     }
   } else {
     LogLine(LOG_WARNING, "THole should not be hit by anything but balls");

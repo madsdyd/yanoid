@@ -47,17 +47,21 @@ Uint32 GetPixel(SDL_Surface *surface, Sint16 x, Sint16 y);
  * *********************************************************************/
 TPixmapEntity::TPixmapEntity(int x_, int y_, Angle a_, 
 			     const std::string& path,
-			     CollisionType c, EntityType e) :
-  TEntity(x_,y_,a_,c,e)
+			     EntityType e, 
+			     MoveType m, 
+			     CollisionGranularity c):
+  TEntity(x_, y_, a_, e, m, c)
 {
-  init(path,*this);
+  init(path, *this);
 }
 
 TPixmapEntity::TPixmapEntity(const TOrientedPoint& p, 
 			     const std::string& path,
-			     CollisionType c, EntityType e): 
-  TEntity(p, c, e) {
-  init(path,*this);
+			     EntityType e, 
+			     MoveType m, 
+			     CollisionGranularity c):
+  TEntity(p, e, m, c) {
+  init(path, *this);
 }
 
 void TPixmapEntity::init(const std::string& path, 

@@ -33,27 +33,36 @@ TEntity * current_script_entity = NULL;
 /* **********************************************************************
  * The constructor pt. loads a surface to blit around.
  * *********************************************************************/
-TEntity::TEntity(double x_, double y_, Angle a, CollisionType c, EntityType e):
+TEntity::TEntity(double x_, double y_, Angle a, 
+		 EntityType e, MoveType m, CollisionGranularity c) :
   _w(24), _h(16), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
-  name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
+  name("unknown"), 
+  entity_type(e), collision_granularity(c), move_type(m),
+  motion(0), 
+  mask(0),
   collidecorner(0), removable(false), AngleModifier(0.05), 
   MovementAngleModifier(1.55), is_dying(false)
 {
 }
 
 TEntity::TEntity(double x_, double y_, int w_, int h_, 
-		 Angle a, CollisionType c, EntityType e):
+		 Angle a, 
+		 EntityType e, MoveType m, CollisionGranularity c) :
   _w(w_), _h(h_), position(TOrientedPoint(x_,y_,a)), collidepoint(0,0),
-  name("unknown"), collision_type(c), entity_type(e), motion(0), mask(0),
+  name("unknown"), 
+  entity_type(e), collision_granularity(c), move_type(m),
+  motion(0), mask(0),
   changed(true),  collidecorner(0), removable(false), AngleModifier(0.05)
   , MovementAngleModifier(1.55), is_dying(false)
 {
 
 }
 
-TEntity::TEntity(const TOrientedPoint& p, CollisionType c, EntityType e): 
+TEntity::TEntity(const TOrientedPoint& p, 
+		 EntityType e, MoveType m, CollisionGranularity c) :
   _w(24), _h(16), position(p), collidepoint(0,0), name("unknown"), 
-  collision_type(c), entity_type(e), motion(0), mask(0), changed(true),
+  entity_type(e), collision_granularity(c), move_type(m),
+  motion(0), mask(0), changed(true),
   collidecorner(0), removable(false), AngleModifier(0.05), 
   MovementAngleModifier(1.55), is_dying(false)
 {
@@ -96,7 +105,7 @@ void TEntity::Update(Uint32 deltatime)
     removable = true;
   }
 
-  if (entity_type == STATIONARY) {
+  if (move_type == STATIONARY) {
     changed = false;
     return;
   }
@@ -225,15 +234,20 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
   /* This must only be called, when at least boundingCollision have been 
      called 
      The purpose of this method is to resolve collisions between this object
-     and the other. 
-     This is done by rewinding the time for both objects, finding the point
-     in time where they collide, change their motion according to some
-     yet-to-be-defined rules, and then forward time again. */
-  TEntity* ball=0;
-  TEntity* tother=0;
+     and the other. */
+  /* Check if we have already collided */
+  if (LastUpdate == currenttime) {
+    return;
+  }
+
+  TEntity* ball;
+  TEntity* tother;
 
   /* Mega if on this beeing a ball */
-  if (getEntityType() == TEntity::BALL) {
+  if (getEntityType() == "BALL") {
+    LogLineExt(LOG_VERBOSE, ("BALL has collided with %s", 
+			     other.getEntityType().c_str()));
+	       
     ball = this;
     tother = &other;
 
@@ -241,12 +255,12 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
     // so that we won't calculate collisions
     // 2 times on a entity
     LastUpdate = currenttime;
-    other.LastUpdate = currenttime;
+    // other.LastUpdate = currenttime;
     
     //
     // If we have a ball in the collision
     //
-    if (ball && ball->getMotion()) {
+    if (ball->getMotion()) {
       double colx = ball->x();
       double coly = ball->y();
       ball->getMotion()->rewind(*ball);
@@ -258,7 +272,7 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
       double ballheight = 0;
     
       // if the ball is on the way down the drain, skip collision response
-      if ( tother->getEntityType() == TEntity::PADDLE && 
+      if ( tother->getEntityType() == "PADDLE" && 
 	   (ball->y() + ball->h()) > tother->y() ) {
 
 	ball->getMotion()->setVelocity(0.5);
@@ -347,7 +361,7 @@ void TEntity::OnCollision(TEntity& other,Uint32 currenttime) {
 
 	  // If the ball has hit the paddle from above we make some modifications to the angle
 	  // depending where on the paddle the ball has hit.
-	  if (tother->getEntityType() == TEntity::PADDLE) {
+	  if (tother->getEntityType() == "PADDLE") {
 	    double lx = (ball->x() + ball->w()/2) - tother->x();
 	    lx = (lx < 0) ? 0 :  ( (lx > tother->w()) ? tother->w() : lx);
 	    double modangle = ( (tother->w()/2) < lx) ? -log(lx - tother->w()/2) : log(tother->w()/2 - lx);

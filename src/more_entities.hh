@@ -49,6 +49,13 @@ public:
   void Render(SDL_Surface * surface) {};
 };
 
+/* **********************************************************************
+ * A powerup is an entity that is spawned from the middle of another 
+ * entity, and falls down, off the screen
+ * If it collides with a paddle, some action is performed. If
+ * it collides with a THole (no way to check)
+ * *********************************************************************/
+
 /* Used for cheating */
 extern bool hole_bounces;
 

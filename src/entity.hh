@@ -34,8 +34,9 @@ class TMotion;
 class TPixmapEntity;
 class TEntity {
 public:
-  typedef enum CollisionType { BOX, PIXEL, NONE } CollisionType;
-  typedef enum EntityType { MOVING, STATIONARY, PATH, BALL, PADDLE } EntityType;
+  typedef enum CollisionGranularity { BOX, PIXEL } CollisionGranularity;
+  typedef enum MoveType { STATIONARY, MOVING } MoveType;
+  typedef string EntityType;
 protected:
   // TODO: Some sort of fancy vector class? 
   int _w, _h; /* The bounding box size */
@@ -48,8 +49,9 @@ protected:
   TOrientedPoint position;
   TPoint collidepoint;
   std::string name;
-  CollisionType collision_type;
   EntityType entity_type;
+  CollisionGranularity collision_granularity;
+  MoveType move_type;
   TMotion * motion;
   unsigned char* mask;
   /* Script stuff */
@@ -58,16 +60,22 @@ protected:
   int collidecorner;
   Uint32 LastUpdate;
   bool removable;
-  double AngleModifier; // only for paddel (should be in subclass)
-  double MovementAngleModifier; // only for paddel (should be in subclass)
+  double AngleModifier; // only for paddle (should be in subclass)
+  double MovementAngleModifier; // only for paddle (should be in subclass)
   bool is_dying; // only for ball (should be in subclass)
 public:
-  TEntity(double x_, double y_, Angle a_ = 0, 
-	  CollisionType c = BOX, EntityType e = STATIONARY);
+  TEntity(double x_, double y_, Angle a_ = 0,
+	  EntityType e = "BRICK", 
+	  MoveType m = STATIONARY, 
+	  CollisionGranularity c = BOX);
   TEntity(double x_, double y_, int w_, int h_, Angle a_ = 0, 
-	  CollisionType c = BOX, EntityType e = STATIONARY);
+	  EntityType e = "BRICK", 
+	  MoveType m = STATIONARY, 
+	  CollisionGranularity c = BOX);
   TEntity(const TOrientedPoint& p, 
-	  CollisionType c = BOX, EntityType e = STATIONARY);
+	  EntityType e = "BRICK", 
+	  MoveType m = STATIONARY, 
+	  CollisionGranularity c = BOX);
   virtual ~TEntity();
 
   virtual void load(const std::string& path);
@@ -85,9 +93,11 @@ public:
   /* Called when this entity collidies with another */
   virtual void OnCollision(TEntity& other, Uint32 time = 0);
 
-  inline CollisionType getCollisionType() const { return collision_type; }
   inline EntityType getEntityType() const { return entity_type; }
-
+  inline CollisionGranularity getCollisionGranularity() const { 
+    return collision_granularity; 
+  }
+  inline MoveType getMoveType() const { return move_type; }
   /* Stuff to do with calling scripts (Test) */
   void SetScriptHitCall(string function);
   void ExecuteScriptHitCall();
