@@ -300,7 +300,7 @@ int main(int argc, char ** argv) {
 
   /* A small MOD test */
   Mix_Music * modmusic
-    = MusicManager->RequireRessource("music/yanoid.mod");
+    = MusicManager->RequireRessource("music/yanoid.xm");
   Assert(NULL != modmusic, "Error getting Mix_Music *");
 
 #endif
