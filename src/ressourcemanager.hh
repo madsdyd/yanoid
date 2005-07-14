@@ -166,7 +166,8 @@ TRessourceManager <res_t>::~TRessourceManager() {
     if ((*i).second->HasRefs()) {
       LogLine(LOG_ERROR, "Releasing " + (*i).second->GetName() + 
 	      " - ressource still referenced");
-      UnloadRessource((*i).second->TakeRessource());
+      // UnloadRessource((*i).second->TakeRessource());
+      //! \todo Fix to call static operations? Can one do that?
       delete ((*i).second);
     }
   }
