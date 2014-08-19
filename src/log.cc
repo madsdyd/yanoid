@@ -22,7 +22,7 @@
 #ifdef DEBUG
 #include <iostream>
 #include <strstream>
-#include <iomanip.h>
+#include <iomanip>
 
 #include <SDL/SDL.h>
 #include "console.hh"
@@ -30,7 +30,7 @@
 bool duptoconsole = false;
 
 /* These MUST match the declarations in log.hh */
-static char * loglevel_to_name [] =
+static const char * loglevel_to_name [] =
 {
   "FATAL  ",
   "ERROR  ",
@@ -64,7 +64,7 @@ void TLog::SetLevel(int nlevel) {
 /* **********************************************************************
  * The AddLine only prints to stdout at this moment 
  * *********************************************************************/
-void TLog::AddLine(int level_, char * filename, int lineno, string line) {
+void TLog::AddLine(int level_, const char * filename, int lineno, string line) {
   if (level_ <= level) {
     ostrstream tmp;
     tmp << "LOG: " << loglevel_to_name[level_] << " in "

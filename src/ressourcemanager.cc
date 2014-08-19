@@ -27,6 +27,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <limits.h>
+#include <stdlib.h>
 
 #undef DEBUG_RES_MAN
 #ifndef DEBUG_RES_MAN

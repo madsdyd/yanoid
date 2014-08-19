@@ -40,13 +40,14 @@ Mix_Chunk * TSoundManager::LoadRessource(string filename) {
 }
 
 /* This needs to be present for gcc 2.95.x apperently... ? */
+/*
 void TRessourceManager<Mix_Chunk>::UnloadRessource(Mix_Chunk * sound) {
    if (sound)
      Mix_FreeChunk(sound);
    else
      LogLine(LOG_ERROR, "Error. Tried to Unload NULL sound");
  }
-
+*/
 void TSoundManager::UnloadRessource(Mix_Chunk * sound) {
   if (sound)
     Mix_FreeChunk(sound);

@@ -72,7 +72,7 @@ public:
   TLog() { level = LOG_MAX; };
   ~TLog() {};
   void SetLevel(int nlevel);
-  void AddLine(int level_, char * filename, int lineno, string line);
+  void AddLine(int level_, const char * filename, int lineno, string line);
 };
 
 extern TLog * Log;
