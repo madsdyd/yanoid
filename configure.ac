@@ -10,7 +10,10 @@ dnl ------------------------------------------------------------
 dnl Setup initial stuff
 dnl ------------------------------------------------------------
 
-AC_INIT(src/main.cc)
+
+AC_INIT([yanoid], [0.4.0])
+AC_CONFIG_SRCDIR([src/main.cc])
+AM_INIT_AUTOMAKE
 
 dnl ------------------------------------------------------------
 dnl Make CDPATH not influence stuff. 
@@ -18,7 +21,7 @@ dnl ------------------------------------------------------------
 CDPATH=${ZSH_VERSION+.}:
 
 
-AM_INIT_AUTOMAKE(yanoid, "0.4.0")
+
 dnl Enable --maintainer-mode
 dnl AM_MAINTAINER_MODE
 dnl Put config.h in src
