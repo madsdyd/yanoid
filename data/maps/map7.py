@@ -9,7 +9,7 @@ factor = pi / 180.0
 for t in range(180,370,15):
     x = cos(t * factor) * 3.6
     y = sin(t * factor) * 1.4
-    AddBrick("brick", 400 - 38 + x*100, 220 - 8 + y*100,
+    AddBrick("brick", int(400 - 38 + x*100), int( 220 - 8 + y*100),
              "basic_brick_hit()",
              "graphics/bricks/green2_75.png")
 

@@ -15,13 +15,13 @@ factor = pi / 180.0
 for t in range(0, 360, 30):
     x = cos(t * factor) * 1.7
     y = sin(t * factor)
-    AddBrick("brick", 400 - 24 + x*100, 220 - 8 + y*100,
+    AddBrick("brick", int( 400 - 24 + x*100), int (220 - 8 + y*100),
              "basic_brick_hit()",
              "graphics/bricks/red_75.png") 
-    AddBrick("brick", 400 - 24 + x*150, 220 - 8 + y*150,
+    AddBrick("brick", int(400 - 24 + x*150), int(220 - 8 + y*150),
              "basic_brick_hit()",
              "graphics/bricks/blue_75.png") 
-    AddBrick("brick", 400 - 24 + x*200, 220 - 8 + y*200,
+    AddBrick("brick", int(400 - 24 + x*200), int(220 - 8 + y*200),
              "basic_brick_hit()",
              "graphics/bricks/green_75.png") 
             
