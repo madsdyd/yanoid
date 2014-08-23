@@ -188,10 +188,10 @@ bool TClient::NextMap() {
       TTextEffectSpaced * tfx = 
 	new TTextEffectSpaced(Game->GetState()->MapState->mapname.c_str(), 
 			      TextRender);
-      tfx->setLocation(TPoint((Screen->w -  
+      tfx->setLocation(TPoint(static_cast<double>((Screen->w -  
 			      Game->GetState()->MapState->mapname.size()
 			      // * DT_FontWidth(*font))/2, 
-			      * TextRender->GetGlyphWidth())/2, 
+                              * TextRender->GetGlyphWidth())/2), 
 			     Screen->h / 2));
       tfx->setDuration(1500);
       tfx->setPostHoldTime(500);
@@ -297,9 +297,9 @@ void TClient::Run() {
 	const char* str = "Game Over";
 	TTextEffectJumping * tfx = 
 	  new TTextEffectJumping(str, TextRender);
-	tfx->setLocation(TPoint((Screen->w - strlen(str) 
+	tfx->setLocation(TPoint(static_cast<double>((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2, 
-				* TextRender->GetGlyphWidth())/2, 
+                                                     * TextRender->GetGlyphWidth())/2), 
 			       Screen->h / 2));
 	tfx->setDuration(1500);
 	tfx->setPostHoldTime(500);
@@ -340,9 +340,9 @@ void TClient::Run() {
 	const char* str = "You lost the ball..";
 	TTextEffectSwirling * tfx = 
 	  new TTextEffectSwirling(str, TextRender);
-	tfx->setLocation(TPoint((Screen->w - strlen(str) 
+	tfx->setLocation(TPoint((static_cast<double>(Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2,
-				* TextRender->GetGlyphWidth())/2,
+                                                     * TextRender->GetGlyphWidth())/2),
 			       Screen->h / 2));
 	tfx->setDuration(1500);
 	tfx->setPostHoldTime(1000);
@@ -390,9 +390,9 @@ void TClient::Run() {
 	const char* str = "Level complete!";
 	TTextEffectSpaced * tfx = 
 	  new TTextEffectSpaced(str, TextRender);
-	tfx->setLocation(TPoint((Screen->w - strlen(str) 
+	tfx->setLocation(TPoint(static_cast<double>((Screen->w - strlen(str) 
 				// * DT_FontWidth(*font))/2, 
-				* TextRender->GetGlyphWidth())/2, 
+                                                     * TextRender->GetGlyphWidth())/2), 
 			       Screen->h / 2 - 40));
 	tfx->setDuration(1500);
 	tfx->setPostHoldTime(500);
@@ -422,9 +422,9 @@ void TClient::Run() {
 	}
 	TTextEffectSpaced * tfx2 = 
 	  new TTextEffectSpaced(msg, TextRender);
-	tfx2->setLocation(TPoint((Screen->w - strlen(msg) 
+	tfx2->setLocation(TPoint(static_cast<double>((Screen->w - strlen(msg) 
 				 // * DT_FontWidth(*font))/2, 
-				 * TextRender->GetGlyphWidth())/2, 
+                                                      * TextRender->GetGlyphWidth())/2), 
 				Screen->h / 2 + 40));
 	tfx2->setDuration(1500);
 	tfx2->setPostHoldTime(500);

@@ -114,9 +114,10 @@ void TEntity::Render(SDL_Surface * surface) {
   //  if (!changed)
   //    return;
 
-  dest.x = static_cast<int>(x()); 
-  dest.y = static_cast<int>(y());
-  dest.w = _w; dest.h = _h;
+  dest.x = static_cast<short int>(x()); 
+  dest.y = static_cast<short int>(y());
+  dest.w = static_cast<short unsigned int>(_w); 
+  dest.h = static_cast<short unsigned int>(_h);
   Uint32 color = SDL_MapRGB(surface->format, 0xFF, 0x00, 0x00);
 
   SDL_FillRect(surface, &dest, color);

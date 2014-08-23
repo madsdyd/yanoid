@@ -131,10 +131,10 @@ void TDisplay::Render(SDL_Surface * surface) {
       }
     }
     if (powerup_surf) {
-      powerup_src.w = powerup_surf->w;
-      powerup_src.h = powerup_surf->h;
-      powerup_dest.x = surface->w / 2 - 50;
-      powerup_dest.y = surface->h - (40 + powerup_src.h) / 2;;
+      powerup_src.w = static_cast<short unsigned int>(powerup_surf->w);
+      powerup_src.h = static_cast<short unsigned int>(powerup_surf->h);
+      powerup_dest.x = static_cast<short int>(surface->w / 2 - 50);
+      powerup_dest.y = static_cast<short int>(surface->h - (40 + powerup_src.h) / 2);
       powerup_dest.w = powerup_src.w;
       powerup_dest.h = powerup_src.h;
       SDL_BlitSurface(powerup_surf, &powerup_src, surface, &powerup_dest);

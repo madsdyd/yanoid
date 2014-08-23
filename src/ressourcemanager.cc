@@ -32,8 +32,10 @@
 
 #undef DEBUG_RES_MAN
 #ifndef DEBUG_RES_MAN
+#ifndef LogLine
 #define LogLine(a, b)
 #define LogLineExt(a, b)
+#endif
 #endif
 
 #if defined(_MSC_VER) || defined(__MINGW32__)

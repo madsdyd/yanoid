@@ -182,12 +182,13 @@ void TPixmapEntity::Render(SDL_Surface * surface) {
   //  if (!changed)
   //    return;
 
-  src.x = w() * currentframe; 
+  src.x = static_cast<short int>(w() * currentframe); 
   src.y = 0; 
-  src.w = _w; src.h = _h;
+  src.w = static_cast<unsigned short int>(_w); 
+  src.h = static_cast<unsigned short int>(_h);
 
-  dest.x = static_cast<int>(floor(x() + 0.5)); 
-  dest.y = static_cast<int>(floor(y() + 0.5));
+  dest.x = static_cast<short int>(floor(x() + 0.5)); 
+  dest.y = static_cast<short int>(floor(y() + 0.5));
   dest.w = src.w; dest.h = src.h;
   
   SDL_BlitSurface(currentsurface, &src, surface, &dest);

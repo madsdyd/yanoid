@@ -56,6 +56,7 @@ public:
   bool getDirection() const { return (_cur_vel >= 0.0); }
   void reverseDirection() { _cur_vel = - _cur_vel; }
   virtual void rewind(TEntity&);
+    virtual ~TMotion() {}; 
 };
 
 /* 

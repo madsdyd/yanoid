@@ -335,15 +335,18 @@ int main(int argc, char ** argv) {
    * *********************************************************************/
   Assert(NULL != Splash, "Error getting SDL_Surface for splash screen");
   SDL_Rect src, dest, erasedest;
-  src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
+  src.x = 0; 
+  src.y = 0; 
+  src.w = static_cast<short unsigned int>(Splash->w); 
+  src.h = static_cast<short unsigned int>(Splash->h);
 
   // scroll down splash
   for(int i=0 ; i < (Screen->h-src.h)/32; i++) {
-    dest.y = (i*32)/2; 
-    dest.x = (Screen->w-src.w)/2;
+    dest.y = static_cast<short int>((i*32)/2); 
+    dest.x = static_cast<short int>((Screen->w-src.w)/2);
     dest.w = src.w; dest.h = src.h;
     erasedest = dest;
-    erasedest.y = ((i-1)*32)/2;
+    erasedest.y = static_cast<short int>(((i-1)*32)/2);
     SDL_FillRect(Screen, &erasedest, 0x00000000);
     SDL_BlitSurface(Splash, &src, Screen, &dest);
     //    SDL_UpdateRect(Screen, 0, 0, 0, 0);
@@ -362,8 +365,8 @@ int main(int argc, char ** argv) {
   int endi = dest.y - 50;
   for(int i=0 ; i < endi/8; i++) {
     erasedest = dest;
-    dest.y -= 8; 
-    dest.x = (Screen->w-src.w)/2;
+    dest.y = static_cast<short int>(dest.y - 8); 
+    dest.x = static_cast<short int>((Screen->w-src.w)/2);
     dest.w = src.w; dest.h = src.h;
     SDL_FillRect(Screen, &erasedest, 0x00000000);
     SDL_BlitSurface(Splash, &src, Screen, &dest);

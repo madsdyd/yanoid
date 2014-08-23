@@ -71,9 +71,9 @@ THighscore::~THighscore()
  * Update calculates difference.
  * *********************************************************************/
 void THighscore::Update(Uint32 currenttime) {
-  static Uint32 lastupdate = 0;
+  // static Uint32 lastupdate; // = 0;
   //  Uint32 deltatime = currenttime - lastupdate;
-  lastupdate = currenttime;
+  // lastupdate = currenttime;
 }
 
 /* **********************************************************************
@@ -99,8 +99,8 @@ bool THighscore::Run() {
     } else {
       SDL_Rect d;
       d.x = 0; d.y = 0; 
-      d.w = background->w;
-      d.h = background->h;
+      d.w = static_cast<short unsigned int>(background->w);
+      d.h = static_cast<short unsigned int>(background->h);
       SDL_BlitSurface(Screen, &d, background, &d);
       SDL_SetAlpha(background, SDL_SRCALPHA, 64);
     }
@@ -132,8 +132,14 @@ bool THighscore::Run() {
 void THighscore::RenderSplash() {
     /* Put on the splash screen */
     SDL_Rect src, dest;
-    src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
-    dest.x = (Screen->w-src.w)/2; dest.y = 50; dest.w = src.w; dest.h = src.h;
+    src.x = 0; 
+    src.y = 0; 
+    src.w = static_cast<short unsigned int>(Splash->w); 
+    src.h = static_cast<short unsigned int>(Splash->h);
+    dest.x = static_cast<short unsigned int>((Screen->w-src.w)/2); 
+    dest.y = 50; 
+    dest.w = src.w; 
+    dest.h = src.h;
     SDL_BlitSurface(Splash, &src, Screen, &dest);
 }
 
@@ -147,8 +153,8 @@ void THighscore::RenderBackground() {
 		   SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
       SDL_Rect d;
       d.x = 0; d.y = 0; 
-      d.w = background->w;
-      d.h = background->h;
+      d.w = static_cast<unsigned short int>(background->w);
+      d.h = static_cast<unsigned short int>(background->h);
       SDL_BlitSurface(background, &d, Screen, &d);
     } else {
       SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
@@ -256,7 +262,7 @@ bool THighscore::HandleEvent(SDL_Event * event) {
 	  }
 	}
       }
-      name[curchar] = static_cast<int>('A') + cursorpos_y * 10 + cursorpos_x;
+      name[curchar] = static_cast<char>(static_cast<int>('A') + cursorpos_y * 10 + cursorpos_x);
       curchar = (curchar < 3) ? curchar+1 : curchar;
     }
     break;
@@ -344,9 +350,9 @@ void THighscore::Render(SDL_Surface * surface)
   }
   break;
   case INPUT: {
-    char * s1 = "A B C D E F G H I J";
-    char * s2 = "K L M N O P Q R S T";
-    char * s3 = "U V W X Y Z Del End";
+    const char * s1 = "A B C D E F G H I J";
+    const char * s2 = "K L M N O P Q R S T";
+    const char * s3 = "U V W X Y Z Del End";
 
     int drawx=static_cast<int>(x());
     int drawy=static_cast<int>(y());
@@ -354,20 +360,20 @@ void THighscore::Render(SDL_Surface * surface)
     // take special care of Del and End
     if (cursorpos_y == 2) {
       if (cursorpos_x == 6 || cursorpos_x == 7) {
-	dest.x = drawx + //DT_FontWidth(*fontHandle) * 13 ;
-	  TextRender->GetGlyphWidth() * 13;
+	dest.x = static_cast<short int>(drawx + //DT_FontWidth(*fontHandle) * 13 ;
+                                        TextRender->GetGlyphWidth() * 13);
       }else if (cursorpos_x == 8 || cursorpos_x == 9) {
-	dest.x = drawx + // DT_FontWidth(*fontHandle) * 17 ;
-	  TextRender->GetGlyphWidth() * 17;
+	dest.x = static_cast<short int>(drawx + // DT_FontWidth(*fontHandle) * 17 ;
+                                        TextRender->GetGlyphWidth() * 17);
       } else {
-	dest.x = drawx + // DT_FontWidth(*fontHandle) 
-	  TextRender->GetGlyphWidth() * 2 * cursorpos_x;
+	dest.x = static_cast<short int>(drawx + // DT_FontWidth(*fontHandle) 
+                                        TextRender->GetGlyphWidth() * 2 * cursorpos_x);
       }
     } else {
-      dest.x = drawx + // DT_FontWidth(*fontHandle)
-	TextRender->GetGlyphWidth() * 2 * cursorpos_x;
+      dest.x = static_cast<short int>(drawx + // DT_FontWidth(*fontHandle)
+                                      TextRender->GetGlyphWidth() * 2 * cursorpos_x);
     }
-    dest.y = drawy + 40 * cursorpos_y + 20;
+    dest.y = static_cast<short int>(drawy + 40 * cursorpos_y + 20);
     char pointer[2] = { static_cast<int>('y') + 6, 0 };
     // DT_DrawText(" ", surface, *fontHandle, oldcursorpixpos_x, oldcursorpixpos_y);    
     TextRender->Print(surface, oldcursorpixpos_x, oldcursorpixpos_y, " ");

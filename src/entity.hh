@@ -124,7 +124,7 @@ public:
   inline int h() const { return _h; };
   inline void setW(int w_) { _w = w_; }
   inline void setH(int h_) { _h = h_; }
-  inline bool boundingBoxCollision(TEntity& obj);
+  /* inline */ bool boundingBoxCollision(TEntity& obj);
   inline int getCollideCorner() { return collidecorner; }
   inline void resetCollideCorner() { collidecorner = 0; }
   inline TPoint getCollidePoint() { return collidepoint; }

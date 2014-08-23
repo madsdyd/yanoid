@@ -101,7 +101,7 @@ TInterprenter::~TInterprenter() {
 /* **********************************************************************
  * Add a module
  * *********************************************************************/
-bool TInterprenter::AddModule(char * module, PyMethodDef * methods) {
+bool TInterprenter::AddModule(const char * module, PyMethodDef * methods) {
   if (PyImport_AddModule(module)) {
     Py_InitModule(module, methods);
     string tmp(module);
@@ -125,7 +125,7 @@ bool TInterprenter::LoadDefaultScripts() {
 /* **********************************************************************
  * Run a simple string
  * *********************************************************************/
-bool TInterprenter::RunSimpleString(char * script) {
+bool TInterprenter::RunSimpleString(const char * script) {
   return (0 == PyRun_SimpleString(script));
 }
 

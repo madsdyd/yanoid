@@ -63,15 +63,15 @@ void TStatistics::Render(int x, int y) {
   /* Iterate over all stat items, twice */
   TFrameTimesIterator i;
   for (i = next_element; i != end; i++) {
-    dest.h = *i;
-    dest.x = count++; 
-    dest.y = y - dest.h;
+    dest.h = static_cast<short unsigned int>(*i);
+    dest.x = static_cast<short int>(count++); 
+    dest.y = static_cast<short int>(y - dest.h);
     SDL_FillRect(StatSurface, &dest, StatColor);
   }
   for (i = begin; i != next_element; i++) {
-    dest.h = *i;
-    dest.x = count++; 
-    dest.y = y - dest.h;
+    dest.h = static_cast<short unsigned int>(*i);
+    dest.x = static_cast<short int>(count++); 
+    dest.y = static_cast<short int>(y - dest.h);
     SDL_FillRect(StatSurface, &dest, StatColor);
   }
 }

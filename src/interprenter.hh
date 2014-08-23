@@ -38,12 +38,12 @@ public:
   /* Clean up the python interprenter */
   ~TInterprenter();
   /* Add a module */
-  bool AddModule(char * module, PyMethodDef * methods);
+  bool AddModule(const char * module, PyMethodDef * methods);
   bool AddModule(string module, PyMethodDef * methods);
   /* Load the default scripts */
   bool LoadDefaultScripts();
   /* Run scripts - return true for no fault, false otherwise */
-  bool RunSimpleString(char * script);
+  bool RunSimpleString(const char * script);
   bool RunSimpleString(string script);
   /* Note, file is a script within the PathManager path. */
   bool RunSimpleFile(string script);
