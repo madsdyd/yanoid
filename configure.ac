@@ -20,8 +20,6 @@ dnl Make CDPATH not influence stuff.
 dnl ------------------------------------------------------------
 CDPATH=${ZSH_VERSION+.}:
 
-
-
 dnl Enable --maintainer-mode
 dnl AM_MAINTAINER_MODE
 dnl Put config.h in src
@@ -209,7 +207,8 @@ dnl ------------------------------------------------------------
 dnl Specify data directory - stolen from tuxkart
 dnl ------------------------------------------------------------
 
-MY_EXPAND_DIR(yanoid_datadir, "$datadir/games/$PACKAGE")
+dnl I am not exactly sure about datarootdir vs datadir, but here goes.
+MY_EXPAND_DIR(yanoid_datadir, "$datarootdir/games/$PACKAGE")
 AC_DEFINE_UNQUOTED(YANOID_DATADIR, "$yanoid_datadir", Defines the location of the data directory)
 
 dnl AC_ARG_WITH(data-dir, [  --with-data-dir=PATH    Default yanoid data directory], 
