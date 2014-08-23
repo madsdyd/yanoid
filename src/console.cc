@@ -100,10 +100,10 @@ void TConsole::Update(Uint32 deltatime) {
       }
     } else {
       /* Moving down */
-      dposition = mymin (max_pos, dposition+delta_pos*deltatime);
+      dposition = mymin (static_cast<double>(max_pos), dposition+delta_pos*deltatime);
       position = (int) floor(dposition);
       if (max_pos == position) {
-	dposition = max_pos;
+	dposition = static_cast<double>(max_pos);
 	delta_pos = 0;
 	state = is_down;
 	// LogLine(LOG_VERBOSE, "Console is DOWN");
@@ -118,7 +118,7 @@ void TConsole::Update(Uint32 deltatime) {
  * *********************************************************************/
 bool TConsole::HandleLine(string line) {
   /* Readline accepted a line - check if we can handle it */
-  int firstspace = line.find(" ");
+  size_t firstspace = line.find(" ");
   string name, arg;
   if (firstspace < 0) {
     name = line;
@@ -180,12 +180,12 @@ bool TConsole::HandleEvent(SDL_Event * event) {
 void TConsole::Render(SDL_Surface * surface) {
   /* Update maxpos */
   max_pos = surface->h/2;
-  int i = 0;
-  int y;
+  size_t i = 0;
+  size_t y;
 
   if (0 != position) {
     /* render with background */
-    i = mymin((unsigned int) position / TextRender->GetGlyphHeight(), 
+    i = mymin( position / TextRender->GetGlyphHeight(), 
 	      lines.size());
     /* Start printing from the top of the screen, or lower, if fewer lines
      */
@@ -198,8 +198,8 @@ void TConsole::Render(SDL_Surface * surface) {
     SDL_Rect dest;
     dest.y = 0;
     dest.x = 0;
-    dest.w = surface->w;
-    dest.h = position + 2 * TextRender->GetGlyphHeight();
+    dest.w = static_cast<short unsigned int>(surface->w);
+    dest.h = static_cast<short unsigned int>(position + 2 * TextRender->GetGlyphHeight());
     SDL_FillRect(surface, &dest, SDL_MapRGB(surface->format, 0, 0, 0));
   } else {
     // cout << "fadetime " << fade_time << endl;
@@ -213,13 +213,13 @@ void TConsole::Render(SDL_Surface * surface) {
   }
   while(i > 0) {
     // display->textrender->PrintLn(lines[lines.size()-i--]);
-    TextRender->Print(surface, 0, y, lines[lines.size()-i--]);
+    TextRender->Print(surface, 0, static_cast<int>(y), lines[lines.size()-i--]);
     y += TextRender->GetGlyphHeight();
   }
   if (0 != position) {
-    Readline->Render(surface, 0, y, "> ", TextRender);
+    Readline->Render(surface, 0, static_cast<int>(y), "> ", TextRender);
     y += TextRender->GetGlyphHeight();
-    TextRender->Print(surface, 0, y, "--------------------------------------------------");
+    TextRender->Print(surface, 0, static_cast<int>(y), "--------------------------------------------------");
     // display->textrender->PrintLn("--------------------------------------------------------");
   }
 }

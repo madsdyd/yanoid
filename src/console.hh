@@ -47,11 +47,11 @@ private:
   unsigned int max_num_lines;
   vector<string> lines;
   int fade_time;
-  int position;  /* The y current position of the console - 0 if up */
+  size_t position;  /* The y current position of the console - 0 if up */
   double dposition; /* Used to scale the position, when animating */
   double delta_pos; /* The way we move the console - 0 if not moving */
   tconsole_state state;
-  int max_pos;   /* The max position  - updated from Render, to the middle 
+  size_t max_pos;   /* The max position  - updated from Render, to the middle 
 		    of the y position */
   /* The map of commands */
   map<string, TConsoleCommand> Commands;

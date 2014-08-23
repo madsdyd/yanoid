@@ -31,15 +31,15 @@ using namespace std;
 class TText {
 private:
   SDL_Surface * font;
-  int GlyphWidth;
-  int GlyphHeight;
+  unsigned short int GlyphWidth;
+  unsigned short int GlyphHeight;
 public:
   /* The fontname should point to a 16x16 glyph image */
   TText(string fontname);
   ~TText();
   /* Return the width and height of a glyph */
-  inline int GetGlyphWidth() { return GlyphWidth; }
-  inline int GetGlyphHeight() { return GlyphHeight; }
+  inline unsigned short int GetGlyphWidth() { return GlyphWidth; }
+  inline unsigned short int GetGlyphHeight() { return GlyphHeight; }
   /* Print string to surface at x, y 
      Note, the surface is not updated ...
    */

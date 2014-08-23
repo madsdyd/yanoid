@@ -30,10 +30,10 @@
 class TText; /* To support rendering of glyphs */
 class TReadline {
 protected:
-  int cursorpos;
+  size_t cursorpos;
   string currentline;
   string savedline;
-  int savedpos;
+  size_t savedpos;
   // string * value;
   static string killed;
   vector<string> backlog; /* Of lines/commands */

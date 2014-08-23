@@ -48,7 +48,7 @@ TTextEffect::TTextEffect(const char *str_, TText * _TextRender) :
   amask = 0xff000000;
 #endif
   
-  int slen = strlen(str_);
+  int slen = static_cast<int>(strlen(str_));
   int cw = //DT_FontWidth(*font) * slen;
     TextRender->GetGlyphWidth() * slen;
   int ch = // DT_FontHeight(*font);
@@ -90,7 +90,7 @@ TTextEffectSpaced::doEffect(Uint32 currenttime)
 {
   int fontwidth = TextRender->GetGlyphWidth();
   double timepct = static_cast<double>(currenttime-begin_time)/static_cast<double>(Duration-1000);
-  int characters = strlen(str);
+  int characters = static_cast<int>(strlen(str));
   
   /* Now draw it */
   int count=0;
@@ -114,7 +114,7 @@ TTextEffectJumping::doEffect(Uint32 currenttime)
 {
   int fontwidth = TextRender->GetGlyphWidth();
   int fontheight = TextRender->GetGlyphHeight();
-  int characters = strlen(str);
+  int characters = static_cast<int>(strlen(str));
   double timepct = static_cast<double>(currenttime-begin_time)/static_cast<double>(Duration-1000);
   int _i = static_cast<int>(timepct * static_cast<double>(characters));
   int _y = static_cast<int>(Location.y());
@@ -149,7 +149,7 @@ void
 TTextEffectSwirling::doEffect(Uint32 currenttime)
 {
   int count = 0;
-  int characters = strlen(str);
+  int characters = static_cast<int>(strlen(str));
   double timepct = static_cast<double>(currenttime-begin_time) /
     static_cast<double>(Duration-post_hold_time);
   timepct = (timepct > 1.0) ? 1.0 : timepct;
@@ -193,15 +193,15 @@ void TTextEffect::saveBackground()
   for (std::vector<TPoint>::iterator i = char_points.begin();
        i != char_points.end() ; i++) {
 
-    SourceRect.x = static_cast<int>(i->x());
-    SourceRect.y = static_cast<int>(i->y());
-    SourceRect.w = font_width;
-    SourceRect.h = font_height;
+    SourceRect.x = static_cast<short int>(i->x());
+    SourceRect.y = static_cast<short int>(i->y());
+    SourceRect.w = static_cast<short int>(font_width);
+    SourceRect.h = static_cast<short int>(font_height);
     
-    DestRect.x = count * font_width;
+    DestRect.x = static_cast<short int>(count * font_width);
     DestRect.y = 0;
-    DestRect.w = SourceRect.w;
-    DestRect.h = SourceRect.h;
+    DestRect.w = static_cast<short int>(SourceRect.w);
+    DestRect.h = static_cast<short int>(SourceRect.h);
  
    /* save the background */
     SDL_BlitSurface(surface, &SourceRect, background, &DestRect);
@@ -220,12 +220,12 @@ void TTextEffect::blitBackground()
   // Now blit back the backgrounds for each charaters
   for (std::vector<TPoint>::iterator i = char_points.begin();
        i != char_points.end() ; i++) {
-    DestRect.x = static_cast<int>(i->x());
-    DestRect.y = static_cast<int>(i->y());
-    DestRect.w = font_width;
-    DestRect.h = font_height;
+    DestRect.x = static_cast<short int>(i->x());
+    DestRect.y = static_cast<short int>(i->y());
+    DestRect.w = static_cast<short int>(font_width);
+    DestRect.h = static_cast<short int>(font_height);
     
-    SourceRect.x = count * font_width;
+    SourceRect.x = static_cast<short int>(count * font_width);
     SourceRect.y = 0;
     SourceRect.w = DestRect.w;
     SourceRect.h = DestRect.h;

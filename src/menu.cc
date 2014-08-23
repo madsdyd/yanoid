@@ -77,8 +77,8 @@ bool TMenu::Run() {
     } else {
       SDL_Rect d;
       d.x = 0; d.y = 0; 
-      d.w = background->w;
-      d.h = background->h;
+      d.w = static_cast<short unsigned int>(background->w);
+      d.h = static_cast<short unsigned int>(background->h);
       
       /* Note, on my system (mads) blitting before setting the
 	 alpha is a no-no - it crashes... 
@@ -123,8 +123,14 @@ void TMenu::RenderSplash() {
   if (dis_splash) {
     /* Put on the splash screen */
     SDL_Rect src, dest;
-    src.x = 0; src.y = 0; src.w = Splash->w; src.h = Splash->h;
-    dest.x = (Screen->w-src.w)/2; dest.y = 50; dest.w = src.w; dest.h = src.h;
+    src.x = 0; 
+    src.y = 0; 
+    src.w = static_cast<short unsigned int>(Splash->w); 
+    src.h = static_cast<short unsigned int>(Splash->h);
+    dest.x = static_cast<short int>((Screen->w-src.w)/2); 
+    dest.y = 50; 
+    dest.w = src.w; 
+    dest.h = src.h;
     SDL_BlitSurface(Splash, &src, Screen, &dest);
   }
 }
@@ -137,8 +143,8 @@ void TMenu::RenderBackground() {
 		 SDL_MapRGBA(Screen->format, 16, 16, 16, SDL_ALPHA_OPAQUE));
     SDL_Rect d;
     d.x = 0; d.y = 0; 
-    d.w = background->w;
-    d.h = background->h;
+    d.w = static_cast<short unsigned int>(background->w);
+    d.h = static_cast<short unsigned int>(background->h);
     SDL_BlitSurface(background, &d, Screen, &d);
   } else {
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
@@ -154,9 +160,9 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
      20 is the height spacing of the font, 16 is the width */
   int h = yhigh - ylow;
   int w = xhigh - xlow;
-  int drawy = (h - items.size()*TextRender->GetGlyphHeight()) / 2 + ylow;
+  size_t drawy = (h - items.size()*TextRender->GetGlyphHeight()) / 2 + ylow;
   unsigned int count = 0;
-  int drawx;
+  size_t drawx;
   string tmp;
   TItemsIterator End = items.end();
   for (TItemsIterator i = items.begin(); i != End; i++) {
@@ -185,7 +191,7 @@ void TMenu::RenderItems(int xlow, int ylow, int xhigh, int yhigh) {
     }
     drawx = (w - tmp.size()*TextRender->GetGlyphWidth()) / 2 + xlow;
     
-    TextRender->Print(Screen, drawx, drawy, tmp);
+    TextRender->Print(Screen, static_cast<int>(drawx), static_cast<int>(drawy), tmp);
     // DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
     count++;
     drawy += TextRender->GetGlyphHeight();
@@ -212,7 +218,7 @@ bool TMenu::HandleEvent(SDL_Event * event) {
     case SDLK_UP: {
       unsigned int oldfocused = focused;
       if (focused == 0) {
-	focused = items.size() - 1;
+        focused = static_cast<unsigned int>(items.size() - 1);
       } else {
 	focused -= 1;
       }
@@ -268,7 +274,8 @@ void TDialogMenu::AddLines(string _lines) {
   int ff = 0;
   while("" != _lines && ff != -1) {
     /* Get token */
-    ff = _lines.find(' ');
+    // TODO: Check this cast
+    ff = static_cast<int>(_lines.find(' ') );
     if (ff != -1) {
       tmpstring = _lines.substr(0, ff+1);
       _lines.erase(0, ff+1);
@@ -280,7 +287,7 @@ void TDialogMenu::AddLines(string _lines) {
     if (currentleft >= tmpstring.size()*16) {
       /* Can be added to this line */
       newline += tmpstring;
-      currentleft -= tmpstring.size()*16;
+      currentleft = static_cast<unsigned int>(currentleft - tmpstring.size()*16);
     } else {
       /* Uhoh, line is full, lets proceed */
       if (newline[newline.size()-1] == ' ') {
@@ -288,7 +295,7 @@ void TDialogMenu::AddLines(string _lines) {
       }
       lines.push_back(newline);
       newline = tmpstring;
-      currentleft = width - newline.size()*16;
+      currentleft = static_cast<unsigned int>(width - newline.size()*16);
     }
     /* check if there is room in this line */
     /* Still using 16 as char width */
@@ -308,15 +315,15 @@ void TDialogMenu::RenderLines(int xlow, int ylow, int xhigh, int yhigh) {
      20 is the height spacing of the font, 16 is the width */
   int h = yhigh - ylow;
   int w = xhigh - xlow;
-  int drawy = (h - lines.size()*TextRender->GetGlyphHeight()) / 2 + ylow;
+  size_t drawy = (h - lines.size()*TextRender->GetGlyphHeight()) / 2 + ylow;
   unsigned int count = 0;
-  int drawx;
+  size_t drawx;
   string tmp;
   TItemsIterator End = lines.end();
   for (TItemsIterator i = lines.begin(); i != End; i++) {
     tmp = *i;
     drawx = (w - tmp.size()*TextRender->GetGlyphWidth()) / 2 + xlow;
-    TextRender->Print(Screen, drawx, drawy, tmp);
+    TextRender->Print(Screen, static_cast<int>(drawx), static_cast<int>(drawy), tmp);
     // DT_DrawText(tmp.c_str(), Screen, *font, drawx, drawy);
     count++;
     drawy += TextRender->GetGlyphHeight();

@@ -117,11 +117,11 @@ void TTabNode::Insert(string value) {
   }
   /* Okay, the value and key shares a prefix. Lets get the place where they 
      differ - this is the length of the new key */
-  int key_size = key.size();
-  int value_size = value.size();
-  int min_size = value_size < key_size ? value_size : key_size;
-  int i; 
-  int pos = 0; /* Is i defined to have the right value? cant remember 
+  size_t key_size = key.size();
+  size_t value_size = value.size();
+  size_t min_size = value_size < key_size ? value_size : key_size;
+  size_t i; 
+  size_t pos = 0; /* Is i defined to have the right value? cant remember 
 		  The compiler will optimize it away, I hope. */
   /* We use i = 0 to make sure that i < min_size to start with... */
   for (i = 0; i < min_size; i++) {
@@ -183,11 +183,11 @@ string TTabNode::Complete(string prefix) {
        recurse into center (if present) 
        If no match, return longest match 
     */
-    int key_size = key.size();
-    int prefix_size = prefix.size();
-    int min_size = prefix_size < key_size ? prefix_size : key_size;
-    int i; 
-    int pos = 0; /* Is i defined to have the right prefix? cant remember 
+    size_t key_size = key.size();
+    size_t prefix_size = prefix.size();
+    size_t min_size = prefix_size < key_size ? prefix_size : key_size;
+    size_t i; 
+    size_t pos = 0; /* Is i defined to have the right prefix? cant remember 
 		    The compiler will optimize it away, I hope. */
     /* We use i = 0 to make sure that i < min_size to start with... */
     for (i = 0; i < min_size; i++) {
@@ -240,11 +240,11 @@ string TTabNode::Complete(string prefix, TCompletions * suffixes) {
        recurse into center (if present) 
        If no match, return longest match 
     */
-    int key_size = key.size();
-    int prefix_size = prefix.size();
-    int min_size = prefix_size < key_size ? prefix_size : key_size;
-    int i; 
-    int pos = 0; /* Is i defined to have the right prefix? cant remember 
+    size_t key_size = key.size();
+    size_t prefix_size = prefix.size();
+    size_t min_size = prefix_size < key_size ? prefix_size : key_size;
+    size_t i; 
+    size_t pos = 0; /* Is i defined to have the right prefix? cant remember 
 		    The compiler will optimize it away, I hope. */
     /* We use i = 0 to make sure that i < min_size to start with... */
     for (i = 0; i < min_size; i++) {

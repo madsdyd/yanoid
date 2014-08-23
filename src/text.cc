@@ -36,12 +36,12 @@ TText::TText(string fontname) {
     LogLineExt(LOG_ERROR, 
 	       ("Font width of %s must be multiple of 16", fontname.c_str()));
   }
-  GlyphWidth = font->w / 16;
+  GlyphWidth = static_cast<unsigned short int>(font->w / 16);
   if (0 != (font->h % 16)) {
     LogLineExt(LOG_ERROR, 
 	       ("Font height of %s must be multiple of 16", fontname.c_str()));
   }
-  GlyphHeight = font->h / 16;
+  GlyphHeight = static_cast<unsigned short int>(font->h / 16);
   // cout << "GW, GH " << GlyphWidth << ", " << GlyphHeight << endl;
 }
 /* **********************************************************************
@@ -57,25 +57,25 @@ TText::~TText() {
  * Print
  * *********************************************************************/
 void TText::Print(SDL_Surface * surface, int x, int y, string text) {
-  int size = text.size();
+  size_t size = text.size();
   SDL_Rect src;
   SDL_Rect dest;
   src.w = GlyphWidth;
   src.h = GlyphHeight;
-  dest.y = y;
-  dest.x = x;
+  dest.y = static_cast<short int>(y);
+  dest.x = static_cast<short int>(x);
   dest.w = src.w;
   dest.h = src.h;
   unsigned char glyph;
-  int i;
+  size_t i;
   for (i = 0; i < size; i++) {
     glyph = text[i];
     // cout << "Got -" << glyph << "- as a glyph" << endl;
-    src.x = GlyphWidth * (glyph % 16);
-    src.y = GlyphHeight * (glyph / 16);
+    src.x = static_cast<short int>(GlyphWidth * (glyph % 16));
+    src.y = static_cast<short int>(GlyphHeight * (glyph / 16));
     // cout << "Blitting from (" << src.x << ", " << src.y << ")" << endl;
     SDL_BlitSurface(font, &src, surface, &dest);
-    dest.x += GlyphWidth;
+    dest.x = static_cast<short int>(dest.x + GlyphWidth);
   }
 }
 
@@ -84,15 +84,15 @@ void TText::Print(SDL_Surface * surface, int x, int y, const char ch) {
   SDL_Rect dest;
   src.w = GlyphWidth;
   src.h = GlyphHeight;
-  dest.y = y;
-  dest.x = x;
+  dest.y = static_cast<short int>(y);
+  dest.x = static_cast<short int>(x);
   dest.w = src.w;
   dest.h = src.h;
   unsigned char glyph;
   glyph = ch; // static_cast<unsigned char>(ch);
   // cout << "Got -" << glyph << "- as a glyph" << endl;
-  src.x = GlyphWidth * (glyph % 16);
-  src.y = GlyphHeight * (glyph / 16);
+  src.x = static_cast<short int>(GlyphWidth * (glyph % 16));
+  src.y = static_cast<short int>(GlyphHeight * (glyph / 16));
   // cout << "Blitting from (" << src.x << ", " << src.y << ")" << endl;
   SDL_BlitSurface(font, &src, surface, &dest);
 }

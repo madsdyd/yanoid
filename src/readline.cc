@@ -44,7 +44,7 @@ void TReadline::AdjustCursor() {
   if (cursorpos < 0) {
     cursorpos = 0;
   }
-  if (cursorpos > static_cast<int>(currentline.size())) {
+  if (cursorpos > currentline.size()) {
     cursorpos = currentline.size();
   }
 }
@@ -87,7 +87,7 @@ bool TReadline::HandleEvent(SDL_Event * event) {
     }
     case SDLK_h: { /* Delete char under cursor */
       /* cant delete if we are at end */
-      if (static_cast<int>(currentline.size()) == cursorpos) {
+      if (currentline.size() == cursorpos) {
 	return true;
       }
       currentline.erase(cursorpos, 1);
@@ -112,7 +112,7 @@ bool TReadline::HandleEvent(SDL_Event * event) {
       return true;
     }
     case SDLK_t: { /* Transpose chars */
-      if (cursorpos > 0 && cursorpos < static_cast<int>(currentline.size())) {
+      if (cursorpos > 0 && cursorpos < currentline.size()) {
 	char tmp = currentline[cursorpos];
 	currentline[cursorpos] = currentline[cursorpos-1];
 	currentline[cursorpos-1] = tmp;
@@ -159,7 +159,7 @@ bool TReadline::HandleEvent(SDL_Event * event) {
       LastEventWasTab = true;
     }
     /* Check if we need to complete on command or arg */
-    int firstspace = currentline.find(" ");
+    size_t firstspace = currentline.find(" ");
     if (firstspace < 0 || firstspace >= cursorpos) {
       /* Matching on command */
       if (CommandComplete) {
@@ -247,7 +247,7 @@ bool TReadline::HandleEvent(SDL_Event * event) {
   /* Delete and backspace */
   case SDLK_DELETE: { /* Delete char under cursor */
     /* cant delete if we are at end */
-    if (static_cast<int>(currentline.size()) == cursorpos) {
+    if (currentline.size() == cursorpos) {
       return true;
     }
     currentline.erase(cursorpos, 1);
